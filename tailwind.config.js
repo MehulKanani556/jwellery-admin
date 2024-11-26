@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brown: '#523C34',
+        'brown-50': '#727272',
+      },
+    },
     screens: {
       'sm': '425px',
       'md': '768px',
