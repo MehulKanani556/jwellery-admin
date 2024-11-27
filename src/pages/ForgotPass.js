@@ -1,26 +1,27 @@
 import React, { useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../reduxe/slice/auth.slice';
+import { forgotPassword } from '../reduxe/slice/auth.slice';
 
-export default function Login() {
-    const [showPassword, setShowPassword] = useState(false);
+export default function ForgotPass() {
     const dispatch = useDispatch();
     const data = useSelector(state => state.auth.user);
-
+    const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Required'),
-        password: Yup.string().required('Required'),
+
     });
-    const handleSubmit = (values) => {
+    const handleSubmit = (values, { resetForm }) => {
         // Here you can make API call or perform any other logic
-        dispatch(login(values))
         console.log('Form submitted:', values);
+        dispatch(forgotPassword(values));
+        resetForm();
+        navigate('/verify-otp');
     }
 
     return (
@@ -36,18 +37,15 @@ export default function Login() {
                         <div className="col-md-6 flex items-center justify-center flex-1 absolute h-screen left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:relative md:top-auto md:left-auto md:translate-x-0 md:translate-y-0">
                             <div className='flex items-center justify-center'>
                                 <Formik
-                                    initialValues={{ email: '', password: '' }}
+                                    initialValues={{ email: '' }}
                                     validationSchema={validationSchema}
-                                    onSubmit={(values) => {
-                                        handleSubmit(values);
-                                    }}
+                                    onSubmit={handleSubmit}
                                 >
                                     {() => (
                                         <Form className="bg-white p-8 rounded-lg shadow-md w-80 md:w-96">
-                                            <h2 className="text-2xl font-bold mb-4 text-brown text-center">Login</h2>
-                                            <p className="mb-6 text-brown-50 text-center">Login to your existing account!</p>
+                                            <h2 className="text-2xl font-bold mb-4 text-brown text-center">Forgot password</h2>
+                                            <p className="mb-6 text-brown-50 text-center">Enter your mail to forgot your password.</p>
                                             <div className="mb-4 ">
-
                                                 <div className="relative">
 
                                                     <Field
@@ -59,28 +57,12 @@ export default function Login() {
                                                     <div className='absolute top-1/2 right-3 text-lg text-brown-50 -translate-y-1/2'>
                                                         <MdEmail />
                                                     </div>
+                                                    <ErrorMessage name="email" component="div" className="text-red-500" />
                                                 </div>
-                                                <ErrorMessage name="email" component="div" className="text-red-500" />
-                                            </div>
-                                            <div className="mb-4">
 
-                                                <div className=" relative">
-                                                    <Field
-                                                        type={showPassword ? "text" : "password"}
-                                                        name="password"
-                                                        className="border border-brown p-2 w-full rounded"
-                                                        placeholder="Password"
-                                                    />
-                                                    <div className='absolute top-1/2 right-3 text-lg text-brown-50 -translate-y-1/2 cursor-pointer' onClick={() => setShowPassword(!showPassword)}>
-                                                        {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
-                                                    </div>
-                                                </div>
-                                                <ErrorMessage name="password" component="div" className="text-red-500" />
                                             </div>
 
-                                            <div className="mb-4 text-sm font-semibold text-right text-red-500">
-                                                <Link to="/forgot-password">Forgot Password?</Link>
-                                            </div>
+
                                             <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">Login</button>
                                         </Form>
                                     )}

@@ -1,25 +1,28 @@
 import React, { useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
-import { MdEmail } from 'react-icons/md'
-import { Link } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../reduxe/slice/auth.slice';
+import {  resetPassword } from '../reduxe/slice/auth.slice';
 
-export default function Login() {
+export default function RestPass() {
     const [showPassword, setShowPassword] = useState(false);
+    const [showPassword1, setShowPassword1] = useState(false);
     const dispatch = useDispatch();
     const data = useSelector(state => state.auth.user);
 
 
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email address').required('Required'),
-        password: Yup.string().required('Required'),
+        password: Yup.string()
+            .min(8, 'Password must be at least 8 characters')
+            .required('Required'),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Passwords must match')
+            .required('Required'),
     });
     const handleSubmit = (values) => {
         // Here you can make API call or perform any other logic
-        dispatch(login(values))
+        dispatch(resetPassword(values))
         console.log('Form submitted:', values);
     }
 
@@ -36,7 +39,7 @@ export default function Login() {
                         <div className="col-md-6 flex items-center justify-center flex-1 absolute h-screen left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:relative md:top-auto md:left-auto md:translate-x-0 md:translate-y-0">
                             <div className='flex items-center justify-center'>
                                 <Formik
-                                    initialValues={{ email: '', password: '' }}
+                                    initialValues={{ password: '', confirmPassword: '' }}
                                     validationSchema={validationSchema}
                                     onSubmit={(values) => {
                                         handleSubmit(values);
@@ -44,25 +47,9 @@ export default function Login() {
                                 >
                                     {() => (
                                         <Form className="bg-white p-8 rounded-lg shadow-md w-80 md:w-96">
-                                            <h2 className="text-2xl font-bold mb-4 text-brown text-center">Login</h2>
-                                            <p className="mb-6 text-brown-50 text-center">Login to your existing account!</p>
-                                            <div className="mb-4 ">
-
-                                                <div className="relative">
-
-                                                    <Field
-                                                        type="email"
-                                                        name="email"
-                                                        className="border border-brown p-2 w-full rounded"
-                                                        placeholder="Email"
-                                                    />
-                                                    <div className='absolute top-1/2 right-3 text-lg text-brown-50 -translate-y-1/2'>
-                                                        <MdEmail />
-                                                    </div>
-                                                </div>
-                                                <ErrorMessage name="email" component="div" className="text-red-500" />
-                                            </div>
-                                            <div className="mb-4">
+                                            <h2 className="text-2xl font-bold mb-4 text-brown text-center">Reset password</h2>
+                                            <p className="mb-6 text-brown-50 text-center">Reset your password here!</p>
+                                            <div className='mb-4'>
 
                                                 <div className=" relative">
                                                     <Field
@@ -75,13 +62,27 @@ export default function Login() {
                                                         {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
                                                     </div>
                                                 </div>
-                                                <ErrorMessage name="password" component="div" className="text-red-500" />
+                                                <ErrorMessage name="password" component="div" className="text-red-500 " />
+                                            </div>
+                                            <div className="mb-4">
+
+
+                                                <div className=" relative">
+                                                    <Field
+                                                        type={showPassword1 ? "text" : "password"}
+                                                        name="confirmPassword"
+                                                        className="border border-brown p-2 w-full rounded"
+                                                        placeholder="Password"
+                                                    />
+                                                    <div className='absolute top-1/2 right-3 text-lg text-brown-50 -translate-y-1/2 cursor-pointer' onClick={() => setShowPassword1(!showPassword1)}>
+                                                        {showPassword1 ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
+                                                    </div>
+                                                </div>
+                                                <ErrorMessage age name="confirmPassword" component="div" className="text-red-500 " />
                                             </div>
 
-                                            <div className="mb-4 text-sm font-semibold text-right text-red-500">
-                                                <Link to="/forgot-password">Forgot Password?</Link>
-                                            </div>
-                                            <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">Login</button>
+                                           
+                                            <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">Reset password</button>
                                         </Form>
                                     )}
                                 </Formik>
