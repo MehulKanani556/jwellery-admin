@@ -30,15 +30,21 @@ import { RiCoupon3Fill } from "react-icons/ri";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { FaReceipt } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Badge } from '@mui/material';
 
 const drawerWidth = 325;
 
-function Layout({children}) {
+function Layout({ children }) {
   const { window } = children;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -55,8 +61,8 @@ function Layout({children}) {
   };
 
   const pages = [
-    { title: 'Dashboard', icon: <AiFillHome />, path: '/' },
-    { title: 'User', icon: <FaUser />,path: '/user' },
+    { title: 'Dashboard', icon: <AiFillHome />, path: '/dashboard' },
+    { title: 'User', icon: <FaUser />, path: '/user' },
     { title: 'Category', icon: <BiSolidCategory /> },
     { title: 'Subcategory', icon: <FaList /> },
     { title: 'Product', icon: <BsFillBoxSeamFill /> },
@@ -68,25 +74,37 @@ function Layout({children}) {
     { title: 'Coupons', icon: <RiCoupon3Fill /> },
     { title: 'Offers', icon: <BiSolidOffer /> },
     { title: 'Return Orders', icon: <FaArrowsRotate /> },
-    { title: 'Invoice', icon: <FaReceipt />}
+    { title: 'Invoice', icon: <FaReceipt /> }
   ]
 
   const drawer = (
     <div>
-      <Toolbar />
+      <Toolbar></Toolbar>
       <Divider />
       <List>
         {
           pages.map((v, index) => (
-            <ListItem key={v.title} disablePadding sx={{ paddingLeft: '20px' }}>
-              <ListItemButton 
-                sx={{ gap: '16px' }} 
-                onClick={() => navigate(v.path)} // Add onClick handler for navigation
+            <ListItem key={v.title} disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+              <ListItemButton
+                sx={{
+                  gap: '16px',
+                  backgroundColor: location.pathname == v.path ? '#FFF9F6' : 'transparent',
+                  color: location.pathname == v.path ? '#523C34' : 'white',
+                  borderRadius: '10px',
+                  '&:hover': {
+                    backgroundColor: '#FFF9F6',
+                    color: '#523C34',
+                    '& .MuiListItemIcon-root': {
+                      color: '#523C34',
+                    }
+                  }
+                }}
+                onClick={() => navigate(v.path)}
               >
-                <ListItemIcon sx={{ color: 'white' }}>
+                <ListItemIcon sx={{ color: location.pathname == v.path ? '#523C34' : 'white', fontSize: '20px' }}>
                   {v.icon}
                 </ListItemIcon>
-                <ListItemText primary={v.title} sx={{ color: 'white', fontSize: '16px', fontWeight: 500 }} />
+                <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 }} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -105,6 +123,8 @@ function Layout({children}) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          backgroundColor: 'white',
+          color: '#523C34'
         }}
       >
         <Toolbar>
@@ -117,9 +137,36 @@ function Layout({children}) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
+
+
+          <div className='flex justify-between w-full' >
+            <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+              <SearchIcon sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'text.brown' }} />
+              <input
+                type="search"
+                placeholder="Search..."
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  marginRight: '8px',
+                  paddingLeft: '40px',
+                  width: '100%'
+                }}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ backgroundColor: '#FCEAE2' }} className='p-2 rounded-full'>              
+
+              <Badge badgeContent={4} color="secondary" >
+                <NotificationsIcon color="#523C34" />
+              </Badge>
+              </div>
+              <IconButton color="inherit" sx={{ ml: 2 }}>
+                <AccountCircleIcon />
+              </IconButton>
+            </Box>
+          </div>
         </Toolbar>
       </AppBar>
       <Box
