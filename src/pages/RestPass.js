@@ -87,10 +87,10 @@ export default function RestPass() {
                                 </Formik>
                             </div>
                         </div>
-                        <div className='hidden md:absolute md:bottom-0 md:left-[50%] '>
+                        <div className='hidden  md:block  md:absolute md:bottom-0 md:left-[50%] '>
                             <img src={require('../Images/login1.png')} alt="" />
                         </div>
-                        <div className='hidden md:absolute md:top-0  md:right-0'>
+                        <div className='hidden  md:block  md:absolute md:top-0  md:right-0'>
                             <img src={require('../Images/login2.png')} alt="" />
                         </div>
                     </div>

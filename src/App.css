@@ -9,7 +9,9 @@ img{
   height: 100%;
 }
 
-
+body {
+  background-color: #fffefc;
+}
 /* Row */
 .row {
   display: flex;
