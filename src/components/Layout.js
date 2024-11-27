@@ -30,15 +30,15 @@ import { RiCoupon3Fill } from "react-icons/ri";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { FaReceipt } from "react-icons/fa6";
-
+import { useNavigate } from 'react-router-dom'; 
 
 const drawerWidth = 325;
 
-function ResponsiveDrawer(props) {
-  const { window } = props;
+function Layout({children}) {
+  const { window } = children;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-
+  const navigate = useNavigate(); 
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -55,8 +55,8 @@ function ResponsiveDrawer(props) {
   };
 
   const pages = [
-    { title: 'Dashboard', icon: <AiFillHome /> },
-    { title: 'User', icon: <FaUser /> },
+    { title: 'Dashboard', icon: <AiFillHome />, path: '/' },
+    { title: 'User', icon: <FaUser />,path: '/user' },
     { title: 'Category', icon: <BiSolidCategory /> },
     { title: 'Subcategory', icon: <FaList /> },
     { title: 'Product', icon: <BsFillBoxSeamFill /> },
@@ -68,7 +68,7 @@ function ResponsiveDrawer(props) {
     { title: 'Coupons', icon: <RiCoupon3Fill /> },
     { title: 'Offers', icon: <BiSolidOffer /> },
     { title: 'Return Orders', icon: <FaArrowsRotate /> },
-    { title: 'Invoice', icon: <FaReceipt /> }
+    { title: 'Invoice', icon: <FaReceipt />}
   ]
 
   const drawer = (
@@ -78,8 +78,11 @@ function ResponsiveDrawer(props) {
       <List>
         {
           pages.map((v, index) => (
-            <ListItem key={v} disablePadding sx={{ paddingLeft: '20px' }}>
-              <ListItemButton sx={{ gap: '16px' }}>
+            <ListItem key={v.title} disablePadding sx={{ paddingLeft: '20px' }}>
+              <ListItemButton 
+                sx={{ gap: '16px' }} 
+                onClick={() => navigate(v.path)} // Add onClick handler for navigation
+              >
                 <ListItemIcon sx={{ color: 'white' }}>
                   {v.icon}
                 </ListItemIcon>
@@ -166,39 +169,13 @@ function ResponsiveDrawer(props) {
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
-        <Typography sx={{ marginBottom: 2 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
-        </Typography>
-        <Typography sx={{ marginBottom: 2 }}>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        {children}
       </Box>
     </Box>
   );
 }
 
-ResponsiveDrawer.propTypes = {
+Layout.propTypes = {
   /**
    * Injected by the documentation to work in an iframe.
    * Remove this when copying and pasting into your project.
@@ -206,4 +183,4 @@ ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default Layout;
