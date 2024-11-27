@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import ForgotPass from './pages/ForgotPass';
 import VerifyOtp from './pages/VerifyOtp';
 import RestPass from './pages/RestPass';
+import DashBord from './pages/DashBord';
 function App() {
   const { store, persistor } = configureStore();
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/reset-password" element={<RestPass />} />
+          <Route path="/dashboard" element={<DashBord />} />
          
         </Routes>
       </Provider>
