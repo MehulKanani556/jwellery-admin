@@ -3,7 +3,7 @@ import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import {  resetPassword } from '../reduxe/slice/auth.slice';
+import { resetPassword } from '../reduxe/slice/auth.slice';
 
 export default function RestPass() {
     const [showPassword, setShowPassword] = useState(false);
@@ -20,9 +20,10 @@ export default function RestPass() {
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Required'),
     });
-    const handleSubmit = (values) => {
+    const handleSubmit = (values,{resetForm}) => {
         // Here you can make API call or perform any other logic
-        dispatch(resetPassword(values))
+        dispatch(resetPassword(values));
+        resetForm();
         console.log('Form submitted:', values);
     }
 
@@ -41,9 +42,7 @@ export default function RestPass() {
                                 <Formik
                                     initialValues={{ password: '', confirmPassword: '' }}
                                     validationSchema={validationSchema}
-                                    onSubmit={(values) => {
-                                        handleSubmit(values);
-                                    }}
+                                    onSubmit={handleSubmit}
                                 >
                                     {() => (
                                         <Form className="bg-white p-8 rounded-lg shadow-md w-80 md:w-96">
@@ -81,7 +80,7 @@ export default function RestPass() {
                                                 <ErrorMessage age name="confirmPassword" component="div" className="text-red-500 " />
                                             </div>
 
-                                           
+
                                             <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">Reset password</button>
                                         </Form>
                                     )}

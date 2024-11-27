@@ -21,7 +21,7 @@ export default function VerifyOtp() {
             )
     });
 
-    const handleSubmit = (values, { resetForm, setErrors }) => {
+    const handleSubmit = (values, { resetForm }) => {
         // Join the otp array into a single string
         const otpString = values.otp.join('');
         

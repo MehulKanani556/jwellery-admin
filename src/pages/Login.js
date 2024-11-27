@@ -17,9 +17,10 @@ export default function Login() {
         email: Yup.string().email('Invalid email address').required('Required'),
         password: Yup.string().required('Required'),
     });
-    const handleSubmit = (values) => {
+    const handleSubmit = (values,{resetForm}) => {
         // Here you can make API call or perform any other logic
-        dispatch(login(values))
+        dispatch(login(values));
+        resetForm();
         console.log('Form submitted:', values);
     }
 
@@ -38,9 +39,7 @@ export default function Login() {
                                 <Formik
                                     initialValues={{ email: '', password: '' }}
                                     validationSchema={validationSchema}
-                                    onSubmit={(values) => {
-                                        handleSubmit(values);
-                                    }}
+                                    onSubmit={handleSubmit}
                                 >
                                     {() => (
                                         <Form className="bg-white p-8 rounded-lg shadow-md w-80 md:w-96">
