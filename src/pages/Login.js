@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const data = useSelector(state => state.auth.user);
-
+    const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Required'),
@@ -22,6 +22,7 @@ export default function Login() {
         dispatch(login(values));
         resetForm();
         console.log('Form submitted:', values);
+        navigate('/dashboard');
     }
 
     return (
