@@ -290,7 +290,7 @@ export default function Size() {
                                             disabled={isSubmitting}
                                             className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
                                         >
-                                            {isSubmitting ? 'Submitting...' : 'Add Size'}
+                                            {isSubmitting ? 'Submitting...' : 'Edit Size'}
                                         </button>
                                     </div>
                                 </form>
