@@ -63,8 +63,8 @@ function Layout({ children }) {
   const pages = [
     { title: 'Dashboard', icon: <AiFillHome />, path: '/dashboard' },
     { title: 'User', icon: <FaUser />, path: '/user' },
-    { title: 'Category', icon: <BiSolidCategory /> },
-    { title: 'Subcategory', icon: <FaList /> },
+    { title: 'Category', icon: <BiSolidCategory />,path: '/category' },
+    { title: 'Subcategory', icon: <FaList />,path: '/subcategory' },
     { title: 'Product', icon: <BsFillBoxSeamFill /> },
     { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
     { title: 'Stock', icon: <BsBoxFill />, path: '/' },
