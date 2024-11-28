@@ -10,7 +10,7 @@ const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   (config) => {
     // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
-    const token = '10|jS2Fz9AmFjfqLrzhA8k6CFWiXZmLhSYf8c2HUQrabf4d7c96' // Retrieve the token from session storage
+    const token = sessionStorage.getItem("token")// Retrieve the token from session storage
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
     }
