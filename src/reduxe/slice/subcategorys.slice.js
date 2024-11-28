@@ -6,6 +6,10 @@ import { BASE_URL } from "../../utils/BaseUrl";
 // Create an Axios instance
 const axiosInstance = axios.create();
 
+async function getToken() {
+  const token = await sessionStorage.getItem("token");
+  return token;
+}
 // Add a request interceptor to include the token
 axiosInstance.interceptors.request.use(
   async (config) => {
