@@ -14,15 +14,12 @@ function App() {
   return (
     <>
       <Provider store={store}>
-
-
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/reset-password" element={<RestPass />} />
           <Route path="/*" element={<AuthRoutes />}></Route>
-
         </Routes>
 
       </Provider>
