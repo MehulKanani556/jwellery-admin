@@ -9,7 +9,7 @@ const handleErrors = (error, dispatch, rejectWithValue) => {
     return rejectWithValue(error.response?.data || { message: errorMessage });
 };
 const apiUrl = "http://127.0.0.1:8000/api";
-getToken();
+
 
 
 async function getToken() {

@@ -5,12 +5,15 @@ import { BASE_URL } from "../../utils/BaseUrl";
 
 // Create an Axios instance
 const axiosInstance = axios.create();
-
+async function getToken() {
+  const token = await sessionStorage.getItem("token");
+  return token;
+}
 // Add a request interceptor to include the token
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
-    const token = sessionStorage.getItem("token")// Retrieve the token from session storage
+    const token =await getToken();// Retrieve the token from session storage
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
     }
