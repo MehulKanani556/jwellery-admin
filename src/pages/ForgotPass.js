@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,7 +9,7 @@ import { forgotPassword } from '../reduxe/slice/auth.slice';
 
 export default function ForgotPass() {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.auth.user);
+    const data = useSelector(state => state.auth.message);
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
@@ -21,8 +21,15 @@ export default function ForgotPass() {
         console.log('Form submitted:', values);
         dispatch(forgotPassword(values));
         resetForm();
-        navigate('/verify-otp');
+        // navigate('/verify-otp');
     }
+
+    // Use an effect to navigate after the data is updated
+    useEffect(() => {
+        if (data) {
+            navigate('/verify-otp');
+        }
+    }, [data, navigate]);
 
     return (
         <div>

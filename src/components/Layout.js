@@ -36,7 +36,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Badge } from '@mui/material';
 
-const drawerWidth = 325;
+const drawerWidth = 250;
 
 function Layout({ children }) {
   const { window } = children;
@@ -66,15 +66,15 @@ function Layout({ children }) {
     { title: 'Category', icon: <BiSolidCategory /> },
     { title: 'Subcategory', icon: <FaList /> },
     { title: 'Product', icon: <BsFillBoxSeamFill /> },
-    { title: 'Size', icon: <CgArrowsShrinkH /> },
-    { title: 'Stock', icon: <BsBoxFill /> },
-    { title: 'Cart', icon: <IoBagCheck /> },
-    { title: 'Orders', icon: <LuBoxes /> },
-    { title: 'Review', icon: <TbMessageStar /> },
-    { title: 'Coupons', icon: <RiCoupon3Fill /> },
-    { title: 'Offers', icon: <BiSolidOffer /> },
-    { title: 'Return Orders', icon: <FaArrowsRotate /> },
-    { title: 'Invoice', icon: <FaReceipt /> }
+    { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
+    { title: 'Stock', icon: <BsBoxFill />, path: '/' },
+    { title: 'Cart', icon: <IoBagCheck />, path: '/' },
+    { title: 'Orders', icon: <LuBoxes />, path: '/' },
+    { title: 'Review', icon: <TbMessageStar />, path: '/'},
+    { title: 'Coupons', icon: <RiCoupon3Fill />, path: '/' },
+    { title: 'Offers', icon: <BiSolidOffer />, path: '/' },
+    { title: 'Return Orders', icon: <FaArrowsRotate />, path: '/' },
+    { title: 'Invoice', icon: <FaReceipt />, path: '/' }
   ]
 
   const drawer = (
@@ -87,7 +87,7 @@ function Layout({ children }) {
             <ListItem key={v.title} disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
               <ListItemButton
                 sx={{
-                  gap: '16px',
+                  gap: '4px',
                   backgroundColor: location.pathname == v.path ? '#FFF9F6' : 'transparent',
                   color: location.pathname == v.path ? '#523C34' : 'white',
                   borderRadius: '10px',
@@ -101,7 +101,7 @@ function Layout({ children }) {
                 }}
                 onClick={() => navigate(v.path)}
               >
-                <ListItemIcon sx={{ color: location.pathname == v.path ? '#523C34' : 'white', fontSize: '20px' }}>
+                <ListItemIcon sx={{ color: location.pathname == v.path ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
                   {v.icon}
                 </ListItemIcon>
                 <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 }} />
@@ -156,11 +156,11 @@ function Layout({ children }) {
               />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ backgroundColor: '#FCEAE2' }} className='p-2 rounded-full'>              
+              <div style={{ backgroundColor: '#FCEAE2' }} className='p-2 rounded-full'>
 
-              <Badge badgeContent={4} color="secondary" >
-                <NotificationsIcon color="#523C34" />
-              </Badge>
+                <Badge badgeContent={4} color="secondary" >
+                  <NotificationsIcon color="#523C34" />
+                </Badge>
               </div>
               <IconButton color="inherit" sx={{ ml: 2 }}>
                 <AccountCircleIcon />

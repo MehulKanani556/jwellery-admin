@@ -4,27 +4,34 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword } from '../reduxe/slice/auth.slice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function RestPass() {
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
     const dispatch = useDispatch();
-    const data = useSelector(state => state.auth.user);
-
+    const navigate = useNavigate();
+    // const data = useSelector(state => state.auth.user);
+    const location = useLocation();
+    const { otp } = location.state || {};
 
     const validationSchema = Yup.object({
-        password: Yup.string()
+        new_password: Yup.string()
             .min(8, 'Password must be at least 8 characters')
             .required('Required'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        confirm_password: Yup.string()
+            .oneOf([Yup.ref('new_password'), null], 'Passwords must match')
             .required('Required'),
     });
-    const handleSubmit = (values,{resetForm}) => {
-        // Here you can make API call or perform any other logic
-        dispatch(resetPassword(values));
+    const handleSubmit = (values, { resetForm }) => {
+        // Include otp in the values being dispatched
+        const payload = { ...values, otp }; // Add otp to the payload
+        dispatch(resetPassword(payload)).then(() => {
+            // Redirect to the root path after successful reset
+            navigate('/'); // Redirect to '/'
+        });
         resetForm();
-        console.log('Form submitted:', values);
+        console.log('Form submitted:', payload); // Log the payload
     }
 
     return (
@@ -40,7 +47,7 @@ export default function RestPass() {
                         <div className="col-md-6 flex items-center justify-center flex-1 absolute h-screen left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:relative md:top-auto md:left-auto md:translate-x-0 md:translate-y-0">
                             <div className='flex items-center justify-center'>
                                 <Formik
-                                    initialValues={{ password: '', confirmPassword: '' }}
+                                    initialValues={{ new_password: '', confirm_password: '' }}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
                                 >
@@ -53,7 +60,7 @@ export default function RestPass() {
                                                 <div className=" relative">
                                                     <Field
                                                         type={showPassword ? "text" : "password"}
-                                                        name="password"
+                                                        name="new_password"
                                                         className="border border-brown p-2 w-full rounded"
                                                         placeholder="Password"
                                                     />
@@ -61,7 +68,7 @@ export default function RestPass() {
                                                         {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
                                                     </div>
                                                 </div>
-                                                <ErrorMessage name="password" component="div" className="text-red-500 " />
+                                                <ErrorMessage name="new_password" component="div" className="text-red-500 " />
                                             </div>
                                             <div className="mb-4">
 
@@ -69,15 +76,15 @@ export default function RestPass() {
                                                 <div className=" relative">
                                                     <Field
                                                         type={showPassword1 ? "text" : "password"}
-                                                        name="confirmPassword"
+                                                        name="confirm_password"
                                                         className="border border-brown p-2 w-full rounded"
-                                                        placeholder="Password"
+                                                        placeholder="Confirm Password"
                                                     />
                                                     <div className='absolute top-1/2 right-3 text-lg text-brown-50 -translate-y-1/2 cursor-pointer' onClick={() => setShowPassword1(!showPassword1)}>
                                                         {showPassword1 ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
                                                     </div>
                                                 </div>
-                                                <ErrorMessage age name="confirmPassword" component="div" className="text-red-500 " />
+                                                <ErrorMessage age name="confirm_password" component="div" className="text-red-500 " />
                                             </div>
 
 

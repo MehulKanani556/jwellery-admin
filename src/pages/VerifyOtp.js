@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import {  verifyOtp } from '../reduxe/slice/auth.slice';
+import { verifyOtp } from '../reduxe/slice/auth.slice';
 
 export default function VerifyOtp() {
     const dispatch = useDispatch();
@@ -15,21 +15,29 @@ export default function VerifyOtp() {
 
     const validationSchema = Yup.object({
         otp: Yup.array()
-           
-            .test('is-complete', 'Please enter all 4 digits', 
+
+            .test('is-complete', 'Please enter all 4 digits',
                 (value) => value && value.filter(digit => digit && digit.trim() !== '').length === 4
             )
     });
 
-    const handleSubmit = (values, { resetForm }) => {
+    const handleSubmit = (values, { resetForm, setErrors }) => {
         // Join the otp array into a single string
         const otpString = values.otp.join('');
-        
+
         console.log('Form submitted:', otpString); // Log the joined OTP
 
-        dispatch(verifyOtp({ email, otp: otpString })); // Dispatch the joined OTP along with the email
-        resetForm();
-        navigate('/reset-password');
+        // Dispatch the joined OTP along with the email
+        dispatch(verifyOtp({ otp: otpString }))
+            .then(response => {
+                if (response.error) {
+                    // Handle error (e.g., set form errors)
+                    setErrors({ otp: response.error.message });
+                } else {
+                    resetForm();
+                    navigate('/reset-password', { state: { otp: otpString } }); // Pass OTP to reset-password
+                }
+            });
     }
 
     const handleChange = (index, event, setFieldValue) => {
@@ -63,7 +71,7 @@ export default function VerifyOtp() {
                         <div className="col-md-6 flex items-center justify-center flex-1 absolute h-screen left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:relative md:top-auto md:left-auto md:translate-x-0 md:translate-y-0">
                             <div className='flex items-center justify-center'>
                                 <Formik
-                                    initialValues={{ email,otp: ['', '', '', ''] }}
+                                    initialValues={{ email, otp: ['', '', '', ''] }}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
                                 >

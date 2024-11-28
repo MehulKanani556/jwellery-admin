@@ -1,5 +1,5 @@
 import { Box, Button, Modal, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
@@ -7,19 +7,18 @@ import { RiDeleteBin6Fill } from 'react-icons/ri'
 import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteAllUsers, deleteUser } from '../reduxe/slice/users.slice'
+import { deleteAllUsers, deleteUser, getAllUsers } from '../reduxe/slice/users.slice'
 
 export default function User() {
     const [userData, setUserData] = useState([]);
     const [open, setOpen] = useState(false);
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
-    const user = useSelector(state =>state.users)
-    const data = [
-        { id: '0123', name: 'Rachin', surname: 'Desai', image: img, mobile: '8574569852', username: 'Rachin05', email: 'Rachin@gmail.com', password: '21055' },
-        { id: '0123', name: 'Olie Martin', surname: 'Patel', image: img, mobile: '8574569852', username: 'OlieMarting121', email: 'OlieMarting@gmail.com', password: '21055' },
-        { id: '0123', name: 'Akash Deep', surname: 'Patel', image: img, mobile: '8574569852', username: 'Akash05', email: 'Aka@gmail.com', password: '012354' },
-    ]
+    const data = useSelector(state =>state.users.users);
+    useEffect(()=>{
+        dispatch(getAllUsers())
+    },[]);
+   
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -67,6 +66,7 @@ export default function User() {
     const handleDeleteUser =() =>{
         console.log('Delete User', userData)
         dispatch(deleteUser({userId:userData.id}))
+        dispatch(getAllUsers())
         setDelOpen(false);
     }
     const handleDeleteAll =() =>{
@@ -86,7 +86,7 @@ export default function User() {
                 <div>
 
                     <div className="flex gap-4  mb-4">
-                        <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={handleDeleteAll}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
+                        {/* <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={handleDeleteAll}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button> */}
                         {/* <button className="bg-brown w-32 text-white px-4 py-2 rounded">+ Add</button> */}
                     </div>
                 </div>
@@ -116,7 +116,7 @@ export default function User() {
                                 </td>
                                 <td className="py-2 px-4 ">{user.name}</td>
                                 <td className="py-2 px-4 ">{user.surname}</td>
-                                <td className="py-2 px-4 ">{user.mobile}</td>
+                                <td className="py-2 px-4 ">{user.phone}</td>
                                 <td className="py-2 px-4 ">{user.username}</td>
                                 <td className="py-2 px-4 ">{user.email}</td>
 
@@ -186,7 +186,7 @@ export default function User() {
                                 </tr>
                                 <tr className='border-t'>
                                     <td className="px-4 py-2 text-brown font-bold">Mobile No.:</td>
-                                    <td className="px-4 py-2">{userData?.mobile}</td>
+                                    <td className="px-4 py-2">{userData?.phone}</td>
                                 </tr>
                                 <tr className='border-t'>
                                     <td className="px-4 py-2 text-brown font-bold">Username:</td>

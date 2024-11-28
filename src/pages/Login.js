@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../reduxe/slice/auth.slice';
+import session from 'redux-persist/es/storage/session';
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -17,13 +18,18 @@ export default function Login() {
         email: Yup.string().email('Invalid email address').required('Required'),
         password: Yup.string().required('Required'),
     });
-    const handleSubmit = (values,{resetForm}) => {
-        // Here you can make API call or perform any other logic
+    const handleSubmit = (values, { resetForm }) => {
         dispatch(login(values));
         resetForm();
         console.log('Form submitted:', values);
-        navigate('/dashboard');
     }
+
+    // Use an effect to navigate after the data is updated
+    useEffect(() => {
+        if (data) {
+            navigate('/dashboard');
+        }
+    }, [data, navigate]);
 
     return (
         <div>

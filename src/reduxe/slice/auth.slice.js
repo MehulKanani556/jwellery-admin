@@ -8,19 +8,26 @@ const handleErrors = (error, dispatch, rejectWithValue) => {
    
     return rejectWithValue(error.response?.data || { message: errorMessage });
 };
+const apiUrl = "http://127.0.0.1:8000/api";
 
 export const login = createAsyncThunk(
     'auth/login',
     async ({ email, password }, { dispatch, rejectWithValue }) => {
         try {
-            console.log("Login",email, password);
+            console.log("Login", email, password,apiUrl);
             
-            const response = await axios.post('/login', { email, password });
-            // console.log(" response.data.AccessToken", response.data.AccessToken);
-            // console.log(" response.data.refreshToken", response.data.refreshToken);
-            if (response.status === 200) {            
-                localStorage.setItem("id", response.data.user._id);
-                return response.data.AccessToken;
+            const response = await axios.post(`${apiUrl}/auth/login`, { email, password });
+            if (response.status == 200) {            
+                console.log(response)
+              
+                localStorage.setItem("userId", response.data.result.id);
+                sessionStorage.setItem("userId", response.data.result.id);
+                sessionStorage.setItem("token", response.data.result.access_token);
+                sessionStorage.setItem("email", response.data.result.email);
+                sessionStorage.setItem("role", response.data.result.role);
+                return response.data.result;
+            } else {
+                return rejectWithValue({ message: `Login failed with status: ${response.status}` });
             }
         } catch (error) {
             return handleErrors(error, dispatch, rejectWithValue);
@@ -34,7 +41,7 @@ export const forgotPassword = createAsyncThunk(
         try {
             console.log("forgot pass",email);
             sessionStorage.setItem('email', email)
-            const response = await axios.post('/forgot-password', { email });
+            const response = await axios.post(`${apiUrl}/password/email`, { email });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -46,10 +53,10 @@ export const forgotPassword = createAsyncThunk(
 
 export const verifyOtp = createAsyncThunk(
     'auth/verifyOtp',
-    async ({ email, otp }, { rejectWithValue }) => {
+    async ({ otp }, { rejectWithValue }) => {
         try {
-            console.log("Verifying",email,otp);
-            const response = await axios.post('/verify-otp', { email, otp });
+            console.log("Verifying",otp);
+            const response = await axios.post(`${apiUrl}/password/otp`, {  otp });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -61,10 +68,9 @@ export const verifyOtp = createAsyncThunk(
 
 export const resetPassword = createAsyncThunk(
     'auth/resetPassword',
-    async ({  password }, { rejectWithValue }) => {
+    async ({  otp,new_password,confirm_password }, { rejectWithValue }) => {
         try {
-            console.log("Resetting password",password);
-            const response = await axios.post('/reset-password', {  password });
+            const response = await axios.post(`${apiUrl}/password/reset/${otp}`, {  new_password,confirm_password });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -85,6 +91,7 @@ const authSlice = createSlice({
         error: null,
         loggedIn: false,
         isLoggedOut: false,
+        message:null
     },
     extraReducers: (builder) => {
         builder
@@ -111,6 +118,7 @@ const authSlice = createSlice({
             .addCase(forgotPassword.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null; // Clear any previous errors
+                state.message = action.payload;
                 // Handle success message if needed
             })
             .addCase(forgotPassword.rejected, (state, action) => {

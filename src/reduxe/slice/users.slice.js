@@ -8,13 +8,26 @@ const handleErrors = (error, dispatch, rejectWithValue) => {
 
     return rejectWithValue(error.response?.data || { message: errorMessage });
 };
+const apiUrl = "http://127.0.0.1:8000/api";
+getToken();
+
+
+async function getToken() {
+    const token = await sessionStorage.getItem("token");
+    return token;
+}
 
 export const deleteUser = createAsyncThunk(
     'auth/deleteUser',
     async ({userId}, { rejectWithValue }) => {
         try {
-            console.log("Deleting user with ID:", userId);
-            const response = await axios.delete(`/users/${userId}`);
+            const token = await getToken();
+            const response = await axios.delete(`${apiUrl}/user/delete/${userId}`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            console.log(response.data)
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -28,8 +41,13 @@ export const getAllUsers = createAsyncThunk(
     'auth/getAllUsers',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get('/users');
-            return response.data; // Assuming the API returns an array of users
+            const token = await getToken();
+            const response = await axios.get(`${apiUrl}/user/getall`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            return response.data.users; // Assuming the API returns an array of users
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
         }
@@ -93,7 +111,7 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.message = 'All users fetched successfully';
-                state.users = Array.isArray(action.payload) ? action.payload : [];
+                state.users =  action.payload   ;
             })
             .addCase(getAllUsers.rejected, (state, action) => {
                 state.loading = false;
