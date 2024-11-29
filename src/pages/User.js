@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Typography } from '@mui/material'
+import { Box, Button, Modal, Pagination, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
@@ -134,31 +134,28 @@ export default function User() {
                 </table>
             </div>
 
-            <div className="flex justify-end m-4">
-                <button
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                    className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-                >
-                    <MdKeyboardArrowLeft />
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-brown text-white' : 'bg-white text-brown border'}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                    className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-                >
-                    <MdKeyboardArrowRight />
-                </button>
-            </div>
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(event, page) => handlePageChange(page)}
+                variant="outlined"
+                shape="rounded"
+                className="flex justify-end m-4"
+                siblingCount={1} // Show one sibling page on each side
+                boundaryCount={1} // Show one boundary page at the start and end
+                sx={{
+                    '& .MuiPaginationItem-root': {
+                        color: 'text.primary', // Default color for pagination items
+                    },
+                    '& .MuiPaginationItem-root.Mui-selected': {
+                        backgroundColor: '#523b33', // Active page background color
+                        color: 'white', // Active page text color
+                    },
+                    '& .MuiPaginationItem-root:hover': {
+                        backgroundColor: 'lightgray', // Hover effect
+                    },
+                }}
+            />
 
             {/* view user */}
             <Modal

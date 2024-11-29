@@ -10,6 +10,7 @@ import Size from '../pages/Size'
 
 import Category from '../pages/Category'
 import SubCategory from '../pages/SubCategory'
+import Stock from '../pages/Stock'
 
 
 export default function AuthRoutes() {
@@ -22,6 +23,7 @@ export default function AuthRoutes() {
                     <Route path="/size" element={<Size />} />
                     <Route path="/category" element={<Category />} />
                     <Route path="/subcategory" element={<SubCategory />} />
+                    <Route path="/stoke" element={<Stock />} />
 
                 </Routes>
             </Layout>

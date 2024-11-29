@@ -67,7 +67,7 @@ function Layout({ children }) {
     { title: 'Subcategory', icon: <FaList />,path: '/subcategory' },
     { title: 'Product', icon: <BsFillBoxSeamFill /> },
     { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
-    { title: 'Stock', icon: <BsBoxFill />, path: '/' },
+    { title: 'Stock', icon: <BsBoxFill />, path: '/stoke' },
     { title: 'Cart', icon: <IoBagCheck />, path: '/' },
     { title: 'Orders', icon: <LuBoxes />, path: '/' },
     { title: 'Review', icon: <TbMessageStar />, path: '/'},

@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Typography } from '@mui/material'
+import { Box, Button, Modal, Pagination, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
@@ -29,7 +29,7 @@ export default function Size() {
         size: Yup.string().required('Size is required'),
     });
 
-    // Pagination state
+    // Pagination statecurrentItems
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Set items per page
 
@@ -79,7 +79,7 @@ export default function Size() {
         setAddOpen(false);
     }
     const handleDeleteSize = () => {
-        dispatch(deleteSize({id:sizeData.id}))
+        dispatch(deleteSize({ id: sizeData.id }))
         // dispatch(getAllUsers())
         setDelOpen(false);
     }
@@ -106,7 +106,7 @@ export default function Size() {
                 <div>
 
                     <div className="flex gap-4  mb-4">
-                        <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() =>{ setDelAllOpen(true)}}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
+                        <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                         <button className="bg-brown w-32 text-white px-4 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
                     </div>
                 </div>
@@ -123,7 +123,7 @@ export default function Size() {
                         </tr>
                     </thead>
                     <tbody>
-                        {size && size?.map((size, index) => (
+                        {currentItems && currentItems?.map((size, index) => (
                             <tr key={index} className="hover:bg-gray-100 border-t">
                                 <td className="py-2 px-4 ">{size.id}</td>
 
@@ -143,33 +143,28 @@ export default function Size() {
                     </tbody>
                 </table>
             </div>
-
-            <div className="flex justify-end m-4">
-                <button
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                    className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-                >
-                    <MdKeyboardArrowLeft />
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-brown text-white' : 'bg-white text-brown border'}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                    className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-                >
-                    <MdKeyboardArrowRight />
-                </button>
-            </div>
-
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(event, page) => handlePageChange(page)}
+                variant="outlined"
+                shape="rounded"
+                className="flex justify-end m-4"
+                siblingCount={1} // Show one sibling page on each side
+                boundaryCount={1} // Show one boundary page at the start and end
+                sx={{
+                    '& .MuiPaginationItem-root': {
+                        color: 'text.primary', // Default color for pagination items
+                    },
+                    '& .MuiPaginationItem-root.Mui-selected': {
+                        backgroundColor: '#523b33', // Active page background color
+                        color: 'white', // Active page text color
+                    },
+                    '& .MuiPaginationItem-root:hover': {
+                        backgroundColor: 'lightgray', // Hover effect
+                    },
+                }}
+            />
 
             {/* Add Size */}
             <Modal
@@ -248,7 +243,7 @@ export default function Size() {
                     </p>
                     <div>
                         <Formik
-                            initialValues={{ id:sizeData.id || '',name: sizeData.name || '', size: sizeData.size || '' }}
+                            initialValues={{ id: sizeData.id || '', name: sizeData.name || '', size: sizeData.size || '' }}
                             validationSchema={validationSchema}
                             onSubmit={(values, { resetForm }) => {
                                 dispatch(editSize(values));
@@ -326,7 +321,7 @@ export default function Size() {
             {/* Delete All Size */}
             <Modal
                 open={delAllOpen}
-                onClose={() =>setDelAllOpen(false)}
+                onClose={() => setDelAllOpen(false)}
 
             >
                 <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
@@ -339,7 +334,7 @@ export default function Size() {
                                 size?</p>
                         </div>
                         <div className='flex flex-wrap gap-3 mt-4'>
-                            <button onClick={()=>setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
+                            <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                             <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                         </div>
 
