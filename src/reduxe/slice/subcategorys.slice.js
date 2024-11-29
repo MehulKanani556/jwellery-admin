@@ -1,29 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import sessionStorage from "redux-persist/es/storage/session";
-import { BASE_URL } from "../../utils/BaseUrl";
+import axiosInstance from "../../utils/axiosInstance";
 
-// Create an Axios instance
-const axiosInstance = axios.create();
-
-async function getToken() {
-  const token = await sessionStorage.getItem("token");
-  return token;
-}
-// Add a request interceptor to include the token
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
-    const token =await getToken(); // Retrieve the token from session storage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
   const errorMessage = error.response?.data?.message || "An error occurred";
@@ -35,7 +13,7 @@ export const getAllSubCategory = createAsyncThunk(
   "/getAllSubCategory",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/subcategories/getall`);
+      const response = await axiosInstance.get(`/subcategories/getall`);
       console.log(response);
       
       return response.data.subCategories; // Assuming the API returns an array of users
@@ -49,7 +27,7 @@ export const getSingleSubCategory = createAsyncThunk(
   "/getSingleSubCategory",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/subcategories/get/${id}`);
+      const response = await axiosInstance.get(`/subcategories/get/${id}`);
       return response.data.subCategories; // Assuming the API returns the user object
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -61,7 +39,7 @@ export const addSubCategory = createAsyncThunk(
   "/addSubCategory",
   async ({ name }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/subcategories/create`, { name });
+      const response = await axiosInstance.post(`/subcategories/create`, { name });
       if (response.status === 200) {
         console.log(response);
         return response.data.subCategories; // Assuming the API returns a success message
@@ -78,7 +56,7 @@ export const editSubCategory = createAsyncThunk(
       console.log(data);
       
       try {
-        const response = await axiosInstance.post(`${BASE_URL}/subcategories/update/${data.id}`, { name:data.name });
+        const response = await axiosInstance.post(`/subcategories/update/${data.id}`, { name:data.name });
         if (response.status === 200) {
           console.log(response);
           
@@ -95,7 +73,7 @@ export const deleteSubCategory = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       console.log("Deleting user with ID:", id);
-      const response = await axiosInstance.delete(`${BASE_URL}/subcategories/delete/${id}`);
+      const response = await axiosInstance.delete(`/subcategories/delete/${id}`);
       if (response.status === 200) {
         return id; // Assuming the API returns a success message
       }
@@ -109,7 +87,7 @@ export const deleteAllSubCategory = createAsyncThunk(
   "/deleteAllSubCategory",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`${BASE_URL}/subcategories/delete`); // Assuming the API supports deleting all users
+      const response = await axiosInstance.delete(`/subcategories/delete`); // Assuming the API supports deleting all users
       return response.data; // Assuming the API returns a success message
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -121,7 +99,7 @@ export const updateStatusSubCategory = createAsyncThunk(
   "/updateStatusSubCategory",
   async ({ id,status }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/subcategories/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
+      const response = await axiosInstance.post(`/subcategories/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
       console.log(response);
       
       return response.data.subCategories; // Assuming the API returns a success message

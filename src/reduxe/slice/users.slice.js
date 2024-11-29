@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sessionStorage from 'redux-persist/es/storage/session';
+import axiosInstance from '../../utils/axiosInstance';
 
 
 
@@ -10,25 +11,13 @@ const handleErrors = (error, dispatch, rejectWithValue) => {
 
     return rejectWithValue(error.response?.data || { message: errorMessage });
 };
-const apiUrl = "http://127.0.0.1:8000/api";
-getToken();
-
-
-async function getToken() {
-    const token = await sessionStorage.getItem("token");
-    return token;
-}
 
 export const deleteUser = createAsyncThunk(
     'auth/deleteUser',
     async ({userId}, { rejectWithValue }) => {
         try {
-            const token = await getToken();
-            const response = await axios.delete(`${apiUrl}/user/delete/${userId}`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+           
+            const response = await axiosInstance.delete(`/user/delete/${userId}`);
             console.log(response.data)
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
@@ -43,12 +32,8 @@ export const getAllUsers = createAsyncThunk(
     'auth/getAllUsers',
     async (_, { rejectWithValue }) => {
         try {
-            const token = await getToken();
-            const response = await axios.get(`${apiUrl}/user/getall`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+           
+            const response = await axiosInstance.get(`/user/getall`);
             return response.data.users; // Assuming the API returns an array of users
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
@@ -60,7 +45,7 @@ export const getSingleUser = createAsyncThunk(
     'auth/getSingleUser',
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`/users/${userId}`);
+            const response = await axiosInstance.get(`/users/${userId}`);
             return response.data; // Assuming the API returns the user object
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
@@ -72,7 +57,7 @@ export const deleteAllUsers = createAsyncThunk(
     'auth/deleteAllUsers',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.delete('/users'); // Assuming the API supports deleting all users
+            const response = await axiosInstance.delete('/users'); // Assuming the API supports deleting all users
             return response.data.message; // Assuming the API returns a success message
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);

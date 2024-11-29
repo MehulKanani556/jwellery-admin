@@ -1,28 +1,31 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import sessionStorage from "redux-persist/es/storage/session";
-import { BASE_URL } from "../../utils/BaseUrl";
+import axiosInstance from "../../utils/axiosInstance";
+// import { BASE_URL } from "../../utils/BaseUrl";
 
-// Create an Axios instance
-const axiosInstance = axios.create();
-async function getToken() {
-  const token = await sessionStorage.getItem("token");
-  return token;
-}
-// Add a request interceptor to include the token
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
-    const token =await getToken();// Retrieve the token from session storage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// // Create an Axios instance
+// const axiosInstance = axios.create();
+// async function getToken() {
+//   const token = await sessionStorage.getItem("token");
+//   return token;
+// }
+// // Add a request interceptor to include the token
+// axiosInstance.interceptors.request.use(
+//   async (config) => {
+//     // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
+//     const token =await getToken();// Retrieve the token from session storage
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
   const errorMessage = error.response?.data?.message || "An error occurred";
@@ -34,7 +37,7 @@ export const getAllCategory = createAsyncThunk(
   "/getAllCategory",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/categories/getall`);
+      const response = await axiosInstance.get(`/categories/getall`);
       console.log(response);
       
       return response.data.categories; // Assuming the API returns an array of users
@@ -48,7 +51,7 @@ export const getSingleCategory = createAsyncThunk(
   "/getSingleCategory",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/users/${id}`);
+      const response = await axiosInstance.get(`/users/${id}`);
       return response.data; // Assuming the API returns the user object
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -60,7 +63,7 @@ export const addCategory = createAsyncThunk(
   "/addCategory",
   async ({ name }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/categories/create`, { name });
+      const response = await axiosInstance.post(`/categories/create`, { name });
       if (response.status === 200) {
         console.log(response);
         return response.data.category; // Assuming the API returns a success message
@@ -77,7 +80,7 @@ export const editCategory = createAsyncThunk(
       console.log(data);
       
       try {
-        const response = await axiosInstance.post(`${BASE_URL}/categories/update/${data.id}`, { name:data.name });
+        const response = await axiosInstance.post(`/categories/update/${data.id}`, { name:data.name });
         if (response.status === 200) {
           console.log(response);
           
@@ -94,7 +97,7 @@ export const deleteCategory = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       console.log("Deleting user with ID:", id);
-      const response = await axiosInstance.delete(`${BASE_URL}/categories/delete/${id}`);
+      const response = await axiosInstance.delete(`/categories/delete/${id}`);
       if (response.status === 200) {
         return id; // Assuming the API returns a success message
       }
@@ -108,7 +111,7 @@ export const deleteAllCategory = createAsyncThunk(
   "/deleteAllCategory",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`${BASE_URL}/categories/delete`); // Assuming the API supports deleting all users
+      const response = await axiosInstance.delete(`/categories/delete`); // Assuming the API supports deleting all users
       return response.data; // Assuming the API returns a success message
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -120,7 +123,7 @@ export const updateStatusCategory = createAsyncThunk(
   "/updateStatusCategory",
   async ({ id,status }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/categories/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
+      const response = await axiosInstance.post(`/categories/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
       console.log(response);
       
       return response.data.category; // Assuming the API returns a success message

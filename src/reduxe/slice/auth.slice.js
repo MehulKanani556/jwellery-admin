@@ -1,22 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sessionStorage from 'redux-persist/es/storage/session';
-
+import { BASE_URL } from '../../utils/BaseUrl';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
    
     return rejectWithValue(error.response?.data || { message: errorMessage });
 };
-const apiUrl = "http://127.0.0.1:8000/api";
 
 export const login = createAsyncThunk(
     'auth/login',
     async ({ email, password }, { dispatch, rejectWithValue }) => {
         try {
-            console.log("Login", email, password,apiUrl);
+           
             
-            const response = await axios.post(`${apiUrl}/auth/login`, { email, password });
+            const response = await axios.post(`${BASE_URL}/auth/login`, { email, password });
             if (response.status == 200) {            
                 console.log(response)
               
@@ -39,9 +38,8 @@ export const forgotPassword = createAsyncThunk(
     'auth/forgotPassword',
     async ({email}, { rejectWithValue }) => {
         try {
-            console.log("forgot pass",email);
             sessionStorage.setItem('email', email)
-            const response = await axios.post(`${apiUrl}/password/email`, { email });
+            const response = await axios.post(`${BASE_URL}/password/email`, { email });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -55,8 +53,7 @@ export const verifyOtp = createAsyncThunk(
     'auth/verifyOtp',
     async ({ otp }, { rejectWithValue }) => {
         try {
-            console.log("Verifying",otp);
-            const response = await axios.post(`${apiUrl}/password/otp`, {  otp });
+            const response = await axios.post(`${BASE_URL}/password/otp`, {  otp });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
@@ -70,7 +67,7 @@ export const resetPassword = createAsyncThunk(
     'auth/resetPassword',
     async ({  otp,new_password,confirm_password }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${apiUrl}/password/reset/${otp}`, {  new_password,confirm_password });
+            const response = await axios.post(`${BASE_URL}/password/reset/${otp}`, {  new_password,confirm_password });
             if (response.status === 200) {
                 return response.data.message; // Assuming the API returns a success message
             }
