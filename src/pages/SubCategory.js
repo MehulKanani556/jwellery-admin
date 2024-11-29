@@ -1,5 +1,13 @@
-import { Box, Button, Modal, Typography, Select, MenuItem } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Modal,
+  Typography,
+  Select,
+  MenuItem,
+  Divider,
+} from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { BsFillEyeFill } from "react-icons/bs";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -9,59 +17,110 @@ import { RxCross2 } from "react-icons/rx";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAllUsers, deleteUser } from "../reduxe/slice/users.slice";
-import { addCategory, deleteCategory, editCategory, getAllCategory, updateStatusCategory } from "../reduxe/slice/catagorys.slice";
-import { getAllSubCategory } from "../reduxe/slice/subcategorys.slice";
+import {
+  addCategory,
+  deleteCategory,
+  editCategory,
+  getAllCategory,
+  updateStatusCategory,
+} from "../reduxe/slice/catagorys.slice";
+import {
+  addSubCategory,
+  deleteAllSubCategory,
+  deleteSubCategory,
+  editSubCategory,
+  getAllSubCategory,
+  updateStatusSubCategory,
+} from "../reduxe/slice/subcategorys.slice";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import Pagination from "@mui/material/Pagination";
+import Menu from "@mui/material/Menu";
+import { FaFilter } from "react-icons/fa";
+// import MenuItem from '@mui/material/MenuItem';
 
 export default function SubCategory() {
-  const [categoryData, setCategoryData] = useState('');
-  const [open, setOpen] = useState(false);
+  const [subCategoryData, setSubCategoryData] = useState("");
   const [delOpen, setDelOpen] = useState(false);
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [categoryname, setCategoryname] = useState();
-  const [image,setImage] = useState();
+  const [image, setImage] = useState();
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
-console.log(category);
+  console.log(category);
 
+  const fileInputRef = useRef(null);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [filtersApplied, setFiltersApplied] = useState(false);
+  const [filterSubCategory , setFilterSubCategory] = useState(subcategory);
+
+  useEffect(() => {
+    dispatch(getAllCategory());
+    dispatch(getAllSubCategory());
+  }, []);
 
   useEffect(()=>{
-    dispatch(getAllCategory())
-    dispatch(getAllSubCategory())
-  },[])
+    setFilterSubCategory(subcategory)
+  },[subcategory]);
 
-  // const data = [
-  //   { id: "001", name: "Item 1", active: true },
-  //   { id: "002", name: "Item 2", active: false },
-  //   { id: "003", name: "Item 3", active: true },
-  //   { id: "004", name: "Item 4", active: false },
-  //   { id: "005", name: "Item 5", active: true },
-  //   { id: "006", name: "Item 6", active: true },
-  //   { id: "007", name: "Item 7", active: false },
-  //   { id: "008", name: "Item 8", active: true },
-  //   { id: "009", name: "Item 9", active: false },
-  //   { id: "010", name: "Item 10", active: true },
-  //   { id: "011", name: "Item 11", active: true },
-  //   { id: "012", name: "Item 12", active: false },
-  //   { id: "013", name: "Item 13", active: true },
-  //   { id: "014", name: "Item 14", active: true },
-  //   { id: "015", name: "Item 15", active: false },
-  // ];
+  // ======filter=====
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-//   const [category, setCategory] = useState(data)
-
-  // Pagination state
+  //  =====pagination start=====
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Set items per page
 
   // Calculate total pages
-  const totalPages = Math.ceil(subcategory.length / itemsPerPage);
+  const totalPages = Math.ceil(filterSubCategory.length / itemsPerPage);
 
   // Get current items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = subcategory.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Handle filter application
+  const handleApplyFilter = () => {
+    setFiltersApplied(true);
+    console.log(selectedCategory, selectedStatus);
+    
+    const filteredItems = subcategory.filter((item) => {
+        const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
+        const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
+        
+        return matchesCategory && matchesStatus;
+    });
+
+    handleClose();
+    setFilterSubCategory(filteredItems);
+  };
+
+  // Handle reset filters
+  const handleResetFilters = () => {
+    setSelectedCategory("");
+    setSelectedStatus("");
+    setCurrentPage(1); // Reset to the first page
+    setFiltersApplied(false);
+    setFilterSubCategory(subcategory);
+  };
+
+  // // Get current items with filtering
+  // const filteredItems = subcategory.filter((item) => {
+  //   const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
+  //   const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
+  //   return matchesCategory && matchesStatus;
+  // });
+
+  // Get current items based on filtered items
+  const currentItems = filterSubCategory.slice(indexOfFirstItem, indexOfLastItem);
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -81,69 +140,178 @@ console.log(category);
     }
   };
 
+  // =====pagination end=====
+
   const handleOpen = (data) => {
-    setCreateopen(true)
-    console.log(data);
-    
-    setCategoryData(data);
-    setCategoryname(data.name)
+    setCreateopen(true);
+    setSubCategoryData(data);
   };
 
   const handleDeleteOpen = (data) => {
     setDelOpen(true);
-    setCategoryData(data);
+    setSubCategoryData(data);
   };
   const handleDeleteClose = () => {
     setDelOpen(false);
   };
   const handleDeleteCategory = () => {
-    console.log("Delete cat", categoryData);
-    dispatch(deleteCategory({ id: categoryData.id }));
+    console.log("Delete cat", subCategoryData);
+    dispatch(deleteSubCategory({ id: subCategoryData.id }));
     setDelOpen(false);
   };
   const handleDeleteAll = () => {
     console.log("Delete All User ");
-    dispatch(deleteAllUsers());
+    dispatch(deleteAllSubCategory());
   };
 
   const handleCreateClose = () => {
-    setCreateopen(false)
-    setCategoryname('');
-    setCategoryData('');
-  }
+    setCreateopen(false);
+    setSubCategoryData("");
+  };
 
-  const handlecreatedCategory = () => {
-    dispatch(addCategory({name:categoryname}));
-    handleCreateClose();
-    setCategoryname('');
-    setCategoryData('');
-  }
+  const handlecreatedCategory = (values) => {
+    // Ensure the image is included in the values
+    const formData = new FormData();
+    formData.append("category_id", values.category_id);
+    formData.append("name", values.name);
+    formData.append("image", values.image); // Ensure the image is included
 
-  const handleUpdateCategory = () => {
-    const data = { id: categoryData.id, name: categoryname};
-    console.log(data);
-    
-    dispatch(editCategory({data}));
+    dispatch(addSubCategory(formData)); // Dispatch the formData
     handleCreateClose();
-    setCategoryname('');
-    setCategoryData('');
-  }
+    setSubCategoryData("");
+  };
+
+  const handleUpdateCategory = (values) => {
+    const formData = new FormData();
+
+    formData.append("id", subCategoryData.id);
+    formData.append("name", values.name);
+    formData.append("category_id", values.category_id);
+
+    // Ensure the image is included if it has been changed
+    if (values.image) {
+      formData.append("image", values.image);
+    }
+
+    console.log("sdsd", formData, values);
+
+    dispatch(editSubCategory(formData)); // Dispatch the formData
+    handleCreateClose();
+    setSubCategoryData("");
+  };
 
   const handleToggle = (data) => {
-   const  status =  data.status == 'active'? 'inactive' : 'active'
-   dispatch(updateStatusCategory({id:data.id,status:status}))
+    const status = data.status == "active" ? "inactive" : "active";
+    dispatch(updateStatusSubCategory({ id: data.id, status: status }));
   };
+
+  // Validation schema
+  const validationSchema = Yup.object().shape({
+    category_id: Yup.string().required("Category is required"),
+    name: Yup.string().required("Sub Category Name is required"),
+    image: Yup.mixed().required("Image is required"),
+  });
+
   return (
     <div className=" md:mx-[20px] p-4 ">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-brown">SubCategory </h1>
           <p className="text-brown-50">
-            Dashboard / <span className="text-brown font-medium">SubCategory</span>
+            Dashboard /{" "}
+            <span className="text-brown font-medium">SubCategory</span>
           </p>
         </div>
         <div>
           <div className="flex gap-4  mb-4">
+            {filtersApplied ? (
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                className="text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <span>
+                  <FaFilter />
+                </span>
+                <span>Filter</span>
+              </button>
+            )}
+            {/* ====== */}
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+              PaperProps={{
+                style: { width: "300px" },
+              }}
+            >
+              <div className="">
+                <div className="border-b-2">
+                  <p className="text-brown font-bold text-xl p-3">Filter</p>
+                </div>
+                <div className="mt-1 p-3">
+                  <label className="text-brown font-bold">Category</label>
+                  <select
+                    name="category_id"
+                    className="border border-brown rounded w-full p-3 mt-1"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    <option value="">Select Category</option>
+                    {category.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="text-brown font-bold mt-4">Status</label>
+                  <select
+                    name="name"
+                    className="border border-brown rounded w-full p-3 mt-1"
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                  >
+                    <option value="">Select status</option>
+                    <option value="inactive">InActive</option>
+                    <option value="active">Active</option>
+                  </select>
+                </div>
+                <div className="flex justify-center gap-8 mt-2 p-3">
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="text-brown w-36 border-brown border px-5 py-2 rounded"
+                  >
+                    Reset Filters
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleApplyFilter}
+                    className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            </Menu>
+
+            {/* ===== */}
+
             <button
               className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
               onClick={handleDeleteAll}
@@ -153,10 +321,14 @@ console.log(category);
               </span>
               <span>Delete All</span>
             </button>
-            <button className="bg-brown w-32 text-white px-4 py-2 rounded" onClick={() => setCreateopen(true)}>+ Add</button>
+            <button
+              className="bg-brown w-32 text-white px-4 py-2 rounded"
+              onClick={() => setCreateopen(true)}
+            >
+              + Add
+            </button>
           </div>
         </div>
-
       </div>
       <div className="overflow-auto shadow mt-5 rounded">
         <table className="w-full bg-white">
@@ -173,10 +345,14 @@ console.log(category);
             {currentItems.map((v, index) => (
               <tr key={index} className="hover:bg-gray-100 border-t">
                 <td className="py-2 px-5">{v.id}</td>
-                <td className="py-2 px-5">{v.category_id}</td>
+                <td className="py-2 px-5">{v.category_name}</td>
                 <td className="py-2 px-5 flex align-middle">
-                <img src={v.image} alt="User" className="w-10 h-10 rounded-full mr-2" />
-                    {v.name}
+                  <img
+                    src={v.image}
+                    alt="User"
+                    className="w-10 h-10 rounded-full mr-2"
+                  />
+                  {v.name}
                 </td>
                 <td className="py-2 px-5">
                   <label className="inline-flex items-center cursor-pointer">
@@ -186,8 +362,18 @@ console.log(category);
                       onChange={() => handleToggle(v)}
                       className="sr-only peer"
                     />
-                    <div className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == 'active' ? 'bg-[#523C34]' : 'bg-gray-500'}`}>
-                      <div className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${v.status == 'active' ? 'translate-x-[13px] bg-white' : 'bg-white'}`}></div>
+                    <div
+                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${
+                        v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
+                      }`}
+                    >
+                      <div
+                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${
+                          v.status == "active"
+                            ? "translate-x-[13px] bg-white"
+                            : "bg-white"
+                        }`}
+                      ></div>
                     </div>
                   </label>
                 </td>
@@ -215,116 +401,209 @@ console.log(category);
         </table>
       </div>
 
-      <div className="flex justify-end m-4">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-          className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-        >
-          <MdKeyboardArrowLeft />
-        </button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
-              ? "bg-brown text-white"
-              : "bg-white text-brown border"
-              }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-        >
-          <MdKeyboardArrowRight />
-        </button>
-      </div>
-
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={(event, page) => handlePageChange(page)}
+        variant="outlined"
+        shape="rounded"
+        className="flex justify-end m-4"
+        siblingCount={1} // Show one sibling page on each side
+        boundaryCount={1} // Show one boundary page at the start and end
+        sx={{
+          "& .MuiPaginationItem-root": {
+            color: "text.primary", // Default color for pagination items
+          },
+          "& .MuiPaginationItem-root.Mui-selected": {
+            backgroundColor: "#523b33", // Active page background color
+            color: "white", // Active page text color
+          },
+          "& .MuiPaginationItem-root:hover": {
+            backgroundColor: "lightgray", // Hover effect
+          },
+        }}
+      />
 
       {/* create & update category */}
       <Modal open={createopen} onClose={handleCreateClose}>
         <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded max-w-[500px] w-[100%]">
           <div className="p-5">
             <div className="text-center">
-              <p className="text-brown font-bold text-xl">{categoryData ? "Edit" : "Add"} Sub Category</p>
+              <p className="text-brown font-bold text-xl">
+                {subCategoryData ? "Edit" : "Add"} Sub Category
+              </p>
             </div>
-            <div className="mt-10">
-              <label className="text-brown font-bold">Category</label>
-              <select
-                value={categoryData ? categoryData.category_id : ""}
-                onChange={(e) => setCategoryData({ ...categoryData, category_id: e.target.value })}
-                className="border border-brown rounded w-full p-3 mt-1"
-              >
-                <option>Select Category</option>
-                {category.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-                
-              <label className="text-brown font-bold mt-4">Sub Category Name</label>
-              <input
-                type="text"
-                placeholder={categoryData ? categoryData.name : "Enter Sub Category Name"}
-                value={categoryname}
-                className="border border-brown rounded w-full p-2 mt-1"
-                onChange={(e) => setCategoryname(e.target.value)}
-              />
+            <Formik
+              initialValues={{
+                category_id: subCategoryData ? subCategoryData.category_id : "",
+                name: subCategoryData ? subCategoryData.name : "",
+                image:
+                  subCategoryData && subCategoryData.image
+                    ? subCategoryData.image
+                    : null,
+                id: subCategoryData ? subCategoryData.id : "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={(values) => {
+                if (subCategoryData) {
+                  console.log("sdsvdgsd", values);
 
-              <label className="text-brown font-bold mt-4">Image</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])}
-                className="border border-brown rounded w-full p-2 mt-1"
-              />
-            </div>
-            <div className="flex justify-center gap-8 mt-10">
-              <button
-                onClick={handleCreateClose}
-                className="text-brown w-36 border-brown border px-5 py-2 rounded"
-              >
-                Cancel
-              </button>
-              {categoryData ? 
-              ( <button
-               onClick={handleUpdateCategory}
-               className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-             >
-               Update
-             </button> ):(
-                 <button
-                 onClick={handlecreatedCategory}
-                 className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-               >
-                 Add
-               </button>
-             )}
-            </div>
+                  handleUpdateCategory(values); // Pass values to update function
+                } else {
+                  handlecreatedCategory(values); // Pass values to create function
+                }
+                handleCreateClose();
+              }}
+            >
+              {({ setFieldValue, values }) => (
+                <Form>
+                  {console.log(subCategoryData)}
+                  <div className="mt-10">
+                    <label className="text-brown font-bold">Category</label>
+                    <Field
+                      as="select"
+                      name="category_id"
+                      className="border border-brown rounded w-full p-3 mt-1"
+                    >
+                      <option value="">Select Category</option>
+                      {category.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage
+                      name="category_id"
+                      component="div"
+                      className="text-red-500"
+                    />
+
+                    <label className="text-brown font-bold mt-4">
+                      Sub Category Name
+                    </label>
+                    <Field
+                      type="text"
+                      name="name"
+                      placeholder="Enter Sub Category Name"
+                      className="border border-brown rounded w-full p-2 mt-1"
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-red-500"
+                    />
+
+                    <label className="text-brown font-bold mt-4">Image</label>
+                    <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
+                      {values.image ? (
+                        <>
+                          <div className="flex items-center bg-[#72727226] px-2 py-1">
+                            {typeof values.image === "string" ? (
+                              <img
+                                src={values.image}
+                                alt="Preview"
+                                className="w-8 h-8 rounded-full mr-2"
+                              />
+                            ) : (
+                              <img
+                                src={URL.createObjectURL(values.image)}
+                                alt="Preview"
+                                className="w-8 h-8 rounded-full mr-2"
+                              />
+                            )}
+                            <span className="flex-1">
+                              {typeof values.image === "string"
+                                ? values.image.split("/").pop()
+                                : values.image.name}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setFieldValue("image", null)} // Clear the image
+                              className="text-red-500 ml-1"
+                            >
+                              X
+                            </button>
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                              setFieldValue("image", e.target.files[0]);
+                            }}
+                            className="hidden"
+                            id="file-upload"
+                          />
+                          <label
+                            htmlFor="file-upload"
+                            className="cursor-pointer text-center bg-brown text-white rounded p-[5px] px-3 text-[13px]"
+                          >
+                            Change
+                          </label>
+                        </>
+                      ) : (
+                        <>
+                          <p className="flex-1 text-[16px] text-[#727272]">
+                            Choose Image
+                          </p>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                              setFieldValue("image", e.target.files[0]);
+                            }}
+                            className="hidden"
+                            id="file-upload"
+                          />
+                          <label
+                            htmlFor="file-upload"
+                            className="cursor-pointer text-center bg-brown text-white rounded p-1 px-2 text-[13px]"
+                          >
+                            Browse
+                          </label>
+                        </>
+                      )}
+                    </div>
+                    <ErrorMessage
+                      name="image"
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+                  <div className="flex justify-center gap-8 mt-10">
+                    <button
+                      type="button"
+                      onClick={handleCreateClose}
+                      className="text-brown w-36 border-brown border px-5 py-2 rounded"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
+                    >
+                      {subCategoryData ? "Edit" : "Add"}
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </Box>
       </Modal>
 
-
-      
-
-
       {/* Delete category */}
       <Modal open={delOpen} onClose={handleDeleteClose}>
-        <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-          <div className="  p-5">
+        <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+          <div className="p-5">
             <div className="text-center">
-              <p className="text-brown font-bold text-xl">Delete Category</p>
+              <p className="text-brown font-bold text-xl">Delete SubCategory</p>
               <p className="text-brown-50">
-                Are you sure you want to delete Category?
+                Are you sure you want to delete SubCategory?
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 mt-4">
+            <div className="flex flex-wrap gap-3 mt-4 justify-center">
               <button
                 onClick={handleDeleteClose}
                 className="text-brown w-32 border-brown border px-4 py-2 rounded"

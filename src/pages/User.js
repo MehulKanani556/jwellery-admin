@@ -15,6 +15,8 @@ export default function User() {
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const data = useSelector(state =>state.users.users);
+    console.log(data);
+    
     useEffect(()=>{
         dispatch(getAllUsers())
     },[]);

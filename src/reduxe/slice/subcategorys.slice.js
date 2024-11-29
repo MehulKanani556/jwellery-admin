@@ -15,7 +15,7 @@ export const getAllSubCategory = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/subcategories/getall`);
       console.log(response);
-      
+
       return response.data.subCategories; // Assuming the API returns an array of users
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -28,7 +28,7 @@ export const getSingleSubCategory = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/subcategories/get/${id}`);
-      return response.data.subCategories; // Assuming the API returns the user object
+      return response.data.subCategory; // Assuming the API returns the user object
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
     }
@@ -37,12 +37,13 @@ export const getSingleSubCategory = createAsyncThunk(
 
 export const addSubCategory = createAsyncThunk(
   "/addSubCategory",
-  async ({ name }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
+    console.log(data);
     try {
-      const response = await axiosInstance.post(`/subcategories/create`, { name });
+      const response = await axiosInstance.post(`/subcategories/create`, data);
       if (response.status === 200) {
         console.log(response);
-        return response.data.subCategories; // Assuming the API returns a success message
+        return response.data.subCategory; // Assuming the API returns a success message
       }
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
@@ -51,22 +52,22 @@ export const addSubCategory = createAsyncThunk(
 );
 
 export const editSubCategory = createAsyncThunk(
-    "/editSubCategory",
-    async ({ data }, { rejectWithValue }) => {
-      console.log(data);
-      
-      try {
-        const response = await axiosInstance.post(`/subcategories/update/${data.id}`, { name:data.name });
-        if (response.status === 200) {
-          console.log(response);
-          
-          return response.data.subCategories; // Assuming the API returns a success message
-        }
-      } catch (error) {
-        return handleErrors(error, null, rejectWithValue);
+  "/editSubCategory",
+  async (values, { rejectWithValue }) => {
+    console.log(values);
+
+    try {
+      const response = await axiosInstance.post(`/subcategories/update/${values.get('id')}`, values);
+      if (response.status === 200) {
+        console.log(response);
+
+        return response.data.subCategory; // Assuming the API returns a success message
       }
+    } catch (error) {
+      return handleErrors(error, null, rejectWithValue);
     }
-  );
+  }
+);
 
 export const deleteSubCategory = createAsyncThunk(
   "/deleteSubCategory",
@@ -97,12 +98,12 @@ export const deleteAllSubCategory = createAsyncThunk(
 
 export const updateStatusSubCategory = createAsyncThunk(
   "/updateStatusSubCategory",
-  async ({ id,status }, { rejectWithValue }) => {
+  async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/subcategories/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
-      console.log(response);
-      
-      return response.data.subCategories; // Assuming the API returns a success message
+      console.log(response.data.subCategory.status);
+
+      return response.data.subCategory; // Assuming the API returns a success message
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
     }
@@ -120,7 +121,7 @@ const subcategorysSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    // getAllSubCategory
+      // getAllSubCategory
       .addCase(getAllSubCategory.pending, (state) => {
         state.loading = true;
         state.message = "Data is being fetched";
@@ -136,7 +137,7 @@ const subcategorysSlice = createSlice({
         state.success = false;
         state.message = action.payload?.message || "Failed to Data fetched";
       })
-    //   getSingleSubCategory
+      //   getSingleSubCategory
       .addCase(getSingleSubCategory.pending, (state) => {
         state.loading = true;
         state.message = "Data is being fetched";
@@ -152,7 +153,7 @@ const subcategorysSlice = createSlice({
         state.success = false;
         state.message = action.payload?.message || "Failed to Data fetched";
       })
-    //   addSubCategory
+      //   addSubCategory
       .addCase(addSubCategory.pending, (state) => {
         state.loading = true;
         state.message = "Data is being fetched";
@@ -168,7 +169,7 @@ const subcategorysSlice = createSlice({
         state.success = false;
         state.message = action.payload?.message || "Failed to Data fetched";
       })
-    //   deleteSubCategory
+      //   deleteSubCategory
       .addCase(deleteSubCategory.pending, (state) => {
         state.loading = true;
         state.message = "Deleting SubCategory...";
@@ -184,7 +185,7 @@ const subcategorysSlice = createSlice({
         state.success = false;
         state.message = action.payload?.message || "Failed to delete SubCategory";
       })
-    //   editSubCategory
+      //   editSubCategory
       .addCase(editSubCategory.pending, (state) => {
         state.loading = true;
         state.message = "Update SubCategory...";
@@ -192,7 +193,7 @@ const subcategorysSlice = createSlice({
       .addCase(editSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? action.payload  :  v);
+        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? {...v, ...action.payload} : v);
         state.message = action.payload?.message || "Update successfully";
       })
       .addCase(editSubCategory.rejected, (state, action) => {
@@ -200,7 +201,7 @@ const subcategorysSlice = createSlice({
         state.success = false;
         state.message = action.payload?.message || "Failed to delete SubCategory";
       })
-    //   deleteAllSubCategory
+      //   deleteAllSubCategory
 
       .addCase(deleteAllSubCategory.pending, (state) => {
         state.loading = true;
@@ -209,7 +210,7 @@ const subcategorysSlice = createSlice({
       .addCase(deleteAllSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.SubCategory = []; 
+        state.SubCategory = [];
         state.message = action.payload || "All SubCategory deleted successfully";
       })
       .addCase(deleteAllSubCategory.rejected, (state, action) => {
@@ -226,7 +227,7 @@ const subcategorysSlice = createSlice({
       .addCase(updateStatusSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? action.payload  :  v);
+        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? {...v, status:action.payload.status} : v);
         state.message = action.payload?.message || "Update successfully";
       })
       .addCase(updateStatusSubCategory.rejected, (state, action) => {
