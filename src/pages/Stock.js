@@ -24,7 +24,7 @@ export default function Stoke() {
     const { SubCategory } = useSelector(state => state.subcategorys);
     const { products } = useSelector(state => state.products);
     const [filteredItems, setFilteredItems] = useState(stocks);
-  
+    const [filtersApplied, setFiltersApplied] = useState(false);
     useEffect(() => {
         // Fetch stocks and other data on component mount
         const fetchData = async () => {
@@ -114,6 +114,7 @@ export default function Stoke() {
     };
 
     const handleApplyFilter = (values) => {
+        setFiltersApplied(true);
         const { date, status } = values;
         console.log(date, status);
         // Filter stocks based on selected date and status
@@ -127,7 +128,14 @@ export default function Stoke() {
         setFilteredItems(filteredStocks);
         handleClose();
     };
+    const handleResetFilters = () => {
 
+        setCurrentPage(1); // Reset to the first page
+        setFiltersApplied(false);
+        setFilteredItems(stocks);
+        handleClose();
+
+    };
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -151,19 +159,32 @@ export default function Stoke() {
                         {/* <button className=" text-brown w-32 border-brown border px-3 py-2 rounded flex justify-center items-center gap-2" onClick={handleFilterOpen}>
                             <span><RiFilter2Fill /></span><span>Filter</span>
                         </button> */}
-                        <button
-                            className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            id="basic-button"
-                            aria-controls={open ? "basic-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
-                        >
-                            <span>
-                                <FaFilter />
-                            </span>
-                            <span>Filter</span>
-                        </button>
+                        {
+                            filtersApplied ? (
+                                <button
+                                    type="button"
+                                    onClick={handleResetFilters}
+                                    className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                                >
+                                    Cancel
+                                </button>
+                            ) : (
+                                <button
+                                    className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                                    id="basic-button"
+                                    aria-controls={open ? "basic-menu" : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? "true" : undefined}
+                                    onClick={handleClick}
+                                >
+                                    <span>
+                                        <FaFilter />
+                                    </span>
+                                    <span>Filter</span>
+                                </button>
+                            )
+                        }
+
                         {/* {/ ====== /} */}
                         <Menu
                             id="basic-menu"
@@ -182,7 +203,7 @@ export default function Stoke() {
                                     <p className="text-brown font-bold text-xl p-3">Filter</p>
                                 </div>
                                 <div className="mt-1 p-3">
-                                <div className="mb-4">
+                                    <div className="mb-4">
                                         <label htmlFor="date" className="block text-sm font-bold text-brown">Update Date</label>
                                         <input
                                             type="date"
@@ -210,7 +231,7 @@ export default function Stoke() {
                                 <div className="flex justify-center gap-8 mt-2 p-3">
                                     <button
                                         type="button"
-                                        onClick={handleClose }
+                                        onClick={handleResetFilters}
                                         className="text-brown w-36 border-brown border px-5 py-2 rounded"
                                     >
                                         Cancel
@@ -249,10 +270,10 @@ export default function Stoke() {
                         {currentItems && currentItems?.map((ele, index) => (
                             <tr key={index} className="hover:bg-gray-100 border-t">
                                 <td className="py-2 px-4 ">{ele?.id}</td>
-                                <td className="py-2  px-4">{ele?.category_name || 'N/A'}</td>
-                                <td className="py-2  px-4">{ele?.sub_category_name || 'N/A'}</td>
-                                <td className="py-2  px-4">{ele?.product_name || 'N/A'}</td>
-                                <td className="py-2  px-4">{ele?.date || 'N/A'}</td>
+                                <td className="py-2  px-4">{ele?.category_name || ''}</td>
+                                <td className="py-2  px-4">{ele?.sub_category_name || ''}</td>
+                                <td className="py-2  px-4">{ele?.product_name || ''}</td>
+                                <td className="py-2  px-4">{new Date(ele?.date).toLocaleDateString('en-IN') || ''}</td>
                                 <td className="py-2 px-4">
                                     <span className={`font-bold p-1 px-2 text-sm rounded text-nowrap ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
                                         {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
@@ -489,7 +510,7 @@ export default function Stoke() {
                 </Box>
             </Modal>
 
-            
+
 
         </div>
     )

@@ -297,7 +297,7 @@ export default function SubCategory() {
                     onClick={handleResetFilters}
                     className="text-brown w-36 border-brown border px-5 py-2 rounded"
                   >
-                    Reset Filters
+                    Cancel
                   </button>
                   <button
                     type="button"
