@@ -7,26 +7,24 @@ import { RiDeleteBin6Fill } from 'react-icons/ri'
 import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
 import { Form } from 'react-router-dom'
+import { addReview, deleteAllReviews, deleteReview, editReview, getAllReviews } from '../reduxe/slice/review.slice'
 
-export default function Size() {
-    const [sizeData, setSizeData] = useState([]);
+export default function Review() {
+    const [Data, setData] = useState([]);
     const [open, setOpen] = useState(false);
     const [delOpen, setDelOpen] = useState(false);
     const [delAllOpen, setDelAllOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const dispatch = useDispatch();
-    const size = useSelector(state => state.sizes.sizes);
-    console.log(size)
+    const { reviews } = useSelector(state => state.reviews);
+    console.log(reviews)
     useEffect(() => {
-        dispatch(getAllSizes())
+        dispatch(getAllReviews())
     }, []);
     const validationSchema = Yup.object({
-        name: Yup.string().required('Name is required'),
-        size: Yup.string().required('Size is required'),
     });
 
     // Pagination statecurrentItems
@@ -34,12 +32,12 @@ export default function Size() {
     const itemsPerPage = 10; // Set items per page
 
     // Calculate total pages
-    const totalPages = Math.ceil(size.length / itemsPerPage);
+    const totalPages = Math.ceil(reviews.length / itemsPerPage);
 
     // Get current items
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = size.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = reviews.slice(indexOfFirstItem, indexOfLastItem);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
@@ -60,14 +58,14 @@ export default function Size() {
     };
     const handleOpen = (data) => {
         setOpen(true);
-        setSizeData(data)
+        setData(data)
     }
     const handleClose = () => {
         setOpen(false);
     }
     const handleDeleteOpen = (data) => {
         setDelOpen(true);
-        setSizeData(data)
+        setData(data)
     }
     const handleDeleteClose = () => {
         setDelOpen(false);
@@ -78,14 +76,14 @@ export default function Size() {
     const handleAddClose = () => {
         setAddOpen(false);
     }
-    const handleDeleteSize = () => {
-        dispatch(deleteSize({ id: sizeData.id }))
+    const handleDeleteReview = () => {
+        dispatch(deleteReview({ id: Data.id }))
         // dispatch(getAllUsers())
         setDelOpen(false);
     }
     const handleDeleteAll = () => {
         console.log('Delete All User ',)
-        dispatch(deleteAllSizes());
+        dispatch(deleteAllReviews());
 
     }
     // const handleSubmitForm = (values, { resetForm }) => {
@@ -123,19 +121,19 @@ export default function Size() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems && currentItems?.map((size, index) => (
+                        {currentItems && currentItems?.map((ele, index) => (
                             <tr key={index} className="hover:bg-gray-100 border-t">
-                                <td className="py-2 px-4 ">{size.id}</td>
+                                <td className="py-2 px-4 ">{ele.id}</td>
 
-                                <td className="py-2 px-4 ">{size.name}</td>
-                                <td className="py-2 px-4 ">{size.size}</td>
+                                <td className="py-2 px-4 ">{ele.name}</td>
+                                <td className="py-2 px-4 ">{ele.size}</td>
 
                                 <td className="py-2 px-4 flex items-center gap-2">
                                     <div>
-                                        <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(size)}><BiSolidEditAlt /></button>
+                                        <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(ele)}><BiSolidEditAlt /></button>
                                     </div>
                                     <div>
-                                        <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(size)}><RiDeleteBin6Fill /></button>
+                                        <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)}><RiDeleteBin6Fill /></button>
                                     </div>
                                 </td>
                             </tr>
@@ -166,69 +164,7 @@ export default function Size() {
                 }}
             />
 
-            {/* Add Review */}
-            <Modal
-                open={addOpen}
-                onClose={handleAddClose}
-            >
-                <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                    <p className='text-brown font-bold text-xl  flex justify-between'>
-                        <p >Add Size</p>
-                        <button onClick={handleAddClose} className=" font-bold"><RxCross2 /></button>
-                    </p>
-                    <div>
-                        <Formik
-                            initialValues={{ name: '', size: '' }}
-                            validationSchema={validationSchema}
-                            onSubmit={(values, { resetForm }) => {
-                                dispatch(addSize(values));
-                                resetForm();
-                                handleAddClose(); // Close the modal after successful submission
-                            }}
-                        >
-                            {({ handleSubmit, isSubmitting }) => (
-                                <form onSubmit={handleSubmit} className=" p-4 md:p-8 rounded-lg  ">
-                                    <div className="mb-4">
-                                        <label htmlFor="name" className="block text-sm font-bold text-brown">Name</label>
-                                        <Field
-                                            type="text"
-                                            name="name"
-                                            id="name"
-                                            className="mt-1 block w-full border border-brown p-2 rounded"
-                                            placeholder="Enter Name"
-                                        />
-                                        <ErrorMessage name="name" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className="mb-4">
-                                        <label htmlFor="size" className="block text-sm font-bold text-brown">Size</label>
-                                        <Field
-                                            type="text"
-                                            name="size"
-                                            id="size"
-                                            className="mt-1 block w-full border border-brown p-2 rounded"
-                                            placeholder="Enter Size"
-                                        />
-                                        <ErrorMessage name="size" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 '>
-                                        <button className='text-brown hover:bg-brown-50  border-brown border p-2 rounded w-full' onClick={handleAddClose}>
-                                            Cancel
-                                        </button>
 
-                                        <button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
-                                        >
-                                            {isSubmitting ? 'Submitting...' : 'Add Size'}
-                                        </button>
-                                    </div>
-                                </form>
-                            )}
-                        </Formik>
-                    </div>
-                </Box>
-            </Modal>
             {/* Edit Review */}
             <Modal
                 open={open}
@@ -243,10 +179,10 @@ export default function Size() {
                     </p>
                     <div>
                         <Formik
-                            initialValues={{ id: sizeData.id || '', name: sizeData.name || '', size: sizeData.size || '' }}
+                            initialValues={{ id: Data.id || '', name: Data.name || '', size: Data.size || '' }}
                             validationSchema={validationSchema}
                             onSubmit={(values, { resetForm }) => {
-                                dispatch(editSize(values));
+                                dispatch(editReview(values));
                                 resetForm();
                                 handleClose(); // Close the modal after successful submission
                             }}
@@ -305,13 +241,13 @@ export default function Size() {
                     <div className='  p-5'>
                         <div className='text-center'>
 
-                            <p className='text-brown font-bold text-xl'>Delete Size</p>
+                            <p className='text-brown font-bold text-xl'>Delete Review</p>
                             <p className='text-brown-50'>Are you sure you want to delete
-                                size?</p>
+                                review?</p>
                         </div>
                         <div className='flex flex-wrap gap-3 mt-4'>
                             <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
-                            <button onClick={handleDeleteSize} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
+                            <button onClick={handleDeleteReview} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                         </div>
 
                     </div>
@@ -329,9 +265,9 @@ export default function Size() {
                     <div className='  p-5'>
                         <div className='text-center'>
 
-                            <p className='text-brown font-bold text-xl'>Delete All Size</p>
+                            <p className='text-brown font-bold text-xl'>Delete All Review</p>
                             <p className='text-brown-50'>Are you sure you want to delete all
-                                size?</p>
+                                review?</p>
                         </div>
                         <div className='flex flex-wrap gap-3 mt-4'>
                             <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
