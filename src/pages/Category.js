@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal, Pagination, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { BsFillEyeFill } from "react-icons/bs";
@@ -21,31 +21,12 @@ export default function Category() {
   const [categoryname, setCategoryname] = useState();
   const category = useSelector((state) => state.categorys.category);
 console.log(category);
-
+  const [error, setError] = useState('');
 
   useEffect(()=>{
     dispatch(getAllCategory())
   },[])
 
-  // const data = [
-  //   { id: "001", name: "Item 1", active: true },
-  //   { id: "002", name: "Item 2", active: false },
-  //   { id: "003", name: "Item 3", active: true },
-  //   { id: "004", name: "Item 4", active: false },
-  //   { id: "005", name: "Item 5", active: true },
-  //   { id: "006", name: "Item 6", active: true },
-  //   { id: "007", name: "Item 7", active: false },
-  //   { id: "008", name: "Item 8", active: true },
-  //   { id: "009", name: "Item 9", active: false },
-  //   { id: "010", name: "Item 10", active: true },
-  //   { id: "011", name: "Item 11", active: true },
-  //   { id: "012", name: "Item 12", active: false },
-  //   { id: "013", name: "Item 13", active: true },
-  //   { id: "014", name: "Item 14", active: true },
-  //   { id: "015", name: "Item 15", active: false },
-  // ];
-
-//   const [category, setCategory] = useState(data)
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,20 +84,29 @@ console.log(category);
     setCreateopen(false)
     setCategoryname('');
     setCategoryData('');
+    setError('')
   }
 
   const handlecreatedCategory = () => {
-    dispatch(addCategory({name:categoryname}));
+    if (!categoryname) {
+      setError('Category name is required.');
+      return;
+    }
+    setError('');
+    dispatch(addCategory({ name: categoryname }));
     handleCreateClose();
     setCategoryname('');
     setCategoryData('');
   }
 
   const handleUpdateCategory = () => {
-    const data = { id: categoryData.id, name: categoryname};
-    console.log(data);
-    
-    dispatch(editCategory({data}));
+    if (!categoryname) {
+      setError('Category name is required.');
+      return;
+    }
+    setError('');
+    const data = { id: categoryData.id, name: categoryname };
+    dispatch(editCategory({ data }));
     handleCreateClose();
     setCategoryname('');
     setCategoryData('');
@@ -203,34 +193,28 @@ console.log(category);
         </table>
       </div>
 
-      <div className="flex justify-end m-4">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-          className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-        >
-          <MdKeyboardArrowLeft />
-        </button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
-              ? "bg-brown text-white"
-              : "bg-white text-brown border"
-              }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="mx-1 px-3 py-1 rounded bg-white text-brown border"
-        >
-          <MdKeyboardArrowRight />
-        </button>
-      </div>
+      <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(event, page) => handlePageChange(page)}
+                variant="outlined"
+                shape="rounded"
+                className="flex justify-end m-4"
+                siblingCount={1} // Show one sibling page on each side
+                boundaryCount={1} // Show one boundary page at the start and end
+                sx={{
+                    '& .MuiPaginationItem-root': {
+                        color: 'text.primary', // Default color for pagination items
+                    },
+                    '& .MuiPaginationItem-root.Mui-selected': {
+                        backgroundColor: '#523b33', // Active page background color
+                        color: 'white', // Active page text color
+                    },
+                    '& .MuiPaginationItem-root:hover': {
+                        backgroundColor: 'lightgray', // Hover effect
+                    },
+                }}
+            />
 
 
       {/* create & update category */}
@@ -247,8 +231,12 @@ console.log(category);
                 placeholder={categoryData ? categoryData.name  : "Enter Category Name"}
                 value={categoryname}
                 className="border border-brown rounded w-full p-2 mt-1"
-                onChange={(e)=>setCategoryname(e.target.value)}
+                onChange={(e) => {
+                  setCategoryname(e.target.value);
+                  if (e.target.value) setError('');
+                }}
               />
+              {error && <p className="text-red-500">{error}</p>}
             </div>
             <div className="flex justify-center gap-8 mt-10">
               <button
@@ -291,7 +279,7 @@ console.log(category);
                 Are you sure you want to delete Category?
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 mt-4">
+            <div className="flex flex-wrap gap-3 mt-4  justify-center">
               <button
                 onClick={handleDeleteClose}
                 className="text-brown w-32 border-brown border px-4 py-2 rounded"
