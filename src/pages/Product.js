@@ -1,72 +1,50 @@
 import {
   Box,
-  Button,
   Modal,
-  Typography,
-  Select,
-  MenuItem,
-  Divider,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
-import { BiSolidEditAlt } from "react-icons/bi";
 import { BsFillEyeFill } from "react-icons/bs";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import img from "../Images/user.png";
-import { RxCross2 } from "react-icons/rx";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllUsers, deleteUser } from "../reduxe/slice/users.slice";
 import {
-  addCategory,
-  deleteCategory,
-  editCategory,
   getAllCategory,
-  updateStatusCategory,
 } from "../reduxe/slice/catagorys.slice";
 import {
-  addSubCategory,
-  deleteAllSubCategory,
-  deleteSubCategory,
-  editSubCategory,
   getAllSubCategory,
   updateStatusSubCategory,
 } from "../reduxe/slice/subcategorys.slice";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
+import { deleteAllProducts, deleteProduct, getAllProducts } from "../reduxe/slice/product.slice";
+import { useNavigate } from "react-router-dom";
 // import MenuItem from '@mui/material/MenuItem';
 
-export default function SubCategory() {
-  const [subCategoryData, setSubCategoryData] = useState("");
+export default function Product() {
+  const [productData, setProductData] = useState("");
   const [delOpen, setDelOpen] = useState(false);
   const dispatch = useDispatch();
-  const [createopen, setCreateopen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [image, setImage] = useState();
+  const navigate = useNavigate();
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
-  console.log(category);
-
-  const fileInputRef = useRef(null);
+  const products = useSelector((state) => state.products.products);
+  console.log(products);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filtersApplied, setFiltersApplied] = useState(false);
-  const [filterSubCategory, setFilterSubCategory] = useState(subcategory);
-
-  const [isImageChanged, setIsImageChanged] = useState(false);
+  const [filterProducts, setFilterProducts] = useState(subcategory);
 
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getAllSubCategory());
+    dispatch(getAllProducts())
   }, []);
 
   useEffect(() => {
-    setFilterSubCategory(subcategory);
-  }, [subcategory]);
+    setFilterProducts(products);
+  }, [products]);
 
   // ======filter=====
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -83,7 +61,7 @@ export default function SubCategory() {
   const itemsPerPage = 10; // Set items per page
 
   // Calculate total pages
-  const totalPages = Math.ceil(filterSubCategory.length / itemsPerPage);
+  const totalPages = Math.ceil(filterProducts.length / itemsPerPage);
 
   // Get current items
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -106,7 +84,7 @@ export default function SubCategory() {
     });
 
     handleClose();
-    setFilterSubCategory(filteredItems);
+    setFilterProducts(filteredItems);
   };
 
   // Handle reset filters
@@ -115,18 +93,11 @@ export default function SubCategory() {
     setSelectedStatus("");
     setCurrentPage(1); // Reset to the first page
     setFiltersApplied(false);
-    setFilterSubCategory(subcategory);
+    setFilterProducts(subcategory);
   };
 
-  // // Get current items with filtering
-  // const filteredItems = subcategory.filter((item) => {
-  //   const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
-  //   const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
-  //   return matchesCategory && matchesStatus;
-  // });
-
   // Get current items based on filtered items
-  const currentItems = filterSubCategory.slice(
+  const currentItems = filterProducts.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
@@ -151,62 +122,20 @@ export default function SubCategory() {
 
   // =====pagination end=====
 
-  const handleOpen = (data) => {
-    setCreateopen(true);
-    setSubCategoryData(data);
-  };
-
   const handleDeleteOpen = (data) => {
     setDelOpen(true);
-    setSubCategoryData(data);
+    setProductData(data);
   };
   const handleDeleteClose = () => {
     setDelOpen(false);
   };
   const handleDeleteCategory = () => {
-    console.log("Delete cat", subCategoryData);
-    dispatch(deleteSubCategory({ id: subCategoryData.id }));
+    dispatch(deleteProduct({ id: productData.id }));
     setDelOpen(false);
   };
   const handleDeleteAll = () => {
     console.log("Delete All User ");
-    dispatch(deleteAllSubCategory());
-  };
-
-  const handleCreateClose = () => {
-    setCreateopen(false);
-    setSubCategoryData("");
-  };
-
-  const handlecreatedCategory = (values) => {
-    // Ensure the image is included in the values
-    const formData = new FormData();
-    formData.append("category_id", values.category_id);
-    formData.append("name", values.name);
-    formData.append("image", values.image); // Ensure the image is included
-
-    dispatch(addSubCategory(formData)); // Dispatch the formData
-    handleCreateClose();
-    setSubCategoryData("");
-  };
-
-  const handleUpdateCategory = (values) => {
-    const formData = new FormData();
-
-    formData.append("id", subCategoryData.id);
-    formData.append("name", values.name);
-    formData.append("category_id", values.category_id);
-
-    // Ensure the image is included if it has been changed
-    if (values.image) {
-      formData.append("image", values.image);
-    }
-
-    console.log("sdsd", formData, values);
-
-    dispatch(editSubCategory(formData)); // Dispatch the formData
-    handleCreateClose();
-    setSubCategoryData("");
+    dispatch(deleteAllProducts());
   };
 
   const handleToggle = (data) => {
@@ -214,36 +143,22 @@ export default function SubCategory() {
     dispatch(updateStatusSubCategory({ id: data.id, status: status }));
   };
 
-  // Validation schema
-  const validationSchema = Yup.object().shape({
-    category_id: Yup.string().required("Category is required"),
-    name: Yup.string().required("Sub Category Name is required"),
-    image: Yup.mixed()
-      .test("fileSize", "File size is too large, must be 2MB or less", function (value) {
-        const { id } = this.parent; 
-        if (!isImageChanged && id) {
-          return true; 
-        }
-        return !value || (value.size <= 2 * 1024 * 1024); 
-      })
-      .test("fileFormat", "Unsupported Format", function (value) {
-        const { id } = this.parent; 
-        if (!isImageChanged && id) {
-          return true; 
-        }
-        return !value || ["image/jpeg", "image/png", "image/gif"].includes(value.type); 
-      }) 
-        
-  });
+  const handleproductadd = (id) => {
+    navigate('/product/productAdd', { state: { id } })
+  }
+
+  const handleproductview = (id) => {
+    // navigate('/product/Productview')
+  }
 
   return (
     <div className=" md:mx-[20px] p-4 ">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-brown">SubCategory </h1>
+          <h1 className="text-2xl font-bold text-brown">Product </h1>
           <p className="text-brown-50">
             Dashboard /{" "}
-            <span className="text-brown font-medium">SubCategory</span>
+            <span className="text-brown font-medium">Product</span>
           </p>
         </div>
         <div>
@@ -350,7 +265,7 @@ export default function SubCategory() {
             </button>
             <button
               className="bg-brown w-32 text-white px-4 py-2 rounded"
-              onClick={() => setCreateopen(true)}
+              onClick={() => handleproductadd()}
             >
               + Add
             </button>
@@ -362,25 +277,32 @@ export default function SubCategory() {
           <thead>
             <tr className="text-brown font-bold">
               <td className="py-2 px-5 w-1/4">ID</td>
+              <td className="py-2 px-5 w-1/4">Product name</td>
               <td className="py-2 px-5 w-1/4">Category</td>
-              <td className="py-2 px-5 w-1/4">Name</td>
+              <td className="py-2 px-5 w-1/4">SubCategory</td>
+              <td className="py-2 px-5 w-1/4">Price</td>
+              <td className="py-2 px-5 w-1/4">Qty</td>
               <td className="py-2 px-5 w-1/4">Status</td>
               <td className="py-2 px-5 w-1/4">Action</td>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((v, index) => (
+          {currentItems &&
+            currentItems?.map((v, index) => (
               <tr key={index} className="hover:bg-gray-100 border-t">
                 <td className="py-2 px-5">{v.id}</td>
-                <td className="py-2 px-5">{v.category_name}</td>
                 <td className="py-2 px-5 flex items-center">
                   <img
-                    src={v.image}
+                    src={v.images?.[0]}
                     alt="User"
                     className="w-10 h-10 rounded-full mr-2"
                   />
-                  {v.name}
+                  {v.product_name}
                 </td>
+                <td className="py-2 px-5">{v.category_name || ""}</td>
+                <td className="py-2 px-5">{v.sub_category_name  || ''}</td>
+                <td className="py-2 px-5">{v.price}</td>
+                <td className="py-2 px-5">{v.qty}</td>
                 <td className="py-2 px-5">
                   <label className="inline-flex items-center cursor-pointer">
                     <input
@@ -407,8 +329,16 @@ export default function SubCategory() {
                 <td className="py-2 px-5 flex items-center gap-2">
                   <div>
                     <button
+                      className="text-brown text-xl p-1 border border-brown-50 rounded"
+                        onClick={() => handleproductview(v.id)}
+                    >
+                      <BsFillEyeFill />
+                    </button>
+                  </div>
+                  <div>
+                    <button
                       className="text-green-700 text-xl p-1 border border-brown-50 rounded"
-                      onClick={() => handleOpen(v)}
+                      onClick={() => handleproductadd(v.id)}
                     >
                       <RiEdit2Fill />
                     </button>
@@ -450,187 +380,6 @@ export default function SubCategory() {
           },
         }}
       />
-
-      {/* create & update category */}
-      <Modal open={createopen} onClose={handleCreateClose}>
-        <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded max-w-[500px] w-[100%]">
-          <div className="p-5">
-            <div className="text-center">
-              <p className="text-brown font-bold text-xl">
-                {subCategoryData ? "Edit" : "Add"} SubCategory
-              </p>
-            </div>
-            <Formik
-              initialValues={{
-                category_id: subCategoryData ? subCategoryData.category_id : "",
-                name: subCategoryData ? subCategoryData.name : "",
-                image:
-                  subCategoryData && subCategoryData.image
-                    ? subCategoryData.image
-                    : null,
-                id: subCategoryData ? subCategoryData.id : "",
-              }}
-              validationSchema={validationSchema}
-              onSubmit={(values) => {
-                if (subCategoryData) {
-                  console.log("sdsvdgsd", values);
-
-                  handleUpdateCategory(values); // Pass values to update function
-                } else {
-                  handlecreatedCategory(values); // Pass values to create function
-                }
-                handleCreateClose();
-              }}
-            >
-              {({ setFieldValue, values }) => (
-                <Form>
-                  {console.log(subCategoryData)}
-                  <div className="mt-7">
-                    <div className="mt-3">
-                      <label className="text-brown font-bold">Category</label>
-                      <Field
-                        as="select"
-                        name="category_id"
-                        className="border border-brown rounded w-full p-3 mt-1"
-                      >
-                        <option value="">Select Category</option>
-                        {category.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </Field>
-                      <ErrorMessage
-                        name="category_id"
-                        component="div"
-                        className="text-red-500 text-[12px]"
-                      />
-                    </div>
-
-                    <div className="mt-3">
-                    <label className="text-brown font-bold mt-4">
-                      SubCategory Name
-                    </label>
-                    <Field
-                      type="text"
-                      name="name"
-                      placeholder="Enter Sub Category Name"
-                      className="border border-brown rounded w-full p-2 mt-1"
-                    />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-500 text-[12px]"
-                    />
-                    </div>
-
-                    <div className="mt-3">
-                    <label className="text-brown font-bold mt-4">Image</label>
-                    <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
-                      {values.image ? (
-                        <>
-                          <div className="flex items-center bg-[#72727226] px-2 py-1">
-                            {typeof values.image === "string" ? (
-                              <img
-                                src={values.image}
-                                alt="Preview"
-                                className="w-8 h-8 rounded-full mr-2"
-                              />
-                            ) : (
-                              <img
-                                src={URL.createObjectURL(values.image)}
-                                alt="Preview"
-                                className="w-8 h-8 rounded-full mr-2"
-                              />
-                            )}
-                            <span className="flex-1">
-                              {typeof values.image === "string"
-                                ? values.image.split("/").pop()
-                                : values.image.name}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setFieldValue("image", null)} // Clear the image
-                              className="text-red-500 ml-1 text-[12px]"
-                            >
-                              X
-                            </button>
-                          </div>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            ref={fileInputRef}
-                            onChange={(e) => {
-                              const file = e.currentTarget.files[0];
-                              setFieldValue("image", file);
-                              setIsImageChanged(!!file);
-                              
-                            }}
-                            className="hidden"
-                            id="file-upload"
-                          />
-                          <label
-                            htmlFor="file-upload"
-                            className="cursor-pointer text-center bg-brown text-white rounded p-[5px] px-3 text-[13px]"
-                          >
-                            Change
-                          </label>
-                        </>
-                      ) : (
-                        <>
-                          <p className="flex-1 text-[16px] text-[#727272]">
-                            Choose Image
-                          </p>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            ref={fileInputRef}
-                            onChange={(e) => {
-                              const file = e.currentTarget.files[0];
-                              setFieldValue("image", file);
-                              setIsImageChanged(!!file);
-                              
-                            }}
-                            className="hidden"
-                            id="file-upload"
-                          />
-                          <label
-                            htmlFor="file-upload"
-                            className="cursor-pointer text-center bg-brown text-white rounded p-1 px-2 text-[13px]"
-                          >
-                            Browse
-                          </label>
-                        </>
-                      )}
-                    </div>
-                    <ErrorMessage
-                      name="image"
-                      component="div"
-                      className="text-red-500 text-[12px]"
-                    />
-                    </div>
-                  </div>
-                  <div className="flex justify-center gap-8 mt-10">
-                    <button
-                      type="button"
-                      onClick={handleCreateClose}
-                      className="text-brown w-36 border-brown border px-5 py-2 rounded"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-                    >
-                      {subCategoryData ? "Edit" : "Add"}
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </Box>
-      </Modal>
 
       {/* Delete category */}
       <Modal open={delOpen} onClose={handleDeleteClose}>

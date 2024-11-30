@@ -12,6 +12,8 @@ import Category from '../pages/Category'
 import SubCategory from '../pages/SubCategory'
 import Stock from '../pages/Stock'
 import Review from '../pages/Review'
+import Product from '../pages/Product'
+import AddProduct from '../pages/ProductAdd'
 
 
 export default function AuthRoutes() {
@@ -24,6 +26,8 @@ export default function AuthRoutes() {
                     <Route path="/size" element={<Size />} />
                     <Route path="/category" element={<Category />} />
                     <Route path="/subcategory" element={<SubCategory />} />
+                    <Route path="/product" element={<Product />} />
+                    <Route path="/product/productAdd" element={<AddProduct />} />
                     <Route path="/stoke" element={<Stock />} />
                     <Route path="/review" element={<Review />} />
 
