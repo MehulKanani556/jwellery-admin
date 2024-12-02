@@ -72,7 +72,9 @@ function Layout({ children }) {
     { title: 'User', icon: <FaUser />, path: '/user' },
     { title: 'Category', icon: <BiSolidCategory />,path: '/category' },
     { title: 'Subcategory', icon: <FaList />,path: '/subcategory' },
+
     { title: 'Product', icon: <BsFillBoxSeamFill />,path: '/products' },
+
     { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
     { title: 'Stock', icon: <BsBoxFill />, path: '/stoke' },
     // { title: 'Cart', icon: <IoBagCheck />, path: '/' },
@@ -82,7 +84,7 @@ function Layout({ children }) {
     {
       title: 'Offers',
       icon: <BiSolidOffer />,
-      path: '/',
+      path: '/offer',
       subItems: [
         { title: 'Product Offer', path: '/product-offer' },
         { title: 'Offer', path: '/offer' },

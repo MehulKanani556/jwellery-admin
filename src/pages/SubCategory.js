@@ -57,13 +57,19 @@ export default function SubCategory() {
   const [filtersApplied, setFiltersApplied] = useState(false);
   const [filterSubCategory, setFilterSubCategory] = useState(subcategory);
 
+
+  const [isImageChanged, setIsImageChanged] = useState(false);
+
+
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getAllSubCategory());
   }, []);
 
   useEffect(() => {
-    setFilterSubCategory(subcategory)
+
+    setFilterSubCategory(subcategory);
+
   }, [subcategory]);
 
   // ======filter=====
@@ -93,8 +99,14 @@ export default function SubCategory() {
     console.log(selectedCategory, selectedStatus);
 
     const filteredItems = subcategory.filter((item) => {
-      const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
-      const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
+
+      const matchesCategory = selectedCategory
+        ? item.category_id == selectedCategory
+        : true;
+      const matchesStatus = selectedStatus
+        ? item.status == selectedStatus
+        : true;
+
 
       return matchesCategory && matchesStatus;
     });
@@ -120,7 +132,10 @@ export default function SubCategory() {
   // });
 
   // Get current items based on filtered items
-  const currentItems = filterSubCategory.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filterSubCategory.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -209,7 +224,22 @@ export default function SubCategory() {
   const validationSchema = Yup.object().shape({
     category_id: Yup.string().required("Category is required"),
     name: Yup.string().required("Sub Category Name is required"),
-    image: Yup.mixed().required("Image is required"),
+    image: Yup.mixed()
+      .test("fileSize", "File size is too large, must be 2MB or less", function (value) {
+        const { id } = this.parent; 
+        if (!isImageChanged && id) {
+          return true; 
+        }
+        return !value || (value.size <= 2 * 1024 * 1024); 
+      })
+      .test("fileFormat", "Unsupported Format", function (value) {
+        const { id } = this.parent; 
+        if (!isImageChanged && id) {
+          return true; 
+        }
+        return !value || ["image/jpeg", "image/png", "image/gif"].includes(value.type); 
+      }) 
+        
   });
 
   return (
@@ -230,7 +260,10 @@ export default function SubCategory() {
                 onClick={handleResetFilters}
                 className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
               >
-                Cancel
+                <span>
+                  <FaFilter />
+                </span>
+                <span>Cancel</span>
               </button>
             ) : (
               <button
@@ -346,7 +379,7 @@ export default function SubCategory() {
               <tr key={index} className="hover:bg-gray-100 border-t">
                 <td className="py-2 px-5">{v.id}</td>
                 <td className="py-2 px-5">{v.category_name}</td>
-                <td className="py-2 px-5 flex align-middle">
+                <td className="py-2 px-5 flex items-center">
                   <img
                     src={v.image}
                     alt="User"
@@ -428,7 +461,7 @@ export default function SubCategory() {
           <div className="p-5">
             <div className="text-center">
               <p className="text-brown font-bold text-xl">
-                {subCategoryData ? "Edit" : "Add"} Sub Category
+                {subCategoryData ? "Edit" : "Add"} SubCategory
               </p>
             </div>
             <Formik
@@ -456,28 +489,31 @@ export default function SubCategory() {
               {({ setFieldValue, values }) => (
                 <Form>
                   {console.log(subCategoryData)}
-                  <div className="mt-10">
-                    <label className="text-brown font-bold">Category</label>
-                    <Field
-                      as="select"
-                      name="category_id"
-                      className="border border-brown rounded w-full p-3 mt-1"
-                    >
-                      <option value="">Select Category</option>
-                      {category.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="category_id"
-                      component="div"
-                      className="text-red-500"
-                    />
+                  <div className="mt-7">
+                    <div className="mt-3">
+                      <label className="text-brown font-bold">Category</label>
+                      <Field
+                        as="select"
+                        name="category_id"
+                        className="border border-brown rounded w-full p-3 mt-1"
+                      >
+                        <option value="">Select Category</option>
+                        {category.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </Field>
+                      <ErrorMessage
+                        name="category_id"
+                        component="div"
+                        className="text-red-500 text-[12px]"
+                      />
+                    </div>
 
+                    <div className="mt-3">
                     <label className="text-brown font-bold mt-4">
-                      Sub Category Name
+                      SubCategory Name
                     </label>
                     <Field
                       type="text"
@@ -488,9 +524,11 @@ export default function SubCategory() {
                     <ErrorMessage
                       name="name"
                       component="div"
-                      className="text-red-500"
+                      className="text-red-500 text-[12px]"
                     />
+                    </div>
 
+                    <div className="mt-3">
                     <label className="text-brown font-bold mt-4">Image</label>
                     <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
                       {values.image ? (
@@ -517,7 +555,7 @@ export default function SubCategory() {
                             <button
                               type="button"
                               onClick={() => setFieldValue("image", null)} // Clear the image
-                              className="text-red-500 ml-1"
+                              className="text-red-500 ml-1 text-[12px]"
                             >
                               X
                             </button>
@@ -527,7 +565,10 @@ export default function SubCategory() {
                             accept="image/*"
                             ref={fileInputRef}
                             onChange={(e) => {
-                              setFieldValue("image", e.target.files[0]);
+                              const file = e.currentTarget.files[0];
+                              setFieldValue("image", file);
+                              setIsImageChanged(!!file);
+                              
                             }}
                             className="hidden"
                             id="file-upload"
@@ -549,7 +590,10 @@ export default function SubCategory() {
                             accept="image/*"
                             ref={fileInputRef}
                             onChange={(e) => {
-                              setFieldValue("image", e.target.files[0]);
+                              const file = e.currentTarget.files[0];
+                              setFieldValue("image", file);
+                              setIsImageChanged(!!file);
+                              
                             }}
                             className="hidden"
                             id="file-upload"
@@ -566,8 +610,9 @@ export default function SubCategory() {
                     <ErrorMessage
                       name="image"
                       component="div"
-                      className="text-red-500"
+                      className="text-red-500 text-[12px]"
                     />
+                    </div>
                   </div>
                   <div className="flex justify-center gap-8 mt-10">
                     <button
