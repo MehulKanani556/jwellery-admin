@@ -144,11 +144,11 @@ export default function Product() {
   };
 
   const handleproductadd = (id) => {
-    navigate('/product/productAdd', { state: { id } })
+    navigate('/products/productAdd', { state: { id } })
   }
 
   const handleproductview = (id) => {
-    // navigate('/product/Productview')
+    // navigate('/products/Productview')
   }
 
   return (

@@ -146,11 +146,11 @@ export default function AddProduct() {
     };
 
     const handleproductadd = (id) => {
-        navigate('/product/productadd')
+        navigate('/products/productadd')
     }
 
     const handleproductview = (id) => {
-        navigate('/product/Productview')
+        navigate('/products/Productview')
     }
 
     return (
