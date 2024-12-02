@@ -123,23 +123,29 @@ export default function Size() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems && currentItems?.map((size, index) => (
-                            <tr key={index} className="hover:bg-gray-100 border-t">
-                                <td className="py-2 px-4 ">{size.id}</td>
+                        {currentItems && currentItems.length > 0 ? (
+                            currentItems.map((size, index) => (
+                                <tr key={index} className="hover:bg-gray-100 border-t">
+                                    <td className="py-2 px-4 ">{size.id}</td>
 
-                                <td className="py-2 px-4 ">{size.name}</td>
-                                <td className="py-2 px-4 ">{size.size}</td>
+                                    <td className="py-2 px-4 ">{size.name}</td>
+                                    <td className="py-2 px-4 ">{size.size}</td>
 
-                                <td className="py-2 px-4 flex items-center gap-2">
-                                    <div>
-                                        <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(size)}><BiSolidEditAlt /></button>
-                                    </div>
-                                    <div>
-                                        <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(size)}><RiDeleteBin6Fill /></button>
-                                    </div>
-                                </td>
+                                    <td className="py-2 px-4 flex items-center gap-2">
+                                        <div>
+                                            <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(size)}><BiSolidEditAlt /></button>
+                                        </div>
+                                        <div>
+                                            <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(size)}><RiDeleteBin6Fill /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4" className="py-2 px-4 text-center text-gray-500 border-t">No records found</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>

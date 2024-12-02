@@ -55,16 +55,16 @@ export default function SubCategory() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filtersApplied, setFiltersApplied] = useState(false);
-  const [filterSubCategory , setFilterSubCategory] = useState(subcategory);
+  const [filterSubCategory, setFilterSubCategory] = useState(subcategory);
 
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getAllSubCategory());
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilterSubCategory(subcategory)
-  },[subcategory]);
+  }, [subcategory]);
 
   // ======filter=====
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -91,12 +91,12 @@ export default function SubCategory() {
   const handleApplyFilter = () => {
     setFiltersApplied(true);
     console.log(selectedCategory, selectedStatus);
-    
+
     const filteredItems = subcategory.filter((item) => {
-        const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
-        const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
-        
-        return matchesCategory && matchesStatus;
+      const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
+      const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
+
+      return matchesCategory && matchesStatus;
     });
 
     handleClose();
@@ -363,16 +363,14 @@ export default function SubCategory() {
                       className="sr-only peer"
                     />
                     <div
-                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${
-                        v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
-                      }`}
+                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
+                        }`}
                     >
                       <div
-                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${
-                          v.status == "active"
+                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${v.status == "active"
                             ? "translate-x-[13px] bg-white"
                             : "bg-white"
-                        }`}
+                          }`}
                       ></div>
                     </div>
                   </label>

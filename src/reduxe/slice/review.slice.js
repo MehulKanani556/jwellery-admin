@@ -61,7 +61,7 @@ export const deleteAllReviews = createAsyncThunk(
     'review/deleteAllReviews',
     async (_, { rejectWithValue }) => {
         try {
-            await axiosInstance.get(`/reviews/deleteAll`);
+            await axiosInstance.delete(`/reviews/allDelete`);
             return; // No need to return anything for delete all
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);

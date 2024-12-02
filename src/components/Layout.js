@@ -35,6 +35,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Badge } from '@mui/material';
+import  { useState } from 'react';
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 const drawerWidth = 250;
 
@@ -44,6 +46,7 @@ function Layout({ children }) {
   const [isClosing, setIsClosing] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [openSubmenu, setOpenSubmenu] = useState(null);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -60,21 +63,34 @@ function Layout({ children }) {
     }
   };
 
+  const handleSubmenuToggle = (title) => {
+    setOpenSubmenu(openSubmenu === title ? null : title);
+  };
+
   const pages = [
     { title: 'Dashboard', icon: <AiFillHome />, path: '/dashboard' },
     { title: 'User', icon: <FaUser />, path: '/user' },
     { title: 'Category', icon: <BiSolidCategory />,path: '/category' },
     { title: 'Subcategory', icon: <FaList />,path: '/subcategory' },
-    { title: 'Product', icon: <BsFillBoxSeamFill /> },
+    { title: 'Product', icon: <BsFillBoxSeamFill />,path: '/products' },
     { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
     { title: 'Stock', icon: <BsBoxFill />, path: '/stoke' },
     // { title: 'Cart', icon: <IoBagCheck />, path: '/' },
-    { title: 'Orders', icon: <LuBoxes />, path: '/' },
+    { title: 'Orders', icon: <LuBoxes />, path: '/order' },
     { title: 'Review', icon: <TbMessageStar />, path: '/review'},
-    { title: 'Coupons', icon: <RiCoupon3Fill />, path: '/' },
-    { title: 'Offers', icon: <BiSolidOffer />, path: '/' },
-    { title: 'Return Orders', icon: <FaArrowsRotate />, path: '/' },
-    { title: 'Invoice', icon: <FaReceipt />, path: '/' }
+    { title: 'Coupons', icon: <RiCoupon3Fill />, path: '/coupons' },
+    {
+      title: 'Offers',
+      icon: <BiSolidOffer />,
+      path: '/',
+      subItems: [
+        { title: 'Product Offer', path: '/product-offer' },
+        { title: 'Offer', path: '/offer' },
+      ],
+      dropdownIcon: <FaAngleDown />
+    },
+    { title: 'Return Orders', icon: <FaArrowsRotate />, path: '/return-order' },
+    { title: 'Invoice', icon: <FaReceipt />, path: '/invoice' }
   ]
 
   const drawer = (
@@ -83,30 +99,63 @@ function Layout({ children }) {
       <Divider />
       <List>
         {
-          pages.map((v, index) => (
-            <ListItem key={v.title} disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
-              <ListItemButton
-                sx={{
-                  gap: '4px',
-                  backgroundColor: location.pathname == v.path ? '#FFF9F6' : 'transparent',
-                  color: location.pathname == v.path ? '#523C34' : 'white',
-                  borderRadius: '10px',
-                  '&:hover': {
-                    backgroundColor: '#FFF9F6',
-                    color: '#523C34',
-                    '& .MuiListItemIcon-root': {
-                      color: '#523C34',
+          pages.map((v) => (
+            <div key={v.title}>
+              <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                <ListItemButton
+                  onClick={() => {
+                    handleSubmenuToggle(v.title);
+                    if (!v.subItems) {
+                      navigate(v.path);
                     }
-                  }
-                }}
-                onClick={() => navigate(v.path)}
-              >
-                <ListItemIcon sx={{ color: location.pathname == v.path ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
-                  {v.icon}
-                </ListItemIcon>
-                <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 }} />
-              </ListItemButton>
-            </ListItem>
+                  }}
+                  sx={{
+                    gap: '4px',
+                    backgroundColor: location.pathname.includes( v.path) ? '#FFF9F6' : 'transparent',
+                    color: location.pathname.includes( v.path)? '#523C34' : 'white',
+                    borderRadius: '10px',
+                    '&:hover': {
+                      backgroundColor: '#FFF9F6',
+                      color: '#523C34',
+                      '& .MuiSvgIcon-root': {
+                        color: '#523C34',
+                      },
+                      '& .icon': {
+                        color: '#523C34',
+                      }
+                    }
+                  }}
+                >
+                  <ListItemIcon className="icon" sx={{ color: location.pathname.includes( v.path) ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
+                    {v.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 }} />
+                  {v.dot && <span style={{ color: 'red', marginLeft: '5px' }}>•</span>}
+                  {v.subItems && openSubmenu === v.title ? <FaAngleUp /> : v.dropdownIcon}
+                </ListItemButton>
+              </ListItem>
+              {v.subItems && openSubmenu === v.title && v.subItems.map(subItem => (
+                <ListItem key={subItem.title} disablePadding sx={{ paddingLeft: '40px' }}>
+                  <ListItemButton
+                    sx={{
+                      backgroundColor: location.pathname.includes( subItem.path) ? '#FFF9F6' : 'transparent',
+                      color: location.pathname.includes( subItem.path) ? '#523C34' : 'white',
+                      borderRadius: '10px',
+                      fontSize: '10px',
+                      marginTop: '7px',
+                      '&:hover': {
+                        backgroundColor: '#FFF9F6',
+                        color: '#523C34',
+                      }
+                    }}
+                    onClick={() => navigate(subItem.path)}
+                  >
+                    <span style={{ margin: '5px' }}>•</span>
+                    <ListItemText primary={subItem.title} sx={{ fontSize: '14px', fontWeight: 400 }} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </div>
           ))}
       </List>
     </div>

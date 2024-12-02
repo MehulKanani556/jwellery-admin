@@ -5,13 +5,15 @@ import Layout from '../components/Layout'
 import DashBord from '../pages/DashBord'
 import User from '../pages/User'
 
-import sessionStorage from 'redux-persist/es/storage/session'
 import Size from '../pages/Size'
 
 import Category from '../pages/Category'
 import SubCategory from '../pages/SubCategory'
 import Stock from '../pages/Stock'
 import Review from '../pages/Review'
+import Coupons from '../pages/Coupons'
+import ProductOffer from '../pages/ProductOffer'
+import AddProductOffer from '../pages/AddProductOffer'
 
 
 export default function AuthRoutes() {
@@ -26,6 +28,9 @@ export default function AuthRoutes() {
                     <Route path="/subcategory" element={<SubCategory />} />
                     <Route path="/stoke" element={<Stock />} />
                     <Route path="/review" element={<Review />} />
+                    <Route path="/coupons" element={<Coupons />} />
+                    <Route path="/product-offer" element={<ProductOffer />} />
+                    <Route path="/product-offer/add" element={<AddProductOffer />} />
 
                 </Routes>
             </Layout>

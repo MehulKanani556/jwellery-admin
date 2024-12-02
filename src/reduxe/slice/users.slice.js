@@ -1,6 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import sessionStorage from 'redux-persist/es/storage/session';
 import axiosInstance from '../../utils/axiosInstance';
 
 

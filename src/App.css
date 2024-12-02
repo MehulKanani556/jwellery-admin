@@ -10,7 +10,7 @@ img{
 }
 
 body {
-  background-color: #fffefc;
+  background-color: #fffefc !important ; 
 }
 /* Row */
 .row {

@@ -9,6 +9,8 @@ import subcategorysSlice from "./slice/subcategorys.slice";
 import stokeSlice from "./slice/stoke.slice";
 import productSlice from "./slice/product.slice";
 import reviewSlice from "./slice/review.slice";
+import couponsSlice from "./slice/coupons.slice";
+import productofferSlice from "./slice/productoffer.slice";
 
 
 export const rootReducer = combineReducers({
@@ -19,5 +21,7 @@ export const rootReducer = combineReducers({
     subcategorys:subcategorysSlice,
     stocks:stokeSlice,
     products:productSlice,
-    reviews:reviewSlice
+    reviews:reviewSlice,
+    coupons:couponsSlice,
+    productoffers:productofferSlice,
 });

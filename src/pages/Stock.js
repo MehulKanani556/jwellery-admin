@@ -105,14 +105,7 @@ export default function Stoke() {
         });
     }
 
-    const handleFilterOpen = () => {
-        setFilterOpen(true);
-    };
-
-    const handleFilterClose = () => {
-        setFilterOpen(false);
-    };
-
+  
     const handleApplyFilter = (values) => {
         setFiltersApplied(true);
         const { date, status } = values;
@@ -267,32 +260,38 @@ export default function Stoke() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems && currentItems?.map((ele, index) => (
-                            <tr key={index} className="hover:bg-gray-100 border-t">
-                                <td className="py-2 px-4 ">{ele?.id}</td>
-                                <td className="py-2  px-4">{ele?.category_name || ''}</td>
-                                <td className="py-2  px-4">{ele?.sub_category_name || ''}</td>
-                                <td className="py-2  px-4">{ele?.product_name || ''}</td>
-                                <td className="py-2  px-4">{new Date(ele?.date).toLocaleDateString('en-IN') || ''}</td>
-                                <td className="py-2 px-4">
-                                    <span className={`font-bold p-1 px-2 text-sm rounded text-nowrap ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
-                                        {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
-                                    </span>
-                                </td>
-                                <td className="py-2  px-4">{ele?.qty || 0}</td>
+                        {currentItems && currentItems.length > 0 ? (
+                            currentItems.map((ele, index) => (
+                                <tr key={index} className="hover:bg-gray-100 border-t">
+                                    <td className="py-2 px-4 ">{ele?.id}</td>
+                                    <td className="py-2  px-4">{ele?.category_name || ''}</td>
+                                    <td className="py-2  px-4">{ele?.sub_category_name || ''}</td>
+                                    <td className="py-2  px-4">{ele?.product_name || ''}</td>
+                                    <td className="py-2  px-4">{new Date(ele?.date).toLocaleDateString('en-IN') || ''}</td>
+                                    <td className="py-2 px-4">
+                                        <span className={`font-bold p-1 px-2 text-sm rounded text-nowrap ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
+                                            {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
+                                        </span>
+                                    </td>
+                                    <td className="py-2  px-4">{ele?.qty || 0}</td>
 
 
 
-                                <td className="py-2 px-4 flex items-center gap-2">
-                                    <div>
-                                        <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleAddOpen(ele)}><BiSolidEditAlt /></button>
-                                    </div>
-                                    <div>
-                                        <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)}><RiDeleteBin6Fill /></button>
-                                    </div>
-                                </td>
+                                    <td className="py-2 px-4 flex items-center gap-2">
+                                        <div>
+                                            <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleAddOpen(ele)}><BiSolidEditAlt /></button>
+                                        </div>
+                                        <div>
+                                            <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)}><RiDeleteBin6Fill /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="8" className="py-2 px-4 text-center text-gray-500 border-t">No records found</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
