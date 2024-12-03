@@ -17,9 +17,6 @@ import AddProduct from '../pages/ProductAdd'
 import Offer from '../pages/Offer'
 import ProductView from '../pages/ProductView'
 
-
-
-
 export default function AuthRoutes() {
     return (
         <div>
