@@ -207,9 +207,12 @@ body {
 }
 input{
   height: 45px !important;
+  color: rgb(153 153 153 / 87%);
+
 }
 select{
   height: 45px !important;
+  color: rgb(153 153 153 / 87%);
 }
 textarea{
   height: 100px !important;
