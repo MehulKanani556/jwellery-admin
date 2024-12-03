@@ -18,6 +18,7 @@ import AddProductOffer from '../pages/AddProductOffer'
 
 import Product from '../pages/Product'
 import AddProduct from '../pages/ProductAdd'
+import ProductView from '../pages/ProductView'
 
 
 
@@ -33,6 +34,7 @@ export default function AuthRoutes() {
                     <Route path="/subcategory" element={<SubCategory />} />
                     <Route path="/products" element={<Product />} />
                     <Route path="/products/productAdd" element={<AddProduct />} />
+                    <Route path="/products/productView" element={<ProductView />} />
                     <Route path="/stoke" element={<Stock />} />
                     <Route path="/review" element={<Review />} />
                     <Route path="/coupons" element={<Coupons />} />

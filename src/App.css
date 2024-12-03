@@ -205,3 +205,111 @@ body {
   color: #523C34 !important;
   border-radius: 10px;
 }
+input{
+  height: 45px !important;
+}
+select{
+  height: 45px !important;
+}
+textarea{
+  height: 100px !important;
+}
+
+.form-control{
+  height: 40px !important;
+}
+
+.form-select{
+  height: 40px !important;
+} 
+
+.form-control:focus{
+  box-shadow: none !important;
+}
+
+.form-select:focus{
+  box-shadow: none !important;
+}
+
+
+/* ==Product View Slider== */
+.product-main-carousel .owl-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.product-main-carousel .owl-nav button {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
+.product-main-carousel .owl-nav button:hover {
+  background: white !important;
+}
+
+.product-thumbs-carousel .owl-item {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.product-thumbs-carousel .owl-item.active {
+  opacity: 1;
+}
+/* Ensure the nav container is visible */
+.owl-carousel .owl-nav {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    pointer-events: none !important;
+}
+
+/* Style the nav buttons */
+.owl-carousel .owl-nav button.owl-prev,
+.owl-carousel .owl-nav button.owl-next {
+    width: 25px !important;
+    height: 25px !important;
+    background: #523C34 !important; /* Updated to match your theme brown color */
+    border-radius: 50% !important;
+    pointer-events: auto !important;
+    z-index: 10 !important;
+    position: absolute !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0.9 !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    font-size: 20px !important;
+}
+
+.owl-carousel .owl-nav button.owl-prev {
+    left: -12px !important;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+    right: -12px !important;
+}
+
+.owl-carousel .owl-nav button.owl-prev:hover,
+.owl-carousel .owl-nav button.owl-next:hover {
+    background: #3a2b25 !important; /* Darker brown on hover */
+    opacity: 1 !important;
+}
+
+.owl-carousel .owl-nav button.owl-prev i,
+.owl-carousel .owl-nav button.owl-next i {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
