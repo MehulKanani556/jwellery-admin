@@ -18,12 +18,16 @@ import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import MenuItem from '@mui/material/MenuItem';
 import { FaFilter } from "react-icons/fa";
-import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts } from "../reduxe/slice/product.slice";
+import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getSingleProducts } from "../reduxe/slice/product.slice";
 import { useLocation, useNavigate } from "react-router-dom";
 // import MenuItem from '@mui/material/MenuItem';
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getAllSizes } from "../reduxe/slice/size.slice";
+
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB in bytes
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
 const AddProduct = React.memo(() => {
 
@@ -32,6 +36,8 @@ const AddProduct = React.memo(() => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useLocation().state;
+    console.log(id);
+
     const category = useSelector((state) => state.categorys.category);
     const subcategory = useSelector((state) => state.subcategorys.SubCategory);
     const products = useSelector((state) => state.products.products);
@@ -56,24 +62,31 @@ const AddProduct = React.memo(() => {
     const [anchorElSetting, setAnchorElSetting] = useState(null);
 
     // Add these new states at the top with other states
-    const [images, setImages] = useState([]);
+    const [mediaFiles, setMediaFiles] = useState([]);
     const fileInputRef = useRef(null);
 
     useEffect(() => {
         dispatch(getAllCategory());
         dispatch(getAllSubCategory());
-        dispatch(getAllProducts());
+        if (id) {
+            dispatch(getSingleProducts(id));
+        } else {
+            dispatch(getAllProducts());
+        }
         dispatch(getAllSizes());
     }, []);
 
 
-    const handleproductadd = (id) => {
-        navigate('/products/productadd')
-    }
 
-    const handleproductview = (id) => {
-        navigate('/products/Productview')
-    }
+
+
+    // const handleproductadd = (id) => {
+    //     navigate('/product/productadd')
+    // }
+
+    // const handleproductview = (id) => {
+    //     navigate('/product/Productview')
+    // }
 
     // Add handler for color and clarity selection
     const handleColorChange = (e) => {
@@ -90,20 +103,25 @@ const AddProduct = React.memo(() => {
     const handleAddDiamondQuality = () => {
         if (selectedColor && selectedClarity) {
             const newQuality = `${selectedColor}/${selectedClarity}`;
-            if (!diamondQualities.includes(newQuality)) {
-                setDiamondQualities([...diamondQualities, newQuality]);
-                // Reset selections
-                // setSelectedColor('');
-                // setSelectedClarity('');
-            }
+            const newQualityArray = !diamondQualities.includes(newQuality)
+                ? [...diamondQualities, newQuality]
+                : [...diamondQualities];
+
+            setDiamondQualities(newQualityArray);
+            setFieldValue('diamond_quality', newQualityArray);
         }
-        setFieldValue('diamond_quality', diamondQualities);
     };
 
     // Add handler for removing diamond quality
     const handleRemoveQuality = (qualityToRemove) => {
-        setDiamondQualities(diamondQualities.filter(quality => quality !== qualityToRemove));
-        setFieldValue('diamond_quality', diamondQualities);
+        let newQualityArray;
+        if (diamondQualities.includes(qualityToRemove)) {
+            newQualityArray = diamondQualities.filter(quality => quality !== qualityToRemove);
+            // setSelectedColor('');
+            // setSelectedClarity('');
+        }
+        setDiamondQualities(newQualityArray);
+        setFieldValue('diamond_quality', newQualityArray);
     };
 
     // Add these new handlers
@@ -160,18 +178,147 @@ const AddProduct = React.memo(() => {
         setFieldValue('diamond_setting', settings?.join(','));
     };
 
-    // Add this function to handle image removal
-    const removeImage = (indexToRemove) => {
-        setImages(prevImages => prevImages.filter((_, index) => index !== indexToRemove));
+    // Add validation function
+    const validateFile = (file) => {
+        if (file.size > MAX_FILE_SIZE) {
+            return `${file.name} is too large. Maximum size is 20MB.`;
+        }
+
+        if (!ALLOWED_IMAGE_TYPES.includes(file.type) && !ALLOWED_VIDEO_TYPES.includes(file.type)) {
+            return `${file.name} has unsupported format. Allowed formats are JPG, PNG, GIF, WEBP, MP4, WEBM, and MOV.`;
+        }
+
+        return null;
     };
 
-    // Update the file input handler
+    // Update the file change handler
     const handleFileChange = (e) => {
         const files = Array.from(e.currentTarget.files);
-        setImages(prevImages => [...prevImages, ...files]);
-        // Reset the input value to allow selecting the same file again
+        const errors = [];
+        const validFiles = [];
+
+        files.forEach(file => {
+            const error = validateFile(file);
+            if (error) {
+                errors.push(error);
+            } else {
+                validFiles.push(file);
+            }
+        });
+
+        if (errors.length > 0) {
+            alert(errors.join('\n'));
+            return;
+        }
+
+        // Update mediaFiles state
+        const newMediaFiles = [...mediaFiles, ...validFiles];
+        setMediaFiles(newMediaFiles);
+
+        // Validate the entire mediaFiles array
+        const validationError = validateMediaFiles(newMediaFiles);
+        if (validationError) {
+            setFieldError('mediaFiles', validationError);
+            setFieldTouched('mediaFiles', true);
+        } else {
+            setFieldValue('mediaFiles', newMediaFiles);
+            setFieldError('mediaFiles', undefined);
+        }
+
         e.target.value = '';
     };
+
+    // Add new validation function for the entire mediaFiles array
+    const validateMediaFiles = (files) => {
+        if (!files || files.length === 0) {
+            return 'At least one image or video is required';
+        }
+
+        // Skip validation for existing files (strings)
+        const newFiles = files.filter(file => typeof file !== 'string');
+
+        for (const file of newFiles) {
+            if (file.size > MAX_FILE_SIZE) {
+                return `${file.name} is too large. Maximum size is 20MB.`;
+            }
+
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type) && !ALLOWED_VIDEO_TYPES.includes(file.type)) {
+                return `${file.name} has unsupported format. Allowed formats are JPG, PNG, GIF, WEBP, MP4, WEBM, and MOV.`;
+            }
+        }
+
+        return undefined;
+    };
+
+    // Update the remove handler
+    const removeFile = (indexToRemove) => {
+        const newMediaFiles = mediaFiles.filter((_, index) => index !== indexToRemove);
+        setMediaFiles(newMediaFiles);
+
+        // Validate the remaining files
+        const validationError = validateMediaFiles(newMediaFiles);
+        if (validationError) {
+            setFieldError('mediaFiles', validationError);
+            setFieldTouched('mediaFiles', true);
+        } else {
+            setFieldValue('mediaFiles', newMediaFiles);
+            setFieldError('mediaFiles', undefined);
+        }
+    };
+
+    // =================updateData=================
+    useEffect(() => {
+        if (id) {
+            console.log(products);
+            setValues(products);
+            setFieldValue('product_name', products.product_name);
+            setFieldValue('category_id', products.category_id);
+            setFieldValue('sub_category_id', products.sub_category_id);
+            setFieldValue('metal_color', products.metal_color);
+            setFieldValue('metal', products.metal);
+            setFieldValue('diamond_color', products.diamond_color);
+            setFieldValue('diamond_quality', products.diamond_quality?.split(',') || []);
+            setFieldValue('no_of_diamonds', products.no_of_diamonds);
+            setFieldValue('clarity', products.clarity);
+            setFieldValue('size_id', products.size_id);
+            setFieldValue('size_name', products.size_name?.split(',') || []);
+            setFieldValue('weight', products.weight);
+            setFieldValue('diamond_setting', products.diamond_setting);
+            setFieldValue('diamond_shape', products.diamond_shape);
+            setFieldValue('collection', products.collection);
+            setFieldValue('gender', products.gender);
+            setFieldValue('qty', products.qty);
+            setFieldValue('price', products.price);
+            setFieldValue('discount', products.discount);
+            setFieldValue('description', products.description);
+
+            // Set media files if they exist
+            if (products.images) {
+                setMediaFiles(products.images);
+                setFieldValue('mediaFiles', products.images);
+            }
+
+            // Set other state values
+            setDiamondQualities(products.diamond_quality?.split(',') || []);
+            setSelectedSizes(products.size_name?.split(',') || []);
+            setSelectedSettings(products.diamond_setting?.split(',') || []);
+
+            // Filter subcategories based on selected category
+            setFilteredSubcategorys(subcategory.filter(
+                (subcat) => subcat.category_id == products.category_id
+            ));
+
+            // Filter sizes based on selected size category
+            const selectedSizeCategory = size.find(
+                (s) => s.id == products.size_id
+            );
+            if (selectedSizeCategory) {
+                setFilteredSize(selectedSizeCategory.size?.split(',') || []);
+            }
+        }
+    }, [id, products, subcategory, size]);
+
+
 
     // Add validation schema
     const productValidationSchema = Yup.object({
@@ -195,11 +342,29 @@ const AddProduct = React.memo(() => {
         price: Yup.number().required('Price is required'),
         discount: Yup.number(),
         description: Yup.string().required('Description is required'),
-        images: Yup.array().min(1, 'At least one image is required')
+        mediaFiles: Yup.array()
+            .test('required', 'At least one image or video is required', function (value) {
+                return value && value.length > 0;
+            })
+            .test('fileSize', 'One or more files exceed 20MB limit', function (value) {
+                if (!value) return true;
+                // Skip validation for existing files (strings)
+                const newFiles = value.filter(file => typeof file !== 'string');
+                return newFiles.every(file => file.size <= MAX_FILE_SIZE);
+            })
+            .test('fileType', 'Unsupported file format', function (value) {
+                if (!value) return true;
+                // Skip validation for existing files (strings)
+                const newFiles = value.filter(file => typeof file !== 'string');
+                return newFiles.every(file =>
+                    ALLOWED_IMAGE_TYPES.includes(file.type) ||
+                    ALLOWED_VIDEO_TYPES.includes(file.type)
+                );
+            }),
     });
 
     const formik = useFormik({
-        initialValues : {
+        initialValues: {
             product_name: '',
             category_id: '',
             sub_category_id: '',
@@ -220,7 +385,7 @@ const AddProduct = React.memo(() => {
             price: '',
             discount: '',
             description: '',
-            images: []
+            mediaFiles: [],
         },
         validationSchema: productValidationSchema,
         validateOnChange: false,
@@ -230,14 +395,26 @@ const AddProduct = React.memo(() => {
             const data = { ...values, status: "active" }
             if (id) {
                 dispatch(editProduct({ data, id: id }))
-                navigate('/product')
+                navigate('/products')
             } else {
                 dispatch(addProduct(data))
+                navigate('/products')
             }
         },
     });
 
-    const { handleSubmit, handleChange, handleBlur, errors, values, touched, setFieldValue, } = formik;
+    const { 
+        handleSubmit, 
+        handleChange, 
+        handleBlur, 
+        errors, 
+        values, 
+        touched, 
+        setFieldValue, 
+        setValues, 
+        setFieldError, 
+        setFieldTouched
+    } = formik;
 
     const handleCategory = useCallback((event) => {
         let id = event.target.value;
@@ -254,55 +431,24 @@ const AddProduct = React.memo(() => {
     }
     console.log(values);
 
-
-    // const submitvalues = async (values, { setSubmitting }) => {
-    //     try {
-    //         const formData = new FormData();
-
-    //         // Append all form values
-    //         Object.keys(values).forEach(key => {
-    //             if (key === 'images') {
-    //                 values.images.forEach(image => {
-    //                     formData.append('images', image);
-    //                 });
-    //             } else if (key === 'diamond_quality') {
-    //                 formData.append('diamond_quality', JSON.stringify(values.diamond_quality));
-    //             } else {
-    //                 formData.append(key, values[key]);
-    //             }
-    //         });
-
-    //         // Make API call here
-    //         // const response = await axios.post('/api/products', formData);
-
-    //         console.log('Form submitted:', values);
-    //         navigate('/products');
-    //     } catch (error) {
-    //         console.error('Error submitting form:', error);
-    //     } finally {
-    //         setSubmitting(false);
-    //     }
-    // };
-
-    // const filteredSubcategorys = useMemo(() => {
-    //     return subcategory.filter((subcat) => subcat.category_id == values.category_id);
-    // }, [subcategory, values.category_id]);
+    const pageTitle = id ? "Edit Product" : "Add Product";
+    const buttonText = id ? "Update" : "Add";
 
     return (
         <div className="md:mx-[20px] p-4">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-brown">Add Product</h1>
+                    <h1 className="text-2xl font-bold text-brown">{pageTitle}</h1>
                     <p className="text-brown-50">
                         Dashboard / Product / {' '}
-                        <span className="text-brown font-medium">Add Product</span>
+                        <span className="text-brown font-medium">{pageTitle}</span>
                     </p>
                 </div>
             </div>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h2 className="text-xl font-bold mb-6 text-brown">Product Details</h2>
 
-                <form className="space-y-6" onSubmit={handleSubmit}  enctype="multipart/form-data">
+                <form className="space-y-6" onSubmit={handleSubmit} enctype="multipart/form-data">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="col-span-1">
                             <label className="block text-brown text-base font-semibold mb-2">Product Name </label>
@@ -310,36 +456,36 @@ const AddProduct = React.memo(() => {
                                 name="product_name"
                                 type="text"
                                 placeholder="Enter product name"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className="w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
                                 onChange={handleChange}
                                 // onBlur={handleBlur}
                                 value={values.product_name}
                             />
-                            {errors.product_name && <p className="text-red-500 text-sm mt-1">{errors.product_name}</p>}
+                            {(errors.product_name && touched.product_name) && <p className="text-red-500 text-sm mt-1">{errors.product_name}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Category </label>
                             <select
                                 name="category_id"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.category_id === '' ? 'text-gray-400' : 'text-black'}`}
                                 onChange={(e) => handleCategory(e)}
                                 // onBlur={handleBlur}
                                 value={values.category_id}
                             >
-                                <option value="">Select category</option>
+                                <option value="" >Select category </option>
                                 {category.map((cat) => (
                                     <option key={cat.id} value={cat.id}>
                                         {cat.name}
                                     </option>
                                 ))}
                             </select>
-                            {errors.category_id && <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>}
+                            {(errors.category_id && touched.category_id) && <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Sub Category </label>
                             <select
                                 name="sub_category_id"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.sub_category_id === '' ? 'text-gray-400' : 'text-black'}`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.sub_category_id}
@@ -351,7 +497,7 @@ const AddProduct = React.memo(() => {
                                     </option>
                                 ))}
                             </select>
-                            {errors.sub_category_id && <p className="text-red-500 text-sm mt-1">{errors.sub_category_id}</p>}
+                            {(errors.sub_category_id && touched.sub_category_id) && <p className="text-red-500 text-sm mt-1">{errors.sub_category_id}</p>}
                         </div>
                     </div>
 
@@ -367,11 +513,12 @@ const AddProduct = React.memo(() => {
                                             name="metal_color"
                                             className="mr-1 text-brown"
                                             onChange={() => {
-                                                handleChange({ target: { name: 'metal_color', value: 'Rose' } });
+                                                handleChange({ target: { name: 'metal_color', value: 'rose' } });
                                                 // setFieldValue('metal_color', 'Rose');
                                             }}
                                             onBlur={handleBlur}
-                                            value="Rose"
+                                            value="rose"
+                                            checked={values.metal_color == 'rose'}
                                         />
                                         <span className="text-gray-700">Rose</span>
                                     </label>
@@ -381,16 +528,17 @@ const AddProduct = React.memo(() => {
                                             name="metal_color"
                                             className="mr-1 text-brown"
                                             onChange={() => {
-                                                handleChange({ target: { name: 'metal_color', value: 'Gold' } });
+                                                handleChange({ target: { name: 'metal_color', value: 'gold' } });
                                                 // setFieldValue('metal_color', 'Gold');
                                             }}
                                             onBlur={handleBlur}
-                                            value="Gold"
+                                            value="gold"
+                                            checked={values.metal_color == 'gold'}
                                         />
                                         <span className="text-gray-700">Gold</span>
                                     </label>
                                 </div>
-                                {errors.metal_color && <p className="text-red-500 text-sm mt-1">{errors.metal_color}</p>}
+                                {(errors.metal_color && touched.metal_color) && <p className="text-red-500 text-sm mt-1">{errors.metal_color}</p>}
                             </div>
                             <div>
                                 <label className="block text-brown text-base font-semibold mb-2">Metal Type </label>
@@ -401,11 +549,12 @@ const AddProduct = React.memo(() => {
                                             name="metal"
                                             className="mr-1 text-brown"
                                             onChange={() => {
-                                                handleChange({ target: { name: 'metal', value: '14K' } });
-                                                setFieldValue('metal', '14K');
+                                                handleChange({ target: { name: 'metal', value: '14k' } });
+                                                setFieldValue('metal', '14k');
                                             }}
                                             onBlur={handleBlur}
-                                            value="14K"
+                                            value="14k"
+                                            checked={values.metal == '14k'}
                                         />
                                         <span className="text-gray-700">14K Gold</span>
                                     </label>
@@ -415,51 +564,68 @@ const AddProduct = React.memo(() => {
                                             name="metal"
                                             className="mr-1 text-brown"
                                             onChange={() => {
-                                                handleChange({ target: { name: 'metal', value: '18K' } });
-                                                setFieldValue('metal', '18K');
+                                                handleChange({ target: { name: 'metal', value: '18k' } });
+                                                setFieldValue('metal', '18k');
                                             }}
                                             onBlur={handleBlur}
-                                            value="18K"
+                                            value="18k"
+                                            checked={values.metal == '18k'}
                                         />
                                         <span className="text-gray-700">18K Gold</span>
                                     </label>
                                 </div>
-                                {errors.metal && <p className="text-red-500 text-sm mt-1">{errors.metal}</p>}
+                                {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1">{errors.metal}</p>}
                             </div>
                         </div>
                         {/* Image Upload */}
                         <div className="col-span-2">
-                            <label className="block text-brown text-base font-semibold mb-2">Product Images </label>
+                            <label className="block text-brown text-base font-semibold mb-2">Product Media (Images/Videos) </label>
                             <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
-                                {images.length > 0 ? (
+                                {mediaFiles.length > 0 ? (
                                     <>
-                                        <div className="flex w-[100%] gap-2 overflow-x-scroll scrollbar-hide ">
-                                            {images.map((image, index) => (
-                                                <div key={index} className="flex w-[300px] items-center justify-between bg-[#72727226] px-2 py-1">
+                                        <div className="flex w-[100%] gap-2 overflow-x-scroll scrollbar-hide">
+                                            {mediaFiles.map((file, index) => (
+                                                <div key={index} className="flex w-[200px] items-center justify-between bg-[#72727226] px-2 py-1">
                                                     <div className="flex items-center">
-                                                        {typeof image === "string" ? (
-                                                            <img
-                                                                src={image}
-                                                                alt="Preview"
-                                                                className="w-8 h-8 rounded-full mr-2"
-                                                            />
+                                                        {typeof file === "string" ? (
+                                                            file.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                                                                <img
+                                                                    src={file}
+                                                                    alt="Preview"
+                                                                    className="w-8 h-8 rounded-full mr-2"
+                                                                />
+                                                            ) : (
+                                                                <video
+                                                                    className="w-8 h-8 rounded-full mr-2 object-cover"
+                                                                >
+                                                                    <source src={file} />
+                                                                </video>
+                                                            )
                                                         ) : (
-                                                            <img
-                                                                src={URL.createObjectURL(image)}
-                                                                alt="Preview"
-                                                                className="w-8 h-8 rounded-full mr-2"
-                                                            />
+                                                            file.type.startsWith('image/') ? (
+                                                                <img
+                                                                    src={URL.createObjectURL(file)}
+                                                                    alt="Preview"
+                                                                    className="w-8 h-8 rounded-full mr-2"
+                                                                />
+                                                            ) : (
+                                                                <video
+                                                                    className="w-8 h-8 rounded-full mr-2 object-cover"
+                                                                >
+                                                                    <source src={URL.createObjectURL(file)} />
+                                                                </video>
+                                                            )
                                                         )}
-                                                        <span className="text-[12px] whitespace-nowrap overflow-hidden text-ellipsis ">
-                                                            {typeof image === "string"
-                                                                ? image.split("/").pop()
-                                                                : image.name}
+                                                        <span className="text-[12px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                                            {typeof file === "string"
+                                                                ? file.split("/").pop()
+                                                                : file.name}
                                                         </span>
                                                     </div>
                                                     <button
                                                         type="button"
-                                                        onClick={() => removeImage(index)}
-                                                        className="flex-1 items-center text-red-500 ml-1 text-[12px]"
+                                                        onClick={() => removeFile(index)}
+                                                        className="text-red-500 ml-1 text-[12px]"
                                                     >
                                                         X
                                                     </button>
@@ -469,14 +635,10 @@ const AddProduct = React.memo(() => {
                                         <div className="flex items-center ml-4">
                                             <input
                                                 type="file"
-                                                accept="image/*"
+                                                accept={[...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES].join(',')}
                                                 multiple
                                                 ref={fileInputRef}
-                                                onChange={(e) => {
-                                                    const files = Array.from(e.currentTarget.files);
-                                                    setFieldValue('images', [...values.images, ...files]);
-                                                    handleFileChange(e);
-                                                }}
+                                                onChange={handleFileChange}
                                                 className="hidden"
                                                 id="file-upload"
                                             />
@@ -491,18 +653,14 @@ const AddProduct = React.memo(() => {
                                 ) : (
                                     <>
                                         <p className="flex-1 text-[16px] text-[#727272]">
-                                            Choose Images
+                                            Choose Images or Videos (Max 20MB each)
                                         </p>
                                         <input
                                             type="file"
-                                            accept="image/*"
+                                            accept={[...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES].join(',')}
                                             multiple
                                             ref={fileInputRef}
-                                            onChange={(e) => {
-                                                const files = Array.from(e.currentTarget.files);
-                                                setFieldValue('images', files);
-                                                handleFileChange(e);
-                                            }}
+                                            onChange={handleFileChange}
                                             className="hidden"
                                             id="file-upload"
                                         />
@@ -515,7 +673,12 @@ const AddProduct = React.memo(() => {
                                     </>
                                 )}
                             </div>
-                            {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images}</p>}
+                            {(errors.mediaFiles && touched.mediaFiles) &&
+                                <p className="text-red-500 text-sm mt-1">{errors.mediaFiles}</p>
+                            }
+                            <p className="text-gray-500 text-xs mt-1">
+                                Supported formats: JPG, PNG, GIF, WEBP, MP4, WEBM, MOV (Max size: 20MB)
+                            </p>
                         </div>
                     </div>
 
@@ -540,7 +703,7 @@ const AddProduct = React.memo(() => {
                                     <option value="KM">KM</option>
                                     <option value="NZ">NZ</option>
                                 </select>
-                                {errors.diamond_color && <p className="text-red-500 text-sm mt-1">{errors.diamond_color}</p>}
+                                {(errors.diamond_color && touched.diamond_color) && <p className="text-red-500 text-sm mt-1">{errors.diamond_color}</p>}
                             </div>
                             <div className="w-50">
                                 <label className="block text-brown text-base font-semibold mb-2">Clarity</label>
@@ -564,7 +727,7 @@ const AddProduct = React.memo(() => {
                                     <option value="I2">I2</option>
                                     <option value="I3">I3</option>
                                 </select>
-                                {errors.clarity && <p className="text-red-500 text-sm mt-1">{errors.clarity}</p>}
+                                {(errors.clarity && touched.clarity) && <p className="text-red-500 text-sm mt-1">{errors.clarity}</p>}
                             </div>
                             <div className="self-end mb-2">
                                 <button
@@ -596,7 +759,7 @@ const AddProduct = React.memo(() => {
                                     </button>
                                 )) : <span className="text-gray-400">Select diamond quality</span>}
                             </div>
-                            {errors.diamond_quality && <p className="text-red-500 text-sm mt-1">{errors.diamond_quality}</p>}
+                            {(errors.diamond_quality && touched.diamond_quality) && <p className="text-red-500 text-sm mt-1">{errors.diamond_quality}</p>}
                         </div>
                     </div>
 
@@ -618,7 +781,7 @@ const AddProduct = React.memo(() => {
                                     </option>
                                 ))}
                             </select>
-                            {errors.size_name && <p className="text-red-500 text-sm mt-1">{errors.size_name}</p>}
+                            {(errors.size_name && touched.size_name) && <p className="text-red-500 text-sm mt-1">{errors.size_name}</p>}
                         </div>
                         <div className="col-span-2">
                             <label className="block text-brown text-base font-semibold mb-2">Size Range </label>
@@ -693,11 +856,11 @@ const AddProduct = React.memo(() => {
                                     ))}
                                 </div>
                             </Menu>
-                            {errors.size_id && <p
+                            {(errors.size_id && touched.size_id) && <p
                                 name="size_id"
                                 component="div"
                                 className="text-red-500 text-sm mt-1"
-                            />}
+                            >{errors.size_id}</p>}
                         </div>
                     </div>
 
@@ -714,7 +877,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.weight}
                             />
-                            {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight}</p>}
+                            {(errors.weight && touched.weight) && <p className="text-red-500 text-sm mt-1">{errors.weight}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Diamond Setting</label>
@@ -773,7 +936,7 @@ const AddProduct = React.memo(() => {
                                     </MenuItem>
                                 ))}
                             </Menu>
-                            {errors.diamond_setting && <p className="text-red-500 text-sm mt-1">{errors.diamond_setting}</p>}
+                            {(errors.diamond_setting && touched.diamond_setting) && <p className="text-red-500 text-sm mt-1">{errors.diamond_setting}</p>}
                         </div>
 
                         <div>
@@ -796,7 +959,7 @@ const AddProduct = React.memo(() => {
                                 <option value="marquise">Marquise</option>
                                 <option value="radiant">Radiant</option>
                             </select>
-                            {errors.diamond_shape && <p className="text-red-500 text-sm mt-1">{errors.diamond_shape}</p>}
+                            {(errors.diamond_shape && touched.diamond_shape) && <p className="text-red-500 text-sm mt-1">{errors.diamond_shape}</p>}
                         </div>
 
                     </div>
@@ -814,7 +977,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.no_of_diamonds}
                             />
-                            {errors.no_of_diamonds && <p className="text-red-500 text-sm mt-1">{errors.no_of_diamonds}</p>}
+                            {(errors.no_of_diamonds && touched.no_of_diamonds) && <p className="text-red-500 text-sm mt-1">{errors.no_of_diamonds}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Gender </label>
@@ -830,7 +993,7 @@ const AddProduct = React.memo(() => {
                                 <option value="female">Female</option>
                                 <option value="unisex">Unisex</option>
                             </select>
-                            {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                            {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Collection</label>
@@ -843,7 +1006,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.collection}
                             />
-                            {errors.collection && <p className="text-red-500 text-sm mt-1">{errors.collection}</p>}
+                            {(errors.collection && touched.collection) && <p className="text-red-500 text-sm mt-1">{errors.collection}</p>}
                         </div>
                     </div>
 
@@ -859,7 +1022,7 @@ const AddProduct = React.memo(() => {
                             onBlur={handleBlur}
                             value={values.description}
                         />
-                        {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                        {(errors.description && touched.description) && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                     </div>
 
                     {/* Price Details Row */}
@@ -875,7 +1038,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.qty}
                             />
-                            {errors.qty && <p className="text-red-500 text-sm mt-1">{errors.qty}</p>}
+                            {(errors.qty && touched.qty) && <p className="text-red-500 text-sm mt-1">{errors.qty}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Price (₹) </label>
@@ -888,7 +1051,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.price}
                             />
-                            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+                            {(errors.price && touched.price) && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Discount (%)</label>
@@ -901,7 +1064,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.discount}
                             />
-                            {errors.discount && <p className="text-red-500 text-sm mt-1">{errors.discount}</p>}
+                            {(errors.discount && touched.discount) && <p className="text-red-500 text-sm mt-1">{errors.discount}</p>}
                         </div>
                     </div>
 
@@ -910,15 +1073,15 @@ const AddProduct = React.memo(() => {
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="px-6 py-2 border border-brown text-brown rounded-md hover:bg-brown hover:text-white transition-colors"
+                            className="px-6 py-2 max-w-[200px] w-full border border-brown text-brown rounded-md hover:bg-brown hover:text-white transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-brown text-white rounded-md hover:bg-brown-600 transition-colors"
+                            className="px-6 py-2 max-w-[200px] w-full bg-brown text-white rounded-md hover:bg-brown-600 transition-colors"
                         >
-                            Add Product
+                            {buttonText}
                         </button>
                     </div>
                 </form>

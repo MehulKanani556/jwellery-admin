@@ -97,10 +97,9 @@ export default function Product() {
   };
 
   // Get current items based on filtered items
-  const currentItems = filterProducts.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentItems = Array.isArray(filterProducts) 
+    ? filterProducts.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -148,7 +147,7 @@ export default function Product() {
   }
 
   const handleproductview = (id) => {
-    // navigate('/products/Productview')
+    navigate('/products/productView', { state: { id } })
   }
 
   return (
