@@ -84,10 +84,10 @@ function Layout({ children }) {
     {
       title: 'Offers',
       icon: <BiSolidOffer />,
-      path: '/offer',
+     
       subItems: [
         { title: 'Product Offer', path: '/product-offer' },
-        { title: 'Offer', path: '/offer' },
+        { title: 'Offer', path: '/offers' },
       ],
       dropdownIcon: <FaAngleDown />
     },

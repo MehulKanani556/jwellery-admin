@@ -11,6 +11,7 @@ import productSlice from "./slice/product.slice";
 import reviewSlice from "./slice/review.slice";
 import couponsSlice from "./slice/coupons.slice";
 import productofferSlice from "./slice/productoffer.slice";
+import offerSlice from "./slice/offer.slice";
 
 
 export const rootReducer = combineReducers({
@@ -24,4 +25,5 @@ export const rootReducer = combineReducers({
     reviews:reviewSlice,
     coupons:couponsSlice,
     productoffers:productofferSlice,
+    offers:offerSlice
 });

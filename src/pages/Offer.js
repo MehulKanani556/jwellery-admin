@@ -3,7 +3,7 @@ import {
     Modal,
     Slider,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
@@ -12,44 +12,46 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
-import { deleteAllProductOffers, deleteProductOffer, getAllProductOffers, updateStatusProductOffer } from "../reduxe/slice/productoffer.slice";
 import { useNavigate } from "react-router-dom";
 import { getAllCategory } from "../reduxe/slice/catagorys.slice";
+import { addOffer, deleteAllOffers, deleteOffer, editOffer, getAllOffers, updateStatusOffer } from "../reduxe/slice/offer.slice";
+import { Field, Formik } from "formik";
+import * as Yup from 'yup';
 
-export default function ProductOffer() {
+export default function Offer() {
     const [data, setData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const [createopen, setCreateopen] = useState(false);
-    const { productOffers } = useSelector((state) => state.productoffers);
-    const { category } = useSelector(state => state.categorys);
-    const navigate = useNavigate();
+    const [openView, setOpenView] = useState(false);
+    const { offers } = useSelector((state) => state.offers);
     const [delAllOpen, setDelAllOpen] = useState(false);
-
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const fileInputRef = useRef(null);
+    const [selectType, setSelectType] = useState("");
+    const [selectName, setSelectName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [filtersApplied, setFiltersApplied] = useState(false);
-    const [filterPOffer, setFilterPOffer] = useState(productOffers);
+    const [filterOffer, setFilterOffer] = useState(offers);
 
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
 
     // ====== Price and Discount Range ======
-     // Calculate dynamic min and max prices based on productOffers
-     const minPrice = 0;
-     const maxPrice = Math.max(...productOffers.map(offer => offer.price))+1000;
+    // Calculate dynamic min and max prices based on productOffers
+    const minPrice = 0;
+    const maxPrice = Math.max(...offers.map(offer => offer.price)) + 1000;
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]); // Price range state
     const [discountRange, setDiscountRange] = useState([0, 100]); // Discount range state
 
     useEffect(() => {
-        dispatch(getAllProductOffers());
+        dispatch(getAllOffers());
         dispatch(getAllCategory());
 
     }, []);
 
     useEffect(() => {
-        setFilterPOffer(productOffers)
-    }, [productOffers]);
+        setFilterOffer(offers)
+    }, [offers]);
 
     // ======filter=====
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -65,16 +67,13 @@ export default function ProductOffer() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Set items per page
     // Calculate total pages
-    const totalPages = Math.ceil(filterPOffer?.length / itemsPerPage);
+    const totalPages = Math.ceil(filterOffer?.length / itemsPerPage);
 
     // Get current items
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-    // Handle price range change
-    const handlePriceRangeChange = (event, newValue) => {
-        setPriceRange(newValue);
-    };
+
 
     // Handle discount range change
     const handleDiscountRangeChange = (event, newValue) => {
@@ -84,14 +83,12 @@ export default function ProductOffer() {
     // Handle filter application
     const handleApplyFilter = () => {
         setFiltersApplied(true);
-        const filteredItems = productOffers.filter((item) => {
-            const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
-            const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
-            const matchesPrice = item.price >= priceRange[0] && item.price <= priceRange[1]; // Price filter
-            const matchesDiscount = (discountRange[0] !== 0 || discountRange[1] !== 100) 
-            ? (item.discount >= discountRange[0] && item.discount <= discountRange[1])
-            : true;
-
+        const filteredItems = offers.filter((item) => {
+            const matchesTypes = selectType ? item.type === selectType : true;
+            const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
+            const matchesDiscount = (discountRange[0] !== 0 || discountRange[1] !== 100)
+                ? (item.discount >= discountRange[0] && item.discount <= discountRange[1])
+                : true;
             // Parse dates
             const itemStartDate = new Date(item.start_date);
             const itemEndDate = new Date(item.end_date);
@@ -99,12 +96,11 @@ export default function ProductOffer() {
             const filterEndDate = new Date(selectedEndDate);
             const matchesStartDate = selectedStartDate ? itemStartDate >= filterStartDate : true;
             const matchesEndDate = selectedEndDate ? itemEndDate <= filterEndDate : true;
-
-            return matchesCategory && matchesStatus && matchesPrice && matchesDiscount && matchesStartDate && matchesEndDate;
+            const matchesName = selectName ? item.name.toLowerCase().includes(selectName.toLowerCase()) : true;
+            return matchesTypes && matchesStatus && matchesDiscount && matchesStartDate && matchesEndDate && matchesName;
         });
-
         handleClose();
-        setFilterPOffer(filteredItems);
+        setFilterOffer(filteredItems);
     };
 
     // Handle reset filters
@@ -112,17 +108,18 @@ export default function ProductOffer() {
         setSelectedEndDate("");
         setSelectedStartDate("");
         setSelectedStatus("");
-        setSelectedCategory("");
+        setSelectType("");
+        setSelectName("");
         setCurrentPage(1);
         setFiltersApplied(false);
-        setFilterPOffer(productOffers);
-        setPriceRange([minPrice,maxPrice]); // Reset price range
+        setFilterOffer(offers);
+        setPriceRange([minPrice, maxPrice]); // Reset price range
         setDiscountRange([0, 100]); // Reset discount range
     };
 
 
     // Get current items based on filtered items
-    const currentItems = filterPOffer?.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filterOffer?.slice(indexOfFirstItem, indexOfLastItem);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
@@ -133,11 +130,13 @@ export default function ProductOffer() {
     // =====pagination end=====
 
     const handleOpen = (data) => {
-        console.log("data",data)
-        navigate('/product-offer/add', { state: { offerData: data } });
+        console.log("data", data)
+        setCreateopen(true);
+        // navigate('/product-offer/add', { state: { offerData: data } });
+        setData(data);
     };
     const handleOpenView = (data) => {
-        setCreateopen(true);
+        setOpenView(true);
         setData(data);
     };
     const handleDeleteOpen = (data) => {
@@ -148,7 +147,7 @@ export default function ProductOffer() {
         setDelOpen(false);
     };
     const handleDelete = () => {
-        dispatch(deleteProductOffer({ id: data.id }));
+        dispatch(deleteOffer({ id: data.id }));
         setDelOpen(false);
     };
     const handleCreateClose = () => {
@@ -156,26 +155,34 @@ export default function ProductOffer() {
         setData("");
     };
     const handleDeleteAll = () => {
-        dispatch(deleteAllProductOffers()).then(() => {
+        dispatch(deleteAllOffers()).then(() => {
             setDelAllOpen(false);
         });
     }
 
     const handleToggle = (data) => {
         const status = data.status == "active" ? "inactive" : "active";
-        dispatch(updateStatusProductOffer({ id: data.id, status: status }));
+        dispatch(updateStatusOffer({ id: data.id, status: status }));
     };
 
-   
+    const validationSchema = Yup.object({
+        name: Yup.string().required('Name is required'),
+        description: Yup.string().required('Description is required'),
+        type: Yup.string().required('Type is required'),
+        discount: Yup.number().typeError('Discount must be a number').positive('Discount must be positive').required('Discount is required'),
+        start_date: Yup.date().required('Start date is required'),
+        end_date: Yup.date().required('End date is required'),
+        status: Yup.string().required('Status is required'),
+    });
 
     return (
         <div className=" md:mx-[20px] p-4 ">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-brown">Product Offers</h1>
+                    <h1 className="text-2xl font-bold text-brown">Offers</h1>
                     <p className="text-brown-50">
                         Dashboard /{" "}
-                        <span className="text-brown font-medium">Product Offers</span>
+                        <span className="text-brown font-medium">Offers</span>
                     </p>
                 </div>
                 <div>
@@ -223,20 +230,29 @@ export default function ProductOffer() {
                                 <div className=" p-3 pt-0">
                                     <div className="mt-4">
 
-                                        <label className="text-brown font-bold mt-4">Category</label>
+                                        <label className="text-brown font-bold mt-4">Offer Type</label>
                                         <select
-                                            name="category"
+                                            name="type"
                                             className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedCategory}
-                                            onChange={(e) => setSelectedCategory(e.target.value)}
+                                            value={selectType}
+                                            onChange={(e) => setSelectType(e.target.value)}
                                         >
-                                            <option value="">Select Category</option>
-                                            {category?.map((ele) => (
-                                                <option key={ele.id} value={ele.id}>
-                                                    {ele.name}
-                                                </option>
-                                            ))}
+                                            <option value="">Select Offer Type</option>
+                                            <option value="percentage">Percentage</option>
+                                            <option value="fixed">Fixed Amount</option>
+
                                         </select>
+                                    </div>
+                                    <div className="mt-4">
+
+                                        <label className="text-brown font-bold mt-4">Offer Name</label>
+                                        <input
+                                            type="text"
+                                            className="border border-brown rounded w-full p-3 mt-1"
+                                            placeholder="Enter offer name"
+                                            value={selectName}
+                                            onChange={(e) => setSelectName(e.target.value)}
+                                        />
                                     </div>
                                     <div className="mt-4">
 
@@ -269,24 +285,11 @@ export default function ProductOffer() {
                                             onChange={(e) => setSelectedStatus(e.target.value)}
                                         >
                                             <option value="">Select Status</option>
-                                            <option value="inactive">InActive</option>
+                                            <option value="inactive">In Active</option>
                                             <option value="active">Active</option>
                                         </select>
                                     </div>
-                                    {/* Price Range Slider */}
-                                    <div className="mt-4">
-                                        <label className="text-brown font-bold">Price</label>
-                                        <Slider
-                                            value={priceRange}
-                                            onChange={handlePriceRangeChange}
-                                            valueLabelDisplay="auto"
-                                            min={minPrice}
-                                            max={maxPrice}
-                                            marks={[{ value: minPrice, label: `₹${minPrice}` }, { value: maxPrice, label: `₹${maxPrice}` }]}
-                                            style={{ width: '90%', display: 'flex', justifyContent: 'center', color: '#523C34' }}
-                                            className="mx-auto flex justify-center"
-                                        />
-                                    </div>
+
                                     {/* Discount Range Slider */}
                                     <div className="mt-4">
                                         <label className="text-brown font-bold">Discount</label>
@@ -335,7 +338,7 @@ export default function ProductOffer() {
                         </button>
                         <button
                             className="bg-brown w-32 text-white px-4 py-2 rounded"
-                            onClick={() => { navigate('/product-offer/add') }}
+                            onClick={handleOpen}
                         >
                             + Add
                         </button>
@@ -347,27 +350,30 @@ export default function ProductOffer() {
                     <thead>
                         <tr className="text-brown font-bold">
                             <td className="py-2 px-5">ID</td>
-                            <td className="py-2 px-5">Category</td>
-                            <td className="py-2 px-5">Product Name</td>
-                            <td className="py-2 px-5">Code</td>
-                            <td className="py-2 px-5">Discount</td>
-                            <td className="py-2 px-5">Price</td>
-                            <td className="py-2 px-5">Start Date</td>
-                            <td className="py-2 px-5">End Date</td>
-                            <td className="py-2 px-5">Status</td>
-                            <td className="py-2 px-5">Action</td>
+                            <td className="py-2 px-5 text-nowrap">Offer Image</td>
+                            <td className="py-2 px-5 text-nowrap">Offer Type</td>
+                            <td className="py-2 px-5 text-nowrap">Description</td>
+                            <td className="py-2 px-5 text-nowrap">Offer Name</td>
+                            <td className="py-2 px-5 text-nowrap">Button Text</td>
+                            <td className="py-2 px-5 text-nowrap">Discount</td>
+                            <td className="py-2 px-5 text-nowrap">Start Date</td>
+                            <td className="py-2 px-5 text-nowrap">End Date</td>
+                            <td className="py-2 px-5 text-nowrap">Status</td>
+                            <td className="py-2 px-5 text-nowrap">Action</td>
                         </tr>
                     </thead>
                     <tbody>
                         {currentItems && currentItems.length > 0 ? (
                             currentItems.map((v, index) => (
                                 <tr key={index} className="hover:bg-gray-100 border-t">
-                                    <td className="py-2 px-5">{v.id}</td>
-                                    <td className="py-2 px-5">{v.category}</td>
-                                    <td className="py-2 px-5">{v.product}</td>
-                                    <td className="py-2 px-5">{v.code}</td>
+                                    <td className="py-2 px-5 ">{v.id}</td>
+                                    <td className="py-2 px-5">
+                                        <img src={v.image} alt="" className="w-[50px] rounded object-cover" /></td>
+                                    <td className="py-2 px-5 capitalize">{v.type}</td>
+                                    <td className="py-2 px-5">{v.description}</td>
+                                    <td className="py-2 px-5">{v.name}</td>
+                                    <td className="py-2 px-5">{v.button_text}</td>
                                     <td className="py-2 px-5">{v.type === 'fixed' ? `₹ ${v.discount}` : `${v.discount}%`}</td>
-                                    <td className="py-2 px-5">₹ {v.price}</td>
                                     <td className="py-2 px-5">{v.start_date}</td>
                                     <td className="py-2 px-5">{v.end_date}</td>
                                     <td className="py-2 px-5">
@@ -406,7 +412,7 @@ export default function ProductOffer() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="10" className="py-2 px-4 text-center text-gray p-1 px-4-500 border-t">No records found</td>
+                                <td colSpan="11" className="py-2 px-4 text-center text-gray p-1 px-4-500 border-t">No records found</td>
                             </tr>
                         )}
                     </tbody>
@@ -436,18 +442,214 @@ export default function ProductOffer() {
                 }}
             />
 
-            {/* view product offer*/}
+            {/* Add and Edit Offer*/}
             <Modal open={createopen} onClose={handleCreateClose}>
                 <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px] transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
                     <p className='text-brown font-bold text-xl flex justify-between'>
-                        <p>View Product Offers</p>
+                        <p>{data.id ? 'Edit Offer' : 'Add Offer'}</p>
                         <button onClick={handleCreateClose} className="font-bold"><RxCross2 /></button>
+                    </p>
+                    <div>
+                        <Formik
+                            initialValues={{
+
+                                type: data.type || '',
+                                description: data.description || '',
+                                name: data.name || '',
+                                image: data.image || '',
+                                button_text: data.button_text || '',
+                                discount: data.discount || '',
+                                start_date: data.start_date || '',
+                                end_date: data.end_date || '',
+                                id: data.id || '',
+                                status: data.status || 'active'
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={(values, { resetForm }) => {
+                                if (data.id) {
+                                    dispatch(editOffer(values));
+                                } else {
+                                    dispatch(addOffer(values));
+                                }
+                                resetForm();
+                                handleCreateClose();
+                            }}
+                        >
+                            {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
+                                <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
+
+                                    <div className="mb-4">
+                                        <label htmlFor="type" className="block text-sm font-bold text-brown">Offer Type</label>
+                                        <Field
+                                            as="select"
+                                            name="type"
+                                            id="type"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                        >
+                                            <option value="">Select Offer Type</option>
+                                            <option value="percentage">Percentage</option>
+                                            <option value="fixed">Fixed Amount</option>
+                                        </Field>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="description" className="block text-sm font-bold text-brown">Description</label>
+                                        <Field
+                                            type="text"
+                                            name="description"
+                                            id="description"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                            placeholder="Enter Description"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="name" className="block text-sm font-bold text-brown">Offer Name</label>
+                                        <Field
+                                            type="text"
+                                            name="name"
+                                            id="name"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                            placeholder="Enter Offer Name"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="image" className="block text-sm font-bold text-brown">Offer Image</label>
+                                        <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
+                                            {values.image ? (
+                                                <>
+                                                    <div className="flex items-center bg-[#72727226] px-2 py-1">
+                                                        <img
+                                                            src={typeof values.image === "string" ? values.image : URL.createObjectURL(values.image)}
+                                                            alt="Preview"
+                                                            className="w-8 h-8 rounded-full mr-2"
+                                                        />
+                                                        <span className="flex-1">
+                                                            {typeof values.image === "string" ? values.image.split("/").pop() : values.image.name}
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setFieldValue("image", null)} // Clear the image
+                                                            className="text-red-500 ml-1"
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </div>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        ref={fileInputRef}
+                                                        onChange={(e) => {
+                                                            const file = e.target.files[0];
+                                                            if (file) {
+                                                                setFieldValue("image", file); // Update the image
+                                                            }
+                                                        }}
+                                                        className="hidden"
+                                                        id="file-upload"
+                                                    />
+                                                    <label
+                                                        htmlFor="file-upload"
+                                                        className="cursor-pointer text-center bg-brown text-white rounded p-[5px] px-3 text-[13px]"
+                                                    >
+                                                        Change
+                                                    </label>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="flex-1 text-[16px] text-[#727272]">
+                                                        Choose Image
+                                                    </p>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        ref={fileInputRef}
+                                                        onChange={(e) => {
+                                                            const file = e.target.files[0];
+                                                            if (file) {
+                                                                setFieldValue("image", file); // Update the image
+                                                            }
+                                                        }}
+                                                        className="hidden"
+                                                        id="file-upload"
+                                                    />
+                                                    <label
+                                                        htmlFor="file-upload"
+                                                        className="cursor-pointer text-center bg-brown text-white rounded p-1 px-2 text-[13px]"
+                                                    >
+                                                        Browse
+                                                    </label>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="button_text" className="block text-sm font-bold text-brown">Button Text</label>
+                                        <Field
+                                            type="text"
+                                            name="button_text"
+                                            id="button_text"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                            placeholder="Enter Button Text"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="discount" className="block text-sm font-bold text-brown">Discount</label>
+                                        <Field
+                                            type="number"
+                                            name="discount"
+                                            id="discount"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                            placeholder="Enter Discount"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="start_date" className="block text-sm font-bold text-brown">Start Date</label>
+                                        <Field
+                                            type="date"
+                                            name="start_date"
+                                            id="start_date"
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="end_date" className="block text-sm font-bold text-brown">End Date</label>
+                                        <Field
+                                            type="date"
+                                            name="end_date"
+                                            id="end_date"
+                                            min={values.start_date || ''}
+                                            className="mt-1 block w-full border border-brown p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className='flex flex-col md:flex-row gap-2 p-5 pb-2'>
+                                        <button className='text-brown hover:bg-brown-50 border-brown border p-2 rounded w-full' onClick={handleCreateClose}>
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
+                                        >
+                                            {isSubmitting ? 'Submitting...' : (data.id ? 'Edit Offer' : 'Add Offer')}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+                        </Formik>
+                    </div>
+                </Box>
+            </Modal>
+            {/* View Offer*/}
+            <Modal open={openView} onClose={() => setOpenView(false)}>
+                <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px] transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+                    <p className='text-brown font-bold text-xl flex justify-between'>
+                        <p>View Offer</p>
+                        <button onClick={() => setOpenView(false)} className="font-bold"><RxCross2 /></button>
                     </p>
                     <div>
                         <div className="p-4">
                             <div className="flex flex-col items-center">
-                                <img src={data.product_image} alt={data.name} className="w-36 mx-auto mb-4 rounded" />
-                                <div className="w-full">
+                                <img src={data.image} alt={data.name} className="w-36 mx-auto mb-4 rounded" />
+                                {/* <div className="w-full">
                                     <table className="bg-white shadow-md rounded w-full mt-4 ">
                                         <tbody>
                                             <tr className=" border-t ">
@@ -464,9 +666,9 @@ export default function ProductOffer() {
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
+                                </div> */}
                             </div>
-                            <div className=" bg-white shadow-md rounded mt-4">
+                            {/* <div className=" bg-white shadow-md rounded mt-4">
                                 <h2 className="text-xl p-1 px-4 font-bold">Offer Details</h2>
                                 <table className="w-full ">
                                     <tbody>
@@ -512,7 +714,7 @@ export default function ProductOffer() {
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </Box>
@@ -523,9 +725,9 @@ export default function ProductOffer() {
                 <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
                     <div className="p-5">
                         <div className="text-center">
-                            <p className="text-brown font-bold text-xl">Delete Product Offer</p>
+                            <p className="text-brown font-bold text-xl">Delete  Offer</p>
                             <p className="text-brown-50">
-                                Are you sure you want to delete product offer?
+                                Are you sure you want to delete offer?
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3 mt-4 justify-center">
@@ -556,9 +758,9 @@ export default function ProductOffer() {
                     <div className='  p-5'>
                         <div className='text-center'>
 
-                            <p className='text-brown font-bold text-xl'>Delete All Product Offer</p>
+                            <p className='text-brown font-bold text-xl'>Delete All  Offer</p>
                             <p className='text-brown-50'>Are you sure you want to delete all
-                                product offer?</p>
+                                offer?</p>
                         </div>
                         <div className='flex flex-wrap justify-center gap-3 mt-4'>
                             <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>

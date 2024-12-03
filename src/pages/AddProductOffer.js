@@ -58,7 +58,23 @@ export default function AddProductOffer() {
     dispatch(getAllCategory());
     dispatch(getAllSubCategory());
     dispatch(getAllProducts());
-  }, [dispatch]);
+
+
+  }, [dispatch]); // Add offerData and products as dependencies
+
+
+  useEffect(() => {
+    // Set selected category and filter products if offerData exists
+    if (offerData) {
+      setSelectedCategory(offerData.subcategory_id); // Set selected category
+      const filtered = products.filter(product => product.sub_category_id == offerData.subcategory_id);
+      setFilteredProducts(filtered); // Filter products based on the selected subcategory
+    }
+  }, [offerData, products]);
+
+
+  console.log("offerData", offerData);
+
 
   // Function to handle category change
   const handleCategoryChange = (event) => {
@@ -104,9 +120,9 @@ export default function AddProductOffer() {
     description: offerData ? offerData.description : '',
     type: offerData ? offerData.type : '',
     status: offerData ? offerData.status : 'active',
-    image: offerData?offerData.image :null,
-    id: offerData ? offerData.id :'',
-  };  
+    image: offerData ? offerData.image : null,
+    id: offerData ? offerData.id : '',
+  };
 
   return (
     <div className=" md:mx-[20px] p-4 ">

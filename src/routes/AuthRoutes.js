@@ -18,6 +18,7 @@ import AddProductOffer from '../pages/AddProductOffer'
 
 import Product from '../pages/Product'
 import AddProduct from '../pages/ProductAdd'
+import Offer from '../pages/Offer'
 
 
 
@@ -38,6 +39,7 @@ export default function AuthRoutes() {
                     <Route path="/coupons" element={<Coupons />} />
                     <Route path="/product-offer" element={<ProductOffer />} />
                     <Route path="/product-offer/add" element={<AddProductOffer />} />
+                    <Route path="/offers" element={<Offer />} />
 
                 </Routes>
             </Layout>
