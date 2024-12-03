@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         brown: '#523C34',
         'brown-50': '#727272',
-        
+        secondary: '#523C34',
       },
     },
     screens: {
