@@ -23,10 +23,48 @@ export const getAllProducts = createAsyncThunk(
 
 export const addProduct = createAsyncThunk(
     'product/addProduct',
-    async ({ name, size }, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
+        // Format the data object
+        const formData = new FormData();
+        
+        // Add all fields to FormData
+        formData.append('product_name', data.product_name);
+        formData.append('category_id', data.category_id);
+        formData.append('sub_category_id', data.sub_category_id);
+        formData.append('metal_color', data.metal_color);
+        formData.append('metal', data.metal);
+        formData.append('diamond_color', data.diamond_color);
+        formData.append('diamond_quality', Array.isArray(data.diamond_quality) ? data.diamond_quality.join(',') : data.diamond_quality);
+        formData.append('no_of_diamonds', data.no_of_diamonds);
+        formData.append('clarity', data.clarity);
+        formData.append('size_id', data.size_id);
+        formData.append('size_name', data.size_name);
+        formData.append('weight', data.weight);
+        formData.append('diamond_setting', Array.isArray(data.diamond_setting) ? data.diamond_setting.join(',') : data.diamond_setting);
+        formData.append('diamond_shape', data.diamond_shape);
+        formData.append('collection', data.collection);
+        formData.append('gender', data.gender);
+        formData.append('qty', data.qty);
+        formData.append('price', data.price);
+        formData.append('discount', data.discount);
+        formData.append('description', data.description);
+        formData.append('status', data.status);
+        if (Array.isArray(data.images)) {
+            data.images.forEach((image, index) => {
+                formData.append(`images[${index}]`, image);
+            });
+            console.log(formData);
+        } else {
+            formData.append('image', data.images);
+        }
+        
         try {
-            const response = await axiosInstance.post(`/products/create`, { name, size });
-            return response.data.product; // Assuming the API returns the added product
+            const response = await axiosInstance.post(`/products/create`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data.product;
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
         }
@@ -35,9 +73,13 @@ export const addProduct = createAsyncThunk(
 
 export const editProduct = createAsyncThunk(
     'product/editProduct',
-    async ({ id, name, size }, { rejectWithValue }) => {
+    async ({data, id}, { rejectWithValue }) => {
         try {
-            const response = await axiosInstance.post(`/products/update/${id}`, { name, size });
+            const response = await axiosInstance.post(`/products/update/${id}`, data,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             return response.data.product; // Assuming the API returns the updated product
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
