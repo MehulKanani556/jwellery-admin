@@ -43,8 +43,8 @@ export const getSingleUser = createAsyncThunk(
     'auth/getSingleUser',
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axiosInstance.get(`/users/${userId}`);
-            return response.data; // Assuming the API returns the user object
+            const response = await axiosInstance.get(`/user/get/${userId}`);
+            return response.data.user; // Assuming the API returns the user object
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
         }
@@ -63,6 +63,46 @@ export const deleteAllUsers = createAsyncThunk(
     }
 );
 
+export const editUser = createAsyncThunk(
+    'auth/editUser',
+    async ({ userId, userData }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.put(`/user/edit/${userId}`, userData);
+            return response.data.user; // Assuming the API returns the updated user object
+        } catch (error) {
+            return handleErrors(error, null, rejectWithValue);
+        }
+    }
+);
+
+export const editUserProfile = createAsyncThunk(
+    'auth/editUserProfile',
+    async (values, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            Object.keys(values).forEach(key => {
+                formData.append(key, values[key]);
+            });
+            const response = await axiosInstance.post(`/user/updateprofile/${values.id}`, formData);
+            return response.data.user; // Assuming the API returns the updated user object
+        } catch (error) {
+            return handleErrors(error, null, rejectWithValue);
+        }
+    }
+);
+
+export const changePassword = createAsyncThunk(
+    'auth/changePassword',
+    async (values, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.post(`/password/change`,values);
+            return response.data; // Assuming the API returns a success message
+        } catch (error) {
+            return handleErrors(error, null, rejectWithValue);
+        }
+    }
+);
+
 const usersSlice = createSlice({
     name: 'users',
     initialState: {
@@ -73,7 +113,7 @@ const usersSlice = createSlice({
         loading: false,
     },
     reducers: {},
-    extraReducers: (builder) => {
+    extraReducers: (builder) => {   
         builder
 
             .addCase(deleteUser.pending, (state) => {
@@ -132,6 +172,52 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all users';
+            })
+            .addCase(editUser.pending, (state) => {
+                state.loading = true;
+                state.message = 'Editing user...';
+            })
+            .addCase(editUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.users = state.users.map((user) => 
+                    user._id === action.payload._id ? action.payload : user
+                ); // Update the user in the users array
+                state.message = 'User edited successfully';
+            })
+            .addCase(editUser.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to edit user';
+            })
+            .addCase(editUserProfile.pending, (state) => {
+                state.loading = true;
+                state.message = 'Editing profile...';
+            })
+            .addCase(editUserProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.currUser = action.payload; // Update the current user with the new profile data
+                state.message = 'Profile edited successfully';
+            })
+            .addCase(editUserProfile.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to edit profile';
+            })
+            .addCase(changePassword.pending, (state) => {
+                state.loading = true;
+                state.message = 'Changing password...';
+            })
+            .addCase(changePassword.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.message = action.payload || 'Password changed successfully';
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to change password';
             });
     }
 });

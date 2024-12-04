@@ -42,11 +42,9 @@ const AddProduct = React.memo(() => {
     const subcategory = useSelector((state) => state.subcategorys.SubCategory);
     const products = useSelector((state) => state.products.products);
     const size = useSelector((state) => state.sizes.sizes);
-    console.log(products, category, subcategory, size);
 
     const [filteredSubcategorys, setFilteredSubcategorys] = useState([]);
     const [filteredSize, setFilteredSize] = useState([]);
-    console.log(filteredSubcategorys, filteredSize);
 
     // Add new state for diamond qualities
     const [diamondQualities, setDiamondQualities] = useState([]);

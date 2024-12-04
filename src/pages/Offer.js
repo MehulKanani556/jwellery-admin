@@ -412,7 +412,7 @@ export default function Offer() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="11" className="py-2 px-4 text-center text-gray p-1 px-4-500 border-t">No records found</td>
+                                <td colSpan="11" className="py-2 px-4 text-center text-gray p-2 px-4-500 border-t">No records found</td>
                             </tr>
                         )}
                     </tbody>
@@ -649,72 +649,50 @@ export default function Offer() {
                         <div className="p-4">
                             <div className="flex flex-col items-center">
                                 <img src={data.image} alt={data.name} className="w-36 mx-auto mb-4 rounded" />
-                                {/* <div className="w-full">
-                                    <table className="bg-white shadow-md rounded w-full mt-4 ">
-                                        <tbody>
-                                            <tr className=" border-t ">
-                                                <td className="text-gray p-1 px-4">Category:</td>
-                                                <td className="font-semibold ">{data.category}</td>
-                                            </tr>
-                                            <tr className=" border-t ">
-                                                <td className="text-gray p-1 px-4">Sub Category:</td>
-                                                <td className="font-semibold ">{data.subcategory}</td>
-                                            </tr>
-                                            <tr className=" border-t ">
-                                                <td className="text-gray p-1 px-4">Product ID:</td>
-                                                <td className="font-semibold ">{data.product_id}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div> */}
+                                
                             </div>
-                            {/* <div className=" bg-white shadow-md rounded mt-4">
+                            <div className=" bg-white shadow-md rounded mt-4">
                                 <h2 className="text-xl p-1 px-4 font-bold">Offer Details</h2>
                                 <table className="w-full ">
                                     <tbody>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Name:</td>
-                                            <td className="font-semibold ">{data.name}</td>
+                                            <td className="text-gray-500 p-2 px-4">Offer Name:</td>
+                                            <td className="font-semibold text-brown">{data.name}</td>
                                         </tr>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Type:</td>
-                                            <td className="font-semibold ">{data.type}</td>
+                                            <td className="text-gray-500 p-2 px-4">Offer Type:</td>
+                                            <td className="font-semibold text-brown capitalize ">{data.type}</td>
                                         </tr>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Code:</td>
-                                            <td className="font-semibold ">{data.code}</td>
+                                            <td className="text-gray-500 p-2 px-4">Button Text:</td>
+                                            <td className="font-semibold text-brown">{data.button_text}</td>
                                         </tr>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Discount:</td>
-                                            <td className="font-semibold ">{data.discount}</td>
+                                            <td className="text-gray-500 p-2 px-4">Offer Discount:</td>
+                                            <td className="font-semibold text-brown">{data.type === 'fixed' ? `₹ ${data.discount}` : `${data.discount}%`}</td>
+                                            
+                                        </tr>
+                                        
+                                        <tr className=" border-t ">
+                                            <td className="text-gray-500 p-2 px-4">Offer Start Date:</td>
+                                            <td className="font-semibold text-brown">{data.start_date}</td>
                                         </tr>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Price:</td>
-                                            <td className="font-semibold ">{data.price}</td>
+                                            <td className="text-gray-500 p-2 px-4">Offer End Date:</td>
+                                            <td className="font-semibold text-brown">{data.end_date}</td>
                                         </tr>
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Start Date:</td>
-                                            <td className="font-semibold ">{data.start_date}</td>
+                                            <td className="text-gray-500 p-2 px-4">Status:</td>
+                                            <td className="font-semibold text-brown capitalize">{data.status}</td>
                                         </tr>
+                                       
                                         <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer End Date:</td>
-                                            <td className="font-semibold ">{data.end_date}</td>
-                                        </tr>
-                                        <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Minimum Purchase:</td>
-                                            <td className="font-semibold ">{data.minimum_purchase}</td>
-                                        </tr>
-                                        <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Maximum Discount:</td>
-                                            <td className="font-semibold ">{data.minimum_discount}</td>
-                                        </tr>
-                                        <tr className=" border-t ">
-                                            <td className="text-gray p-1 px-4">Offer Description:</td>
-                                            <td className="font-semibold ">{data.description}</td>
+                                            <td className="text-gray-500 p-2 px-4">Offer Description:</td>
+                                            <td className="font-semibold text-brown">{data.description}</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </Box>

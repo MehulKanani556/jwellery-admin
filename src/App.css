@@ -207,12 +207,12 @@ body {
 }
 input{
   height: 45px !important;
-  color: rgb(153 153 153 / 87%);
+  /* color: rgb(153 153 153 / 87%); */
 
 }
 select{
   height: 45px !important;
-  color: rgb(153 153 153 / 87%);
+  /* color: rgb(153 153 153 / 87%); */
 }
 textarea{
   height: 100px !important;
@@ -318,4 +318,31 @@ textarea{
 }
 .css-1y8627i-MuiBadge-badge {
   background-color: #523C34 !important;
+}
+.MuiTypography-root:where(.css-mpmzl2-MuiListItemText-root .MuiListItemText-primary) {
+  font-size: 14px !important;
+}
+.dropdown-content {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.9); /* Start slightly smaller */
+}
+
+.dropdown-content.fade-in {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-content.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.scale-in {
+  transform: scale(1); /* Scale to normal size */
+}
+
+.scale-out {
+  transform: scale(0.9); /* Scale down slightly */
 }

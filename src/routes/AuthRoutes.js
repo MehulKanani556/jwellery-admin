@@ -16,6 +16,8 @@ import Product from '../pages/Product'
 import AddProduct from '../pages/ProductAdd'
 import Offer from '../pages/Offer'
 import ProductView from '../pages/ProductView'
+import ReturnOrder from '../pages/ReturnOrder'
+import ReturnOrderView from '../pages/ReturnOrderView'
 
 export default function AuthRoutes() {
     return (
@@ -36,6 +38,8 @@ export default function AuthRoutes() {
                     <Route path="/product-offer" element={<ProductOffer />} />
                     <Route path="/product-offer/add" element={<AddProductOffer />} />
                     <Route path="/offers" element={<Offer />} />
+                    <Route path="/return-order" element={<ReturnOrder />} />
+                    <Route path="/return-order/view" element={<ReturnOrderView />} />
 
                 </Routes>
             </Layout>
