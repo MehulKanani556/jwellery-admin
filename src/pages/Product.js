@@ -142,7 +142,7 @@ export default function Product() {
 
     setFilterProducts(subcategory);
     handleClose();
-  };
+  
 
     setPriceRange([0, maxPrice]);
     setFilteredSubcategories([]);
