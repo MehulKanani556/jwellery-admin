@@ -76,7 +76,7 @@ export const addProduct = createAsyncThunk(
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            return response.data.product;
+            return response.data.data;
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
         }
@@ -113,20 +113,28 @@ export const editProduct = createAsyncThunk(
         formData.append('discount', data.discount);
         formData.append('description', data.description);
         formData.append('status', data.status);
+        // if (Array.isArray(data.mediaFiles)) {
+        //     data.mediaFiles.forEach((media, index) => {
+        //         if (typeof media === 'string') {
+        //             formData.append(`image[${index}][url]`, media);
+        //         } else {
+        //             formData.append(`image[${index}][file]`, media, media.name);
+        //         }
+        //     });
+        // } else if (data.mediaFiles) {
+        //     if (typeof data.mediaFiles === 'string') {
+        //         formData.append('image[url]', data.mediaFiles);
+        //     } else {
+        //         formData.append('image[file]', data.mediaFiles, data.mediaFiles.name);
+        //     }
+        // }
         if (Array.isArray(data.mediaFiles)) {
-            data.mediaFiles.forEach((media, index) => {
-                if (typeof media === 'string') {
-                    formData.append(`image[${index}][url]`, media);
-                } else {
-                    formData.append(`image[${index}][file]`, media, media.name);
-                }
+            data.mediaFiles.forEach((image, index) => {
+                formData.append(`image[${index}]`, image);
             });
-        } else if (data.mediaFiles) {
-            if (typeof data.mediaFiles === 'string') {
-                formData.append('image[url]', data.mediaFiles);
-            } else {
-                formData.append('image[file]', data.mediaFiles, data.mediaFiles.name);
-            }
+            console.log(formData);
+        } else {
+            formData.append('image', data.mediaFiles);
         }
         
         try {
@@ -135,7 +143,8 @@ export const editProduct = createAsyncThunk(
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            return response.data.product; // Assuming the API returns the updated product
+            console.log(response.data);
+            return response.data.data; // Assuming the API returns the updated product
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
         }

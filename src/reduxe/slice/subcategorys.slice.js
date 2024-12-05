@@ -14,7 +14,7 @@ export const getAllSubCategory = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/subcategories/getall`);
-      console.log(response);
+      // console.log(response);
 
       return response.data.subCategories; // Assuming the API returns an array of users
     } catch (error) {
@@ -38,7 +38,7 @@ export const getSingleSubCategory = createAsyncThunk(
 export const addSubCategory = createAsyncThunk(
   "/addSubCategory",
   async (data, { rejectWithValue }) => {
-    console.log(data);
+    // console.log(data);
     try {
       const response = await axiosInstance.post(`/subcategories/create`, data);
       if (response.status === 200) {

@@ -42,11 +42,11 @@ const AddProduct = React.memo(() => {
     const subcategory = useSelector((state) => state.subcategorys.SubCategory);
     const products = useSelector((state) => state.products.products);
     const size = useSelector((state) => state.sizes.sizes);
-    console.log(products, category, subcategory, size);
+    // console.log(products, category, subcategory, size);
 
     const [filteredSubcategorys, setFilteredSubcategorys] = useState([]);
     const [filteredSize, setFilteredSize] = useState([]);
-    console.log(filteredSubcategorys, filteredSize);
+    // console.log(filteredSubcategorys, filteredSize);
 
     // Add new state for diamond qualities
     const [diamondQualities, setDiamondQualities] = useState([]);
@@ -461,7 +461,7 @@ const AddProduct = React.memo(() => {
                                 // onBlur={handleBlur}
                                 value={values.product_name}
                             />
-                            {(errors.product_name && touched.product_name) && <p className="text-red-500 text-sm mt-1">{errors.product_name}</p>}
+                            {(errors.product_name && touched.product_name) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.product_name}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Category </label>
@@ -479,7 +479,7 @@ const AddProduct = React.memo(() => {
                                     </option>
                                 ))}
                             </select>
-                            {(errors.category_id && touched.category_id) && <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>}
+                            {(errors.category_id && touched.category_id) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.category_id}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Sub Category </label>
@@ -497,7 +497,7 @@ const AddProduct = React.memo(() => {
                                     </option>
                                 ))}
                             </select>
-                            {(errors.sub_category_id && touched.sub_category_id) && <p className="text-red-500 text-sm mt-1">{errors.sub_category_id}</p>}
+                            {(errors.sub_category_id && touched.sub_category_id) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.sub_category_id}</p>}
                         </div>
                     </div>
 
@@ -538,7 +538,7 @@ const AddProduct = React.memo(() => {
                                         <span className="text-gray-700">Gold</span>
                                     </label>
                                 </div>
-                                {(errors.metal_color && touched.metal_color) && <p className="text-red-500 text-sm mt-1">{errors.metal_color}</p>}
+                                {(errors.metal_color && touched.metal_color) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.metal_color}</p>}
                             </div>
                             <div>
                                 <label className="block text-brown text-base font-semibold mb-2">Metal Type </label>
@@ -574,7 +574,7 @@ const AddProduct = React.memo(() => {
                                         <span className="text-gray-700">18K Gold</span>
                                     </label>
                                 </div>
-                                {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1">{errors.metal}</p>}
+                                {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1 text-[11px] ">{errors.metal}</p>}
                             </div>
                         </div>
                         {/* Image Upload */}
@@ -585,7 +585,7 @@ const AddProduct = React.memo(() => {
                                     <>
                                         <div className="flex w-[100%] gap-2 overflow-x-scroll scrollbar-hide">
                                             {mediaFiles.map((file, index) => (
-                                                <div key={index} className="flex w-[200px] items-center justify-between bg-[#72727226] px-2 py-1">
+                                                <div key={index} className="flex w-[200px] items-center justify-between bg-[#72727226] hover:bg-gray-300 px-2 py-1">
                                                     <div className="flex items-center">
                                                         {typeof file === "string" ? (
                                                             file.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
@@ -625,7 +625,7 @@ const AddProduct = React.memo(() => {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeFile(index)}
-                                                        className="text-red-500 ml-1 text-[12px]"
+                                                        className="text-red-500 ml-1 text-[15px] font-bold hover:text-red-600 hover:scale-110 transition-all duration-300"
                                                     >
                                                         X
                                                     </button>
@@ -674,7 +674,7 @@ const AddProduct = React.memo(() => {
                                 )}
                             </div>
                             {(errors.mediaFiles && touched.mediaFiles) &&
-                                <p className="text-red-500 text-sm mt-1">{errors.mediaFiles}</p>
+                                <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.mediaFiles}</p>
                             }
                             <p className="text-gray-500 text-xs mt-1">
                                 Supported formats: JPG, PNG, GIF, WEBP, MP4, WEBM, MOV (Max size: 20MB)
@@ -703,7 +703,7 @@ const AddProduct = React.memo(() => {
                                     <option value="KM">KM</option>
                                     <option value="NZ">NZ</option>
                                 </select>
-                                {(errors.diamond_color && touched.diamond_color) && <p className="text-red-500 text-sm mt-1">{errors.diamond_color}</p>}
+                                {(errors.diamond_color && touched.diamond_color) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_color}</p>}
                             </div>
                             <div className="w-50">
                                 <label className="block text-brown text-base font-semibold mb-2">Clarity</label>
@@ -727,7 +727,7 @@ const AddProduct = React.memo(() => {
                                     <option value="I2">I2</option>
                                     <option value="I3">I3</option>
                                 </select>
-                                {(errors.clarity && touched.clarity) && <p className="text-red-500 text-sm mt-1">{errors.clarity}</p>}
+                                {(errors.clarity && touched.clarity) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.clarity}</p>}
                             </div>
                             <div className="self-end mb-2">
                                 <button
@@ -747,19 +747,19 @@ const AddProduct = React.memo(() => {
                                     <button
                                         key={index}
                                         type="button"
-                                        className="px-3 py-1 border border-brown rounded-md hover:bg-gray-50 flex items-center gap-1"
+                                        className="px-3 py-1 bg-[#72727226] hover:bg-gray-300 flex items-center gap-1"
                                     >
                                         {quality}
                                         <span
-                                            className="text-red-500 cursor-pointer"
+                                            className="text-red-500 cursor-pointer text-[15px] font-bold hover:text-red-600 hover:scale-110 transition-all duration-300"
                                             onClick={() => handleRemoveQuality(quality)}
                                         >
-                                            ×
+                                            x
                                         </span>
                                     </button>
                                 )) : <span className="text-gray-400">Select diamond quality</span>}
                             </div>
-                            {(errors.diamond_quality && touched.diamond_quality) && <p className="text-red-500 text-sm mt-1">{errors.diamond_quality}</p>}
+                            {(errors.diamond_quality && touched.diamond_quality) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_quality}</p>}
                         </div>
                     </div>
 
@@ -781,7 +781,7 @@ const AddProduct = React.memo(() => {
                                     </option>
                                 ))}
                             </select>
-                            {(errors.size_name && touched.size_name) && <p className="text-red-500 text-sm mt-1">{errors.size_name}</p>}
+                            {(errors.size_name && touched.size_name) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.size_name}</p>}
                         </div>
                         <div className="col-span-2">
                             <label className="block text-brown text-base font-semibold mb-2">Size Range </label>
@@ -793,18 +793,18 @@ const AddProduct = React.memo(() => {
                                     <button
                                         key={index}
                                         type="button"
-                                        className="px-3 py-1 border border-brown rounded-md hover:bg-gray-50 flex items-center gap-1"
+                                        className="px-3 py-1 bg-[#72727226] hover:bg-gray-300 flex items-center gap-1"
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         {size}
                                         <span
-                                            className="text-red-500 cursor-pointer"
+                                            className="text-red-500 cursor-pointer text-[15px] font-bold hover:text-red-600 hover:scale-110 transition-all duration-300"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handleRemoveSize(size)
                                             }}
                                         >
-                                            ×
+                                            x
                                         </span>
                                     </button>
                                 )) : <span className="text-gray-400">Select size range</span>}
@@ -859,7 +859,7 @@ const AddProduct = React.memo(() => {
                             {(errors.size_id && touched.size_id) && <p
                                 name="size_id"
                                 component="div"
-                                className="text-red-500 text-sm mt-1"
+                                className="text-red-500 text-sm mt-1 text-[11px]"
                             >{errors.size_id}</p>}
                         </div>
                     </div>
@@ -877,7 +877,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.weight}
                             />
-                            {(errors.weight && touched.weight) && <p className="text-red-500 text-sm mt-1">{errors.weight}</p>}
+                            {(errors.weight && touched.weight) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.weight}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Diamond Setting</label>
@@ -889,18 +889,18 @@ const AddProduct = React.memo(() => {
                                     <button
                                         key={index}
                                         type="button"
-                                        className="px-3 py-1 border border-brown rounded-md hover:bg-gray-50 flex items-center gap-1"
+                                        className="px-3 py-1 bg-[#72727226] hover:bg-gray-300 flex items-center gap-1"
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         {setting}
                                         <span
-                                            className="text-red-500 cursor-pointer"
+                                            className="text-red-500 cursor-pointer text-[15px] font-bold hover:text-red-600 hover:scale-110 transition-all duration-300"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleRemoveSetting(setting);
                                             }}
                                         >
-                                            ×
+                                            x
                                         </span>
                                     </button>
                                 ))}
@@ -936,7 +936,7 @@ const AddProduct = React.memo(() => {
                                     </MenuItem>
                                 ))}
                             </Menu>
-                            {(errors.diamond_setting && touched.diamond_setting) && <p className="text-red-500 text-sm mt-1">{errors.diamond_setting}</p>}
+                            {(errors.diamond_setting && touched.diamond_setting) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_setting}</p>}
                         </div>
 
                         <div>
@@ -959,7 +959,7 @@ const AddProduct = React.memo(() => {
                                 <option value="marquise">Marquise</option>
                                 <option value="radiant">Radiant</option>
                             </select>
-                            {(errors.diamond_shape && touched.diamond_shape) && <p className="text-red-500 text-sm mt-1">{errors.diamond_shape}</p>}
+                            {(errors.diamond_shape && touched.diamond_shape) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_shape}</p>}
                         </div>
 
                     </div>
@@ -977,7 +977,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.no_of_diamonds}
                             />
-                            {(errors.no_of_diamonds && touched.no_of_diamonds) && <p className="text-red-500 text-sm mt-1">{errors.no_of_diamonds}</p>}
+                            {(errors.no_of_diamonds && touched.no_of_diamonds) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.no_of_diamonds}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Gender </label>
@@ -993,7 +993,7 @@ const AddProduct = React.memo(() => {
                                 <option value="female">Female</option>
                                 <option value="unisex">Unisex</option>
                             </select>
-                            {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                                {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.gender}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Collection</label>
@@ -1006,7 +1006,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.collection}
                             />
-                            {(errors.collection && touched.collection) && <p className="text-red-500 text-sm mt-1">{errors.collection}</p>}
+                            {(errors.collection && touched.collection) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.collection}</p>}
                         </div>
                     </div>
 
@@ -1022,7 +1022,7 @@ const AddProduct = React.memo(() => {
                             onBlur={handleBlur}
                             value={values.description}
                         />
-                        {(errors.description && touched.description) && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                        {(errors.description && touched.description) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.description}</p>}
                     </div>
 
                     {/* Price Details Row */}
@@ -1038,7 +1038,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.qty}
                             />
-                            {(errors.qty && touched.qty) && <p className="text-red-500 text-sm mt-1">{errors.qty}</p>}
+                            {(errors.qty && touched.qty) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.qty}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Price (₹) </label>
@@ -1051,7 +1051,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.price}
                             />
-                            {(errors.price && touched.price) && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+                            {(errors.price && touched.price) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.price}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Discount (%)</label>
@@ -1064,7 +1064,7 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.discount}
                             />
-                            {(errors.discount && touched.discount) && <p className="text-red-500 text-sm mt-1">{errors.discount}</p>}
+                            {(errors.discount && touched.discount) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.discount}</p>}
                         </div>
                     </div>
 

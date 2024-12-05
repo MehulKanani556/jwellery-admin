@@ -233,40 +233,20 @@ textarea{
 
 
 /* ==Product View Slider== */
-.product-main-carousel .owl-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
 
-.product-main-carousel .owl-nav button {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.8) !important;
-  border-radius: 50%;
-  pointer-events: auto;
-}
 
-.product-main-carousel .owl-nav button:hover {
-  background: white !important;
-}
-
-.product-thumbs-carousel .owl-item {
+/* .product-thumbs-carousel .owl-item {
   opacity: 0.8;
   transition: opacity 0.3s ease;
-}
+} */
 
 .product-thumbs-carousel .owl-item.active {
   opacity: 1;
 }
-/* Ensure the nav container is visible */
+
 .owl-carousel .owl-nav {
     position: absolute !important;
-    top: 50% !important;
+    top: 20% !important;
     transform: translateY(-50%) !important;
     width: 100% !important;
     display: flex !important;
@@ -277,39 +257,105 @@ textarea{
 /* Style the nav buttons */
 .owl-carousel .owl-nav button.owl-prev,
 .owl-carousel .owl-nav button.owl-next {
-    width: 25px !important;
-    height: 25px !important;
-    background: #523C34 !important; /* Updated to match your theme brown color */
+    width: 20px !important;
+    height: 20px !important;
+    background: #4D1F08 !important;
     border-radius: 50% !important;
     pointer-events: auto !important;
-    z-index: 10 !important;
     position: absolute !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     opacity: 0.9 !important;
     transition: all 0.3s ease !important;
-    color: white !important;
-    font-size: 20px !important;
 }
 
-.owl-carousel .owl-nav button.owl-prev {
-    left: -12px !important;
-}
-
-.owl-carousel .owl-nav button.owl-next {
-    right: -12px !important;
-}
-
-.owl-carousel .owl-nav button.owl-prev:hover,
-.owl-carousel .owl-nav button.owl-next:hover {
-    background: #3a2b25 !important; /* Darker brown on hover */
-    opacity: 1 !important;
-}
-
+/* Add specific styles for the icons */
 .owl-carousel .owl-nav button.owl-prev i,
 .owl-carousel .owl-nav button.owl-next i {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    color: white !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    line-height: 1 !important;
 }
+
+/* Position the navigation buttons */
+.product-thumbs-carousel .owl-nav button.owl-prev {
+    left: -15px !important;
+}
+
+.product-thumbs-carousel .owl-nav button.owl-next {
+    right: -15px !important;
+}
+
+/* Add hover effect */
+.owl-carousel .owl-nav button:hover {
+    opacity: 1 !important;
+}
+/* Style for the nav button icons */
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+
+.ak-product-key{
+font-size: 18px;
+font-weight: 500;
+line-height: 24px;
+text-align: left;
+color: #727272;
+}
+
+.ak-product-value{
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  }
+
+@media (max-width: 2560px) {
+  .owl-carousel .owl-nav {
+      top: 40% !important;
+    }
+  }
+
+  @media (max-width: 1440px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 25% !important;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 35% !important;
+    }
+  }
+  @media (max-width: 992px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 35% !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 30% !important;
+    }
+  }
+  @media (max-width: 425px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 60% !important;
+    }
+  }
+  @media (max-width: 375px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 45% !important;
+    }
+  }
+  @media (max-width: 375px) {
+    .product-thumbs-carousel .owl-nav {
+      top: 30% !important;
+    }
+  }
