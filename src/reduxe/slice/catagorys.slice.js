@@ -38,8 +38,7 @@ export const getAllCategory = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/categories/getall`);
- 
-      
+
       return response.data.categories; // Assuming the API returns an array of users
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);
