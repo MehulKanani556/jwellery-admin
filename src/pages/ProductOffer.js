@@ -116,6 +116,7 @@ export default function ProductOffer() {
         setCurrentPage(1);
         setFiltersApplied(false);
         setFilterPOffer(productOffers);
+        handleClose();
         setPriceRange([minPrice,maxPrice]); // Reset price range
         setDiscountRange([0, 100]); // Reset discount range
     };

@@ -80,11 +80,15 @@ export default function Coupons() {
         const filteredItems = coupons.filter((item) => {
             const matchesCategory = selectedCategory ? item.category_id == selectedCategory : true;
             const matchesStatus = selectedStatus ? item.status == selectedStatus : true;
+
             // Parse dates
             const itemStartDate = new Date(item.start_date);
             const itemEndDate = new Date(item.end_date);
             const filterStartDate = new Date(selectedStartDate);
             const filterEndDate = new Date(selectedEndDate);
+
+
+
             const matchesStartDate = selectedStartDate ? itemStartDate >= filterStartDate : true;
             const matchesEndDate = selectedEndDate ? itemEndDate <= filterEndDate : true; // Ensure end date is less than or equal to the filter end date
 
@@ -173,113 +177,14 @@ export default function Coupons() {
         <div className=" md:mx-[20px] p-4 ">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-brown">Coupons </h1>
+                    <h1 className="text-2xl font-bold text-brown">Invoice </h1>
                     <p className="text-brown-50">
                         Dashboard /{" "}
-                        <span className="text-brown font-medium">Coupons</span>
+                        <span className="text-brown font-medium">Invoice</span>
                     </p>
                 </div>
                 <div>
                     <div className="flex gap-4  mb-4">
-                        {filtersApplied ? (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            >
-                                Cancel
-                            </button>
-                        ) : (
-                            <button
-                                className="text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                                id="basic-button"
-                                aria-controls={open ? "basic-menu" : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? "true" : undefined}
-                                onClick={handleClick}
-                            >
-                                <span>
-                                    <FaFilter />
-                                </span>
-                                <span>Filter</span>
-                            </button>
-                        )}
-                        {/* ====== */}
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                            }}
-                            PaperProps={{
-                                style: { width: "300px" },
-                            }}
-                        >
-                            <div className="">
-                                <div className="border-b-2">
-                                    <p className="text-brown font-bold text-xl p-3">Filter</p>
-                                </div>
-                                <div className=" p-3">.
-                                    <div className="">
-
-                                        <label className="text-brown font-bold">Start Date</label>
-                                        <input
-                                            type="date"
-                                            className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedStartDate}
-                                            onChange={(e) => setSelectedStartDate(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="mt-4">
-
-                                        <label className="text-brown font-bold mt-4">End Date</label>
-                                        <input
-                                            type="date"
-                                            className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedEndDate}
-                                            min={selectedStartDate}
-                                            onChange={(e) => setSelectedEndDate(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="mt-4">
-
-                                        <label className="text-brown font-bold mt-4">Status</label>
-                                        <select
-                                            name="status"
-                                            className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedStatus}
-                                            onChange={(e) => setSelectedStatus(e.target.value)}
-                                        >
-                                            <option value="">Select Status</option>
-                                            <option value="inactive">InActive</option>
-                                            <option value="active">Active</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div className="flex justify-center gap-8 mt-2 p-3">
-                                    <button
-                                        type="button"
-                                        onClick={handleResetFilters}
-                                        className="text-brown w-36 border-brown border px-5 py-2 rounded"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={handleApplyFilter}
-                                        className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
-                        </Menu>
-
-                        {/* ===== */}
-
                         <button
                             className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
                             onClick={() => { setDelAllOpen(true) }}
@@ -289,12 +194,7 @@ export default function Coupons() {
                             </span>
                             <span>Delete All</span>
                         </button>
-                        <button
-                            className="bg-brown w-32 text-white px-4 py-2 rounded"
-                            onClick={() => setCreateopen(true)}
-                        >
-                            + Add
-                        </button>
+                        
                     </div>
                 </div>
             </div>
@@ -303,13 +203,10 @@ export default function Coupons() {
                     <thead>
                         <tr className="text-brown font-bold">
                             <td className="py-2 px-5 ">ID</td>
-                            <td className="py-2 px-5 ">Code</td>
-                            <td className="py-2 px-5 ">Coupon Name</td>
-                            <td className="py-2 px-5 ">Description</td>
-                            <td className="py-2 px-5 ">Coupon type</td>
-                            <td className="py-2 px-5 ">Price</td>
-                            <td className="py-2 px-5 ">Start Date</td>
-                            <td className="py-2 px-5 ">End Date</td>
+                            <td className="py-2 px-5 ">Name</td>
+                            <td className="py-2 px-5 ">Email</td>
+                            <td className="py-2 px-5 ">Date</td>
+                            <td className="py-2 px-5 ">Amount</td>
                             <td className="py-2 px-5 ">Status</td>
                             <td className="py-2 px-5 ">Action</td>
                         </tr>
@@ -320,9 +217,6 @@ export default function Coupons() {
                                 <tr key={index} className="hover:bg-gray-100 border-t">
                                     <td className="py-2 px-5">{v.id}</td>
                                     <td className="py-2 px-5">{v.code}</td>
-                                    <td className="py-2 px-5">{v.name}</td>
-                                    <td className="py-2 px-5">{v.description}</td>
-                                    <td className="py-2 px-5 capitalize ">{v.type}</td>
                                     <td className="py-2 px-5">₹ {v.price}</td>
                                     <td className="py-2 px-5">{v.start_date}</td>
                                     <td className="py-2 px-5">{v.end_date}</td>

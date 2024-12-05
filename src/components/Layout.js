@@ -28,11 +28,9 @@ import { FaArrowsRotate } from "react-icons/fa6";
 import { FaReceipt } from "react-icons/fa6";
 import { useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Badge, Modal } from '@mui/material';
+import {  Modal } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import NotificationsDrawer from './NotificationsDrawer';
 import { useDispatch, useSelector } from 'react-redux';
 import { changePassword, editUserProfile, getSingleUser } from '../reduxe/slice/users.slice';
 import { RxCross2 } from 'react-icons/rx';
@@ -51,7 +49,6 @@ function Layout({ children }) {
   const userId = sessionStorage.getItem('userId');
   const role = sessionStorage.getItem('role');
   const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const user = useSelector((state) => state.users.currUser)
   const [openProfile, setOpenProfile] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
@@ -98,9 +95,7 @@ function Layout({ children }) {
     setOpenSubmenu(openSubmenu === title ? null : title);
   };
 
-  const handleNotificationToggle = () => {
-    setNotificationOpen(!notificationOpen);
-  };
+
 
   const handleLogout= () => {
     sessionStorage.removeItem('userId');
@@ -257,12 +252,8 @@ function Layout({ children }) {
                 }}
               />
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }} className="gap-4">
-              <div style={{ backgroundColor: '#FCEAE2' }} className='p-2 rounded-full'>
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon color="#523C34" onClick={handleNotificationToggle} />
-                </Badge>
-              </div>
+            <Box sx={{ display: 'flex', alignItems: 'center' }} className="gap-4 me-4">
+              
               <div color="inherit" sx={{ ml: 2 }} className='relative'>
                 <div className='flex gap-2 items-center' onClick={() => setDropdownOpen(!dropdownOpen)} style={{ cursor: 'pointer' }}>
                   <div>
@@ -656,19 +647,7 @@ function Layout({ children }) {
         <Toolbar />
         {children}
       </Box>
-      <Drawer
-        anchor="right"
-        open={notificationOpen}
-        onClose={handleNotificationToggle}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 300,
-            background: '#FFF',
-          },
-        }}
-      >
-        <NotificationsDrawer onClose={handleNotificationToggle} />
-      </Drawer>
+     
     </Box>
   );
 }

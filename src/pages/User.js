@@ -1,13 +1,10 @@
-import { Box, Button, Modal, Pagination, Typography } from '@mui/material'
+import { Box, Modal, Pagination } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteAllUsers, deleteUser, getAllUsers } from '../reduxe/slice/users.slice'
+import {  deleteUser, getAllUsers } from '../reduxe/slice/users.slice'
 
 export default function User() {
     const [userData, setUserData] = useState([]);
@@ -19,7 +16,7 @@ export default function User() {
     
     useEffect(()=>{
         dispatch(getAllUsers())
-    },[]);
+    },[dispatch]);
    
 
     // Pagination state
@@ -39,18 +36,7 @@ export default function User() {
         setCurrentPage(pageNumber);
     };
 
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+  
     const handleOpen = (data) => {
         setOpen(true);
         setUserData(data)
@@ -71,11 +57,7 @@ export default function User() {
         dispatch(getAllUsers())
         setDelOpen(false);
     }
-    const handleDeleteAll =() =>{
-        console.log('Delete All User ', )
-        dispatch(deleteAllUsers());
-        
-    }
+   
     return (
         <div className=" md:mx-[20px] p-4 ">
             <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>

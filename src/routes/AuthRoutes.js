@@ -18,6 +18,9 @@ import Offer from '../pages/Offer'
 import ProductView from '../pages/ProductView'
 import ReturnOrder from '../pages/ReturnOrder'
 import ReturnOrderView from '../pages/ReturnOrderView'
+import Orders from '../pages/Orders'
+import OrderView from '../pages/OrderView'
+import InvoiceList from '../pages/InvoiceList'
 
 export default function AuthRoutes() {
     return (
@@ -33,6 +36,8 @@ export default function AuthRoutes() {
                     <Route path="/products/productAdd" element={<AddProduct />} />
                     <Route path="/products/productView" element={<ProductView />} />
                     <Route path="/stoke" element={<Stock />} />
+                    <Route path="/order" element={<Orders />} />
+                    <Route path="/order/view/:id" element={<OrderView />} />
                     <Route path="/review" element={<Review />} />
                     <Route path="/coupons" element={<Coupons />} />
                     <Route path="/product-offer" element={<ProductOffer />} />
@@ -40,6 +45,7 @@ export default function AuthRoutes() {
                     <Route path="/offers" element={<Offer />} />
                     <Route path="/return-order" element={<ReturnOrder />} />
                     <Route path="/return-order/view" element={<ReturnOrderView />} />
+                    <Route path="/invoice" element={<InvoiceList />} />
 
                 </Routes>
             </Layout>

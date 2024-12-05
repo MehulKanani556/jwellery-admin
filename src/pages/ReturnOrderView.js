@@ -1,5 +1,6 @@
 import {
     Box,
+    Menu,
     Modal,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -7,20 +8,24 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import { useNavigate } from "react-router-dom";
-import { getAllReturnOrders , deleteAllReturnOrders, updateStatusReturnOrder} from "../reduxe/slice/returnorder.slice";
+import { getAllReturnOrders, deleteAllReturnOrders, updateStatusReturnOrder } from "../reduxe/slice/returnorder.slice";
+import { FiArrowLeft } from "react-icons/fi";
+import { FaFilter } from "react-icons/fa";
 
 export default function ReturnOrderView() {
-   
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const  {returnOrders}  = useSelector((state) => state.returnorders);
+    const { returnOrders } = useSelector((state) => state.returnorders);
 
     const [delAllOpen, setDelAllOpen] = useState(false);
-    
+
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterReturn, setFilterReturn] = useState(returnOrders);
+    const [selectName, setSelectName] = useState('');
+    const [selectDate, setSelectDate] = useState('');
+    const [selectStatus, setSelectStatus] = useState('');
 
-    
 
     useEffect(() => {
         dispatch(getAllReturnOrders());
@@ -31,7 +36,7 @@ export default function ReturnOrderView() {
         // handleApplyFilter();
     }, [returnOrders]);
 
-    
+
 
     //  =====pagination start=====
     const [currentPage, setCurrentPage] = useState(1);
@@ -43,22 +48,44 @@ export default function ReturnOrderView() {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
+    // ======filter=====
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
 
-  
     // Handle filter application
     const handleApplyFilter = () => {
         setFiltersApplied(true);
         const filteredItems = returnOrders.filter((item) => {
-           
-            const matchesStatus =  item.return_status === "pending";
-         
-            return matchesStatus ;
+
+            // const matchesStatus = item.return_status === "pending";
+            const matchesName = selectName ? item.product.toLowerCase().includes(selectName.toLowerCase()) : true;
+            const matchesDate = selectDate ? item.return_date == selectDate : true;
+            const matchesStatus = selectStatus ? item.return_status == selectStatus : true;
+            return matchesName && matchesDate && matchesStatus;
         });
         setFilterReturn(filteredItems);
     };
 
-  
+    const handleResetFilters = () => {
+        // setSelectedEndDate("");
+        // setSelectedStartDate("");
+        setSelectStatus("");
+        setSelectDate("");
+        setSelectName("");
+        setCurrentPage(1);
+        setFiltersApplied(false);
+        handleClose();
+        setFilterReturn(returnOrders);
+        // setPriceRange([minPrice, maxPrice]); // Reset price range
+        // setDiscountRange([0, 100]); // Reset discount range
+    };
 
     // Get current items based on filtered items
     const currentItems = filterReturn?.slice(indexOfFirstItem, indexOfLastItem);
@@ -69,7 +96,7 @@ export default function ReturnOrderView() {
     };
 
 
-    
+
     const handleDeleteAll = () => {
         dispatch(deleteAllReturnOrders()).then(() => {
             setDelAllOpen(false);
@@ -92,7 +119,19 @@ export default function ReturnOrderView() {
                 </div>
                 <div>
                     <div className="flex gap-4  mb-4">
-                        {/* {filtersApplied ? (
+                        <button
+                            className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                            onClick={() => navigate('/return-order')}
+                        >
+                            <span>
+                                <FiArrowLeft />
+                            </span>
+                            <span>
+                                Back
+                            </span>
+                        </button>
+
+                        {filtersApplied ? (
                             <button
                                 type="button"
                                 onClick={handleResetFilters}
@@ -114,9 +153,9 @@ export default function ReturnOrderView() {
                                 </span>
                                 <span>Filter</span>
                             </button>
-                        )} */}
+                        )}
 
-                        {/* <Menu
+                        <Menu
                             id="basic-menu"
                             anchorEl={anchorEl}
                             open={open}
@@ -133,82 +172,47 @@ export default function ReturnOrderView() {
                                     <p className="text-brown font-bold text-xl p-3">Filter</p>
                                 </div>
                                 <div className=" p-3 pt-0">
+
                                     <div className="mt-4">
 
-                                        <label className="text-brown font-bold mt-4">Offer Type</label>
-                                        <select
-                                            name="type"
-                                            className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectType}
-                                            onChange={(e) => setSelectType(e.target.value)}
-                                        >
-                                            <option value="">Select Offer Type</option>
-                                            <option value="percentage">Percentage</option>
-                                            <option value="fixed">Fixed Amount</option>
-
-                                        </select>
-                                    </div>
-                                    <div className="mt-4">
-
-                                        <label className="text-brown font-bold mt-4">Offer Name</label>
+                                        <label className="text-brown font-bold mt-4">Product Name</label>
                                         <input
                                             type="text"
                                             className="border border-brown rounded w-full p-3 mt-1"
-                                            placeholder="Enter offer name"
+                                            placeholder="Enter product name"
                                             value={selectName}
                                             onChange={(e) => setSelectName(e.target.value)}
                                         />
                                     </div>
                                     <div className="mt-4">
 
-                                        <label className="text-brown font-bold">Start Date</label>
+                                        <label className="text-brown font-bold"> Date</label>
                                         <input
                                             type="date"
                                             className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedStartDate}
-                                            onChange={(e) => setSelectedStartDate(e.target.value)}
+                                            value={selectDate}
+                                            onChange={(e) => setSelectDate(e.target.value)}
                                         />
                                     </div>
-                                    <div className="mt-4">
 
-                                        <label className="text-brown font-bold mt-4">End Date</label>
-                                        <input
-                                            type="date"
-                                            className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedEndDate}
-                                            min={selectedStartDate}
-                                            onChange={(e) => setSelectedEndDate(e.target.value)}
-                                        />
-                                    </div>
                                     <div className="mt-4">
 
                                         <label className="text-brown font-bold mt-4">Status</label>
                                         <select
                                             name="status"
                                             className="border border-brown rounded w-full p-3 mt-1"
-                                            value={selectedStatus}
-                                            onChange={(e) => setSelectedStatus(e.target.value)}
+                                            value={selectStatus}
+                                            onChange={(e) => setSelectStatus(e.target.value)}
                                         >
                                             <option value="">Select Status</option>
-                                            <option value="inactive">In Active</option>
-                                            <option value="active">Active</option>
+                                            <option value="accepted">Accepted</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="pending">Pending</option>
                                         </select>
                                     </div>
 
-                                   
-                                    <div className="mt-4">
-                                        <label className="text-brown font-bold">Discount</label>
-                                        <Slider
-                                            value={discountRange}
-                                            onChange={handleDiscountRangeChange}
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            marks={[{ value: 0, label: '0%' }, { value: 100, label: '100%' }]}
-                                            style={{ width: '90%', display: 'flex', justifyContent: 'center', color: '#523C34' }}
-                                            className="mx-auto flex justify-center"
-                                        />
-                                    </div>
+
+
 
                                 </div>
                                 <div className="flex justify-center gap-8 mt-2 p-3">
@@ -228,25 +232,7 @@ export default function ReturnOrderView() {
                                     </button>
                                 </div>
                             </div>
-                        </Menu> */}
-
-                        <button
-                            className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            onClick={()=>navigate('/return-order/view')}
-                        >
-                            View History
-                        </button>
-
-                        <button
-                            className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            onClick={() => { setDelAllOpen(true) }}
-                        >
-                            <span>
-                                <RiDeleteBin6Fill />
-                            </span>
-                            <span>Delete All</span>
-                        </button>
-
+                        </Menu>
                     </div>
                 </div>
             </div>
@@ -267,15 +253,15 @@ export default function ReturnOrderView() {
                         {currentItems && currentItems.length > 0 ? (
                             currentItems.map((v, index) => (
                                 <tr key={index} className="hover:bg-gray-100 border-t">
-                                    <td className="py-2 px-5 ">{v.id}</td>                                    
+                                    <td className="py-2 px-5 ">{v.id}</td>
                                     <td className="py-2 px-5 capitalize">{v.customer}</td>
                                     <td className="py-2 px-5">{v.product}</td>
                                     <td className="py-2 px-5">{v.return_date}</td>
                                     <td className="py-2 px-5 flex gap-2 capitalize">
-                                        <span className={`font-semibold text-sm px-3 py-1 rounded ${v.return_status === 'accepted' ? 'bg-green-200 text-green-800 ' : v.return_status === 'rejected' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-800'}`}>
+                                        <span className={`font-semibold w-24 text-center text-sm px-3 py-1 rounded ${v.return_status === 'accepted' ? 'bg-green-200 text-green-800 ' : v.return_status === 'rejected' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-700'}`}>
                                             {v.return_status}
                                         </span>
-                                        
+
                                     </td>
                                     <td className="py-2 px-5">{v.reason}</td>
                                 </tr>
@@ -312,7 +298,7 @@ export default function ReturnOrderView() {
                 }}
             />
 
-            
+
             {/* Delete All coupon */}
             <Modal
                 open={delAllOpen}

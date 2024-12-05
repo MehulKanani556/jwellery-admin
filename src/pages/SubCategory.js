@@ -122,6 +122,7 @@ export default function SubCategory() {
     setCurrentPage(1); // Reset to the first page
     setFiltersApplied(false);
     setFilterSubCategory(subcategory);
+    handleClose();
   };
 
   // // Get current items with filtering
@@ -142,18 +143,7 @@ export default function SubCategory() {
     setCurrentPage(pageNumber);
   };
 
-  // Handle next and previous
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   // =====pagination end=====
 

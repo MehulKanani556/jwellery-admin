@@ -1,31 +1,23 @@
-import { Box, Button, Modal, Pagination, Typography } from "@mui/material";
+import { Box, Modal, Pagination } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { BiSolidEditAlt } from "react-icons/bi";
-import { BsFillEyeFill } from "react-icons/bs";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import img from "../Images/user.png";
-import { RxCross2 } from "react-icons/rx";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllUsers, deleteUser } from "../reduxe/slice/users.slice";
+import { deleteAllUsers } from "../reduxe/slice/users.slice";
 import { addCategory, deleteCategory, editCategory, getAllCategory, updateStatusCategory } from "../reduxe/slice/catagorys.slice";
 
 export default function Category() {
   const [categoryData, setCategoryData] = useState('');
-  const [open, setOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
   const [categoryname, setCategoryname] = useState();
   const category = useSelector((state) => state.categorys.category);
-console.log(category);
   const [error, setError] = useState('');
 
   useEffect(()=>{
     dispatch(getAllCategory())
-  },[])
+  },[dispatch])
 
 
   // Pagination state
@@ -45,18 +37,7 @@ console.log(category);
     setCurrentPage(pageNumber);
   };
 
-  // Handle next and previous
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  
   const handleOpen = (data) => {
     setCreateopen(true)
     setCategoryData(data);

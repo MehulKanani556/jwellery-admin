@@ -77,7 +77,7 @@ export const deleteAllReturnOrders = createAsyncThunk(
     'returnOrder/deleteAllReturnOrders',
     async (_, { rejectWithValue }) => {
         try {
-            await axiosInstance.delete(`/returnOrders/allDelete`);
+            await axiosInstance.delete(`/returnorder/allDelete`);
             return; // No need to return anything for delete all
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);

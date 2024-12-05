@@ -94,6 +94,7 @@ export default function Product() {
     setCurrentPage(1); // Reset to the first page
     setFiltersApplied(false);
     setFilterProducts(subcategory);
+    handleClose();
   };
 
   // Get current items based on filtered items

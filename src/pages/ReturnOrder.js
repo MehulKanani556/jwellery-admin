@@ -322,9 +322,9 @@ export default function ReturnOrder() {
                     <div className='  p-5'>
                         <div className='text-center'>
 
-                            <p className='text-brown font-bold text-xl'>Delete All  Offer</p>
+                            <p className='text-brown font-bold text-xl'>Delete All  Return Order</p>
                             <p className='text-brown-50'>Are you sure you want to delete all
-                                offer?</p>
+                                return order?</p>
                         </div>
                         <div className='flex flex-wrap justify-center gap-3 mt-4'>
                             <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
