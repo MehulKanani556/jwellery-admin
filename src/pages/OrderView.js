@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
+import { FiArrowLeft } from "react-icons/fi";
 
 export default function OrderView() {
     const dispatch = useDispatch();
@@ -25,12 +26,28 @@ export default function OrderView() {
                         <span className="text-brown font-medium">View Orders</span>
                     </p>
                 </div>
-                <div>
-                    <div className={`font-semibold w-24 text-center text-sm px-3 capitalize py-2 rounded ${selectedOrder?.order_status === 'delivered' ? 'bg-green-200 text-green-800 ' :
+                <div className="flex gap-4 items-center">
+                    <div>
+                        <button
+                            className=" text-brown  border-brown border px-3 py-2 rounded flex justify-center items-center gap-2"
+                            onClick={() => navigate('/order')}
+                        >
+                            <span>
+                                <FiArrowLeft />
+                            </span>
+                            <span>
+                                Back
+                            </span>
+                        </button>
+                    </div>
+                    <div className={`font-semibold  w-24 text-center text-sm px-3 capitalize py-2 rounded ${selectedOrder?.order_status === 'delivered' ? 'bg-green-200 text-green-800 ' :
                         selectedOrder?.order_status === 'cancelled' ? 'bg-red-200 text-red-600' :
                             selectedOrder?.order_status === 'transit' ? 'bg-gray-200 text-brown ' :
                                 'bg-yellow-200 text-yellow-700'}`}>
-                        {selectedOrder?.order_status}
+                        <span>
+
+                            {selectedOrder?.order_status}
+                        </span>
                     </div>
                 </div>
 
@@ -63,35 +80,35 @@ export default function OrderView() {
             </div>
             <div className="mt-6 w-full">
                 <div className=" flex gap-5 flex-col  lg:flex-row w-full justify-between">
-                    <div className="bg-white shadow lg:w-[30%] ">
+                    <div className="bg-white shadow lg:w-[30%] overflow-hidden ">
                         <div className="border-b">
                             <h2 className="text-xl py-3 font-bold text-brown px-5">Order details</h2>
                         </div>
-                        <div>
+                        <div >
                             <table className=" ">
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Order ID</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">123</td>
+                                    <td className="px-5 py-1 font-semibold">{selectedOrder?.id}</td>
 
                                 </tr>
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Order Date</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">10-12-2024</td>
+                                    <td className="px-5 py-1 font-semibold">{selectedOrder?.order_date}</td>
 
                                 </tr>
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Invoice No</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">#452178931</td>
+                                    <td className="px-5 py-1 font-semibold">#{selectedOrder?.invoice_number}</td>
 
                                 </tr>
 
                             </table>
                         </div>
                     </div>
-                    <div className="bg-white shadow lg:w-[30%] ">
+                    <div className="bg-white shadow lg:w-[30%] overflow-hidden ">
                         <div className="border-b">
                             <h2 className="text-xl py-3 font-bold text-brown px-5">Customer details</h2>
                         </div>
@@ -100,26 +117,26 @@ export default function OrderView() {
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Name</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">Name</td>
+                                    <td className="px-5 py-1 font-semibold">{selectedOrder?.customer?.name}</td>
 
                                 </tr>
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Email</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">abc@gmail.com</td>
+                                    <td className="px-5 py-1 font-semibold text-wrap">{selectedOrder?.customer?.email}</td>
 
                                 </tr>
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Mobile No</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">1234567890</td>
+                                    <td className="px-5 py-1 font-semibold">{selectedOrder?.customer?.phone}</td>
 
                                 </tr>
 
                             </table>
                         </div>
                     </div>
-                    <div className="bg-white shadow lg:w-[30%] ">
+                    <div className="bg-white shadow lg:w-[30%] overflow-hidden ">
                         <div className="border-b">
                             <h2 className="text-xl py-3 font-bold text-brown px-5">Delivery Address</h2>
                         </div>
@@ -128,7 +145,9 @@ export default function OrderView() {
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1 ">Adress</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">1st Flr, 13 Chewoolwadi, Kalbadevi Rd, Kolbad Lane, Kalbadevi East, Mumbai 400002, Maharashtra.</td>
+                                    <td className="px-5 py-1 font-semibold">
+                                        {selectedOrder?.deliveryAddress?.address}
+                                    </td>
 
                                 </tr>
 

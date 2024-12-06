@@ -133,10 +133,7 @@ export default function Orders() {
     const handleDateChange = (event) => {
         setSelectedDate(event.target.value); // Update selected date
     };
-    const handleToggle = (data) => {
-        const status = data.status == "active" ? "inactive" : "active";
-        dispatch(updateStatusOffer({ id: data.id, status: status }));
-    };
+  
 
 
 
