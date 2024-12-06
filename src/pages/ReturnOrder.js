@@ -8,23 +8,27 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import { useNavigate } from "react-router-dom";
 import { getAllReturnOrders , deleteAllReturnOrders, updateStatusReturnOrder} from "../reduxe/slice/returnorder.slice";
+import { useSnackbar } from "notistack";
 
 export default function ReturnOrder() {
-   
+    const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const  {returnOrders}  = useSelector((state) => state.returnorders);
+    const  {returnOrders,message,success}  = useSelector((state) => state.returnorders);
 
     const [delAllOpen, setDelAllOpen] = useState(false);
     
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterReturn, setFilterReturn] = useState(returnOrders);
-
+    // console.log(success) 
     
-
     useEffect(() => {
         dispatch(getAllReturnOrders());
-    }, [dispatch]);
+        if (message) { // Check if there is a message to display
+            const variant = success == 'false' ? 'error' : 'success'; // Determine variant based on status
+            // enqueueSnackbar(message, { variant }); // Show notification with dynamic variant
+        }
+    }, [dispatch, message]); // Added message to the dependency array
 
     useEffect(() => {
         setFilterReturn(returnOrders)

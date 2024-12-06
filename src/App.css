@@ -395,3 +395,6 @@ color: #727272;
     }
   }
 
+  :focus-visible {
+    outline: transparent auto 1px !important;   
+  }

@@ -77,7 +77,7 @@ export const deleteAllReturnOrders = createAsyncThunk(
     'returnOrder/deleteAllReturnOrders',
     async (_, { rejectWithValue }) => {
         try {
-            await axiosInstance.delete(`/returnorder/allDelete`);
+            await axiosInstance.delete(`/returnordera/allDelete`);
             return; // No need to return anything for delete all
         } catch (error) {
             return handleErrors(error, null, rejectWithValue);
@@ -143,13 +143,20 @@ const returnOrdersSlice = createSlice({
             })
             .addCase(deleteReturnOrder.rejected, (state, action) => {
                 state.message = action.payload?.message || 'Failed to delete return order';
+                state.success = false;
+
             })
             .addCase(deleteAllReturnOrders.fulfilled, (state) => {
                 state.returnOrders = []; // Clear the returnOrders array
                 state.message = 'All return orders deleted successfully';
+                state.success = true;
+
             })
             .addCase(deleteAllReturnOrders.rejected, (state, action) => {
+                state.loading = false;
                 state.message = action.payload?.message || 'Failed to delete all return orders';
+                state.success = false;
+
             })
             .addCase(updateStatusReturnOrder.fulfilled, (state, action) => {
                 const index = state.returnOrders.findIndex(order => order.id === action.payload.id);

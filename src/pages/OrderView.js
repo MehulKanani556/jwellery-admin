@@ -49,12 +49,12 @@ export default function OrderView() {
                                 <td className="px-5 py-3">Qty</td>
                                 <td className="px-5 py-3">Total</td>
                             </tr>
-                            {selectedOrder?.order_details?.map((item, index) => (
+                            {selectedOrder?.order_items?.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-100 border-t">
                                     <td className="px-5 py-3">{item.product_name}</td>
-                                    <td className="px-5 py-3">{item.price}</td>
-                                    <td className="px-5 py-3">{item.quantity}</td>
-                                    <td className="px-5 py-3">{item.price * item.quantity}</td>
+                                    <td className="px-5 py-3">₹{item.price}</td>
+                                    <td className="px-5 py-3">{item.qty}</td>
+                                    <td className="px-5 py-3">₹{item.price * item.qty}</td>
                                 </tr>
                             ))}
                         </table>

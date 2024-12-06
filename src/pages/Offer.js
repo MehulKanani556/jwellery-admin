@@ -12,8 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import { addOffer, deleteAllOffers, deleteOffer, editOffer, getAllOffers, updateStatusOffer } from "../reduxe/slice/offer.slice";
 import { Field, Formik } from "formik";
 import * as Yup from 'yup';
@@ -45,7 +43,6 @@ export default function Offer() {
 
     useEffect(() => {
         dispatch(getAllOffers());
-        dispatch(getAllCategory());
 
     }, []);
 

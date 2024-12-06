@@ -29,7 +29,7 @@ import { FaReceipt } from "react-icons/fa6";
 import { useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import {  Modal } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { changePassword, editUserProfile, getSingleUser } from '../reduxe/slice/users.slice';
@@ -57,6 +57,10 @@ function Layout({ children }) {
   const dropdownRef = useRef(null);
 
   console.log(user);
+
+  // Memoize the user data
+  const memoizedUser = useMemo(() => user, [user]);
+
   useEffect(() => {
     if (userId) {
       dispatch(getSingleUser(userId))
@@ -257,10 +261,10 @@ function Layout({ children }) {
               <div color="inherit" sx={{ ml: 2 }} className='relative'>
                 <div className='flex gap-2 items-center' onClick={() => setDropdownOpen(!dropdownOpen)} style={{ cursor: 'pointer' }}>
                   <div>
-                    <img src={user?.image} alt="User Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                    <img src={memoizedUser?.image} alt="User Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '16px', fontWeight: 500 }} className='capitalize'>{user?.name}</div>
+                    <div style={{ fontSize: '16px', fontWeight: 500 }} className='capitalize'>{memoizedUser?.name}</div>
                     <div style={{ fontSize: '14px' }} className='capitalize flex items-center gap-1 text-brown-50'>
                       <span>
                         {role}
@@ -299,7 +303,7 @@ function Layout({ children }) {
                       <div className='flex gap-6 items-center'>
 
                         <div>
-                          <img src={user?.image} alt="User Profile" className='rounded-full w-24 h-24' />
+                          <img src={memoizedUser?.image} alt="User Profile" className='rounded-full w-24 h-24' />
                         </div>
                         <div>
 
@@ -307,19 +311,19 @@ function Layout({ children }) {
                             <tbody>
                               <tr>
                                 <td className='p-1'>Name:</td>
-                                <td className='capitalize font-semibold ps-3'>{user?.name}</td>
+                                <td className='capitalize font-semibold ps-3'>{memoizedUser?.name}</td>
                               </tr>
                               <tr>
                                 <td className='p-1'>Email:</td>
-                                <td className=' font-semibold ps-3'>{user?.email}</td>
+                                <td className=' font-semibold ps-3'>{memoizedUser?.email}</td>
                               </tr>
                               <tr>
                                 <td className='p-1'>Mobile No.:</td>
-                                <td className=' font-semibold ps-3'>{user?.phone}</td>
+                                <td className=' font-semibold ps-3'>{memoizedUser?.phone}</td>
                               </tr>
                               <tr>
                                 <td className='p-1'>Gender:</td>
-                                <td className='capitalize font-semibold ps-3'>{user?.gender}</td>
+                                <td className='capitalize font-semibold ps-3'>{memoizedUser?.gender}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -350,17 +354,17 @@ function Layout({ children }) {
                     <div>
                       <Formik
                         initialValues={{
-                          image: user ? user.image : '',
-                          name: user ? user.name : '',
-                          email: user ? user.email : '',
-                          phone: user ? user.phone : '',
-                          gender: user ? user.gender : '',
-                          id: user ? user.id : ''
+                          image: memoizedUser ? memoizedUser.image : '',
+                          name: memoizedUser ? memoizedUser.name : '',
+                          email: memoizedUser ? memoizedUser.email : '',
+                          phone: memoizedUser ? memoizedUser.phone : '',
+                          gender: memoizedUser ? memoizedUser.gender : '',
+                          id: memoizedUser ? memoizedUser.id : ''
 
                         }}
                         validationSchema={validationSchema}
                         onSubmit={(values, { resetForm }) => {
-                          if (user.id) {
+                          if (memoizedUser.id) {
                             dispatch(editUserProfile(values)).then((response) => {
                               resetForm();
                               setEditProfile(false);
@@ -532,7 +536,7 @@ function Layout({ children }) {
                           confirm_password: Yup.string().required('Confirm password is required').oneOf([Yup.ref('new_password'), null], 'Passwords must match')
                         })}
                         onSubmit={(values, { resetForm, setErrors }) => {
-                          if (user.id) {
+                          if (memoizedUser.id) {
                             dispatch(changePassword(values)).then((response) => {
                               console.log(response.payload);
                               if (response?.payload?.success) {
