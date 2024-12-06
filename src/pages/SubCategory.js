@@ -42,6 +42,7 @@ import { FaFilter } from "react-icons/fa";
 export default function SubCategory() {
   const [subCategoryData, setSubCategoryData] = useState("");
   const [delOpen, setDelOpen] = useState(false);
+  const [delAllOpen, setDelAllOpen] = useState(false);
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -164,9 +165,10 @@ export default function SubCategory() {
     dispatch(deleteSubCategory({ id: subCategoryData.id }));
     setDelOpen(false);
   };
-  const handleDeleteAll = () => {
-    console.log("Delete All User ");
+  const handleDeleteAllSubCategory = () => {
+    // console.log("Delete All User ");
     dispatch(deleteAllSubCategory());
+    setDelAllOpen(false);
   };
 
   const handleCreateClose = () => {
@@ -288,10 +290,11 @@ export default function SubCategory() {
                   <p className="text-brown font-bold text-xl p-3">Filter</p>
                 </div>
                 <div className="mt-1 p-3">
-                  <label className="text-brown font-bold">Category</label>
+                  <div className>
+                  <label className="text-brown font-bold mt-4">Category</label>
                   <select
                     name="category_id"
-                    className="border border-brown rounded w-full p-3 mt-1"
+                    className="border border-brown rounded w-full p-3 "
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                   >
@@ -301,9 +304,11 @@ export default function SubCategory() {
                         {cat.name}
                       </option>
                     ))}
-                  </select>
-                  <label className="text-brown font-bold mt-4">Status</label>
-                  <select
+                    </select>
+                  </div>
+                  <div className="mt-3">
+                    <label className="text-brown font-bold mt-4">Status</label>
+                    <select
                     name="name"
                     className="border border-brown rounded w-full p-3 mt-1"
                     value={selectedStatus}
@@ -311,8 +316,9 @@ export default function SubCategory() {
                   >
                     <option value="">Select status</option>
                     <option value="inactive">InActive</option>
-                    <option value="active">Active</option>
-                  </select>
+                      <option value="active">Active</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="flex justify-center gap-8 mt-2 p-3">
                   <button
@@ -337,7 +343,7 @@ export default function SubCategory() {
 
             <button
               className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-              onClick={handleDeleteAll}
+              onClick={() => setDelAllOpen(true)}
             >
               <span>
                 <RiDeleteBin6Fill />
@@ -632,11 +638,11 @@ export default function SubCategory() {
           <div className="p-5">
             <div className="text-center">
               <p className="text-brown font-bold text-xl">Delete SubCategory</p>
-              <p className="text-brown-50">
+              <p className="text-brown-50 mt-2">
                 Are you sure you want to delete SubCategory?
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 mt-4 justify-center">
+            <div className="flex flex-wrap gap-3 mt-6 justify-center">
               <button
                 onClick={handleDeleteClose}
                 className="text-brown w-32 border-brown border px-4 py-2 rounded"
@@ -653,6 +659,35 @@ export default function SubCategory() {
           </div>
         </Box>
       </Modal>
+
+      {/* Delete all sub category */}
+      <Modal open={delAllOpen} onClose={() => setDelAllOpen(false)}>
+        <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+          <div className="p-5">
+            <div className="text-center">
+              <p className="text-brown font-bold text-xl">Delete All SubCategory</p>
+              <p className="text-brown-50 mt-2">
+                Are you sure you want to delete All SubCategory?
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-6 justify-center">
+              <button
+                onClick={() => setDelAllOpen(false)}
+                className="text-brown w-32 border-brown border px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAllSubCategory}
+                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+
     </div>
   );
 }

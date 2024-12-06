@@ -144,6 +144,7 @@ const AddProduct = React.memo(() => {
             sizes = [...selectedSizes, size];
         }
         setFieldValue('size_name', sizes);
+        setFieldTouched('size_name', true);
         setSelectedSizes(sizes);
     };
 
@@ -152,6 +153,7 @@ const AddProduct = React.memo(() => {
         const sizes = selectedSizes.filter((size) => size !== sizeToRemove);
         setSelectedSizes(sizes);
         setFieldValue('size_name', sizes);
+        setFieldTouched('size_name', true);
     };
 
     // Add these new handlers for diamond settings
@@ -334,7 +336,7 @@ const AddProduct = React.memo(() => {
         no_of_diamonds: Yup.number().required('Number of diamonds is required'),
         clarity: Yup.string().required('Clarity is required'),
         size_id: Yup.string().required('Size is required'),
-        size_name: Yup.array().min(1, 'At least one size is required'),
+        size_name: Yup.array().required('At least one size is required'),
         weight: Yup.number().required('Weight is required'),
         diamond_setting: Yup.string().required('Diamond setting is required'),
         diamond_shape: Yup.string().required('Diamond shape is required'),
@@ -405,16 +407,16 @@ const AddProduct = React.memo(() => {
         },
     });
 
-    const { 
-        handleSubmit, 
-        handleChange, 
-        handleBlur, 
-        errors, 
-        values, 
-        touched, 
-        setFieldValue, 
-        setValues, 
-        setFieldError, 
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        errors,
+        values,
+        touched,
+        setFieldValue,
+        setValues,
+        setFieldError,
         setFieldTouched
     } = formik;
 
@@ -437,17 +439,17 @@ const AddProduct = React.memo(() => {
     const buttonText = id ? "Update" : "Add";
 
     return (
-        <div className="md:mx-[20px] p-4">
+        <div className="p-4">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">{pageTitle}</h1>
-                    <p className="text-brown-50">
+                    <p className="text-brown-50 text-[14px] font-[500] mt-1">
                         Dashboard / Product / {' '}
                         <span className="text-brown font-medium">{pageTitle}</span>
                     </p>
                 </div>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow-md">
+            <div className="p-5 bg-white rounded-xl shadow-md mt-4">
                 <h2 className="text-xl font-bold mb-6 text-brown">Product Details</h2>
 
                 <form className="space-y-6" onSubmit={handleSubmit} enctype="multipart/form-data">
@@ -474,9 +476,9 @@ const AddProduct = React.memo(() => {
                                 // onBlur={handleBlur}
                                 value={values.category_id}
                             >
-                                <option value="" >Select category </option>
+                                <option value="" className="text-black">Select category </option>
                                 {category.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>
+                                    <option key={cat.id} value={cat.id} className="text-black">
                                         {cat.name}
                                     </option>
                                 ))}
@@ -492,9 +494,9 @@ const AddProduct = React.memo(() => {
                                 onBlur={handleBlur}
                                 value={values.sub_category_id}
                             >
-                                <option value="">Select sub category</option>
+                                <option value="" className="text-black">Select sub category</option>
                                 {filteredSubcategorys.map((subcat) => (
-                                    <option key={subcat.id} value={subcat.id}>
+                                    <option key={subcat.id} value={subcat.id} className="text-black">
                                         {subcat.name}
                                     </option>
                                 ))}
@@ -504,52 +506,69 @@ const AddProduct = React.memo(() => {
                     </div>
 
                     {/* Metal Options Row */}
-                    <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                        <div className="col-span-1 flex gap-4 items-center">
-                            <div>
+                    <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+                        <div className="col-span-2 2xl:col-span-1 flex gap-0 items-center row">
+                            <div className="col-12 col-md-6">
                                 <label className="block text-brown text-base font-semibold mb-2">Metal Color </label>
                                 <div className="flex gap-4">
-                                    <label className="flex items-center">
+                                    <label className="relative flex items-center cursor-pointer">
                                         <input
                                             type="radio"
                                             name="metal_color"
-                                            className="mr-1 text-brown"
+                                            value="rose"
+                                            checked={values.metal_color === 'rose'}
                                             onChange={() => {
                                                 handleChange({ target: { name: 'metal_color', value: 'rose' } });
-                                                // setFieldValue('metal_color', 'Rose');
                                             }}
-                                            onBlur={handleBlur}
-                                            value="rose"
-                                            checked={values.metal_color == 'rose'}
+                                            className="ak-input-radio border border-brown rounded-sm checked:bg-brown checked:border-brown appearance-none"
                                         />
-                                        <span className="text-gray-700">Rose</span>
+                                        <span className="ak-input-radio absolute left-0 border border-brown rounded-sm pointer-events-none">
+                                            {values.metal_color === 'rose' && (
+                                                <svg className="w-full h-full text-white absolute top-0 left-0" viewBox="0 0 16 16">
+                                                    <path
+                                                        fill="currentColor"
+                                                        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </span>
+                                        <span className="ml-2 text-[16px]">Rose</span>
                                     </label>
-                                    <label className="flex items-center">
+
+                                    <label className="relative flex items-center cursor-pointer">
                                         <input
                                             type="radio"
                                             name="metal_color"
-                                            className="mr-1 text-brown"
+                                            value="gold"
+                                            checked={values.metal_color === 'gold'}
                                             onChange={() => {
                                                 handleChange({ target: { name: 'metal_color', value: 'gold' } });
-                                                // setFieldValue('metal_color', 'Gold');
                                             }}
-                                            onBlur={handleBlur}
-                                            value="gold"
-                                            checked={values.metal_color == 'gold'}
+                                            className="ak-input-radio border border-brown rounded-sm checked:bg-brown checked:border-brown appearance-none w-4 h-4"
                                         />
-                                        <span className="text-gray-700">Gold</span>
+                                        <span className="ak-input-radio absolute left-0 border border-brown rounded-sm pointer-events-none">
+                                            {values.metal_color === 'gold' && (
+                                                <svg className="w-full h-full text-white absolute top-0 left-0" viewBox="0 0 16 16">
+                                                    <path
+                                                        fill="currentColor"
+                                                        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </span>
+                                        <span className="ml-2 text-[16px]">Gold</span>
                                     </label>
                                 </div>
                                 {(errors.metal_color && touched.metal_color) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.metal_color}</p>}
-                            </div>
-                            <div>
+                            </div >
+                            <div className="col-12 col-md-6">
                                 <label className="block text-brown text-base font-semibold mb-2">Metal Type </label>
                                 <div className="flex gap-4">
-                                    <label className="flex items-center">
+                                    <label className="relative flex items-center cursor-pointer">
                                         <input
                                             type="radio"
                                             name="metal"
-                                            className="mr-1 text-brown"
+                                            className="ak-input-radio border border-brown rounded-sm checked:bg-brown checked:border-brown appearance-none"
                                             onChange={() => {
                                                 handleChange({ target: { name: 'metal', value: '14k' } });
                                                 setFieldValue('metal', '14k');
@@ -558,13 +577,23 @@ const AddProduct = React.memo(() => {
                                             value="14k"
                                             checked={values.metal == '14k'}
                                         />
-                                        <span className="text-gray-700">14K Gold</span>
+                                        <span className="ak-input-radio absolute left-0 border border-brown rounded-sm pointer-events-none">
+                                            {values.metal == '14k' && (
+                                                <svg className="w-full h-full text-white absolute top-0 left-0" viewBox="0 0 16 16">
+                                                    <path
+                                                        fill="currentColor"
+                                                        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </span>
+                                        <span className="ml-2 text-[16px]">14K Gold</span>
                                     </label>
-                                    <label className="flex items-center">
+                                    <label className="relative flex items-center cursor-pointer">
                                         <input
                                             type="radio"
                                             name="metal"
-                                            className="mr-1 text-brown"
+                                            className="ak-input-radio border border-brown rounded-sm checked:bg-brown checked:border-brown appearance-none"
                                             onChange={() => {
                                                 handleChange({ target: { name: 'metal', value: '18k' } });
                                                 setFieldValue('metal', '18k');
@@ -573,7 +602,17 @@ const AddProduct = React.memo(() => {
                                             value="18k"
                                             checked={values.metal == '18k'}
                                         />
-                                        <span className="text-gray-700">18K Gold</span>
+                                        <span className="ak-input-radio absolute left-0 border border-brown rounded-sm pointer-events-none">
+                                            {values.metal == '18k' && (
+                                                <svg className="w-full h-full text-white absolute top-0 left-0" viewBox="0 0 16 16">
+                                                    <path
+                                                        fill="currentColor"
+                                                        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </span>
+                                        <span className="ml-2 text-[16px]">18K Gold</span>
                                     </label>
                                 </div>
                                 {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1 text-[11px] ">{errors.metal}</p>}
@@ -581,14 +620,14 @@ const AddProduct = React.memo(() => {
                         </div>
                         {/* Image Upload */}
                         <div className="col-span-2">
-                            <label className="block text-brown text-base font-semibold mb-2">Product Media (Images/Videos) </label>
+                            <label className="block text-brown text-base font-semibold mb-2">Product Media</label>
                             <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
                                 {mediaFiles.length > 0 ? (
                                     <>
                                         <div className="flex w-[100%] gap-2 overflow-x-scroll scrollbar-hide">
                                             {mediaFiles.map((file, index) => (
                                                 <div key={index} className="flex w-[200px] items-center justify-between bg-[#72727226] hover:bg-gray-300 px-2 py-1">
-                                                    <div className="flex items-center">
+                                                    <div className="flex items-center w-[90%]">
                                                         {typeof file === "string" ? (
                                                             file.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                                                                 <img
@@ -618,7 +657,7 @@ const AddProduct = React.memo(() => {
                                                                 </video>
                                                             )
                                                         )}
-                                                        <span className="text-[12px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                                        <span className="text-[12px] w-full whitespace-nowrap overflow-hidden text-ellipsis">
                                                             {typeof file === "string"
                                                                 ? file.split("/").pop()
                                                                 : file.name}
@@ -655,7 +694,7 @@ const AddProduct = React.memo(() => {
                                 ) : (
                                     <>
                                         <p className="flex-1 text-[16px] text-[#727272]">
-                                            Choose Images or Videos (Max 20MB each)
+                                            Choose Images / Videos
                                         </p>
                                         <input
                                             type="file"
@@ -678,32 +717,32 @@ const AddProduct = React.memo(() => {
                             {(errors.mediaFiles && touched.mediaFiles) &&
                                 <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.mediaFiles}</p>
                             }
-                            <p className="text-gray-500 text-xs mt-1">
+                            {/* <p className="text-gray-500 text-xs mt-1">
                                 Supported formats: JPG, PNG, GIF, WEBP, MP4, WEBM, MOV (Max size: 20MB)
-                            </p>
+                            </p> */}
                         </div>
                     </div>
 
                     {/* Diamond Properties Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="col-span-1 flex gap-4 items-center justify-between w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <div className="col-span-2 xl:col-span-1 flex gap-1 items-center justify-between w-[100%]">
                             <div className="w-50">
                                 <label className="block text-brown text-base font-semibold mb-2">Diamond Color</label>
                                 <select
                                     name="diamond_color"
-                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    className={`w-[100%] px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.diamond_color === '' ? 'text-gray-400' : 'text-black'}`}
                                     onChange={handleColorChange}
                                     onBlur={handleBlur}
                                     value={values.diamond_color}
                                 >
-                                    <option value="">Select color</option>
-                                    <option value="D">D</option>
-                                    <option value="E">E</option>
-                                    <option value="F">F</option>
-                                    <option value="GH">GH</option>
-                                    <option value="IJ">IJ</option>
-                                    <option value="KM">KM</option>
-                                    <option value="NZ">NZ</option>
+                                    <option value="" className="text-black">Select</option>
+                                    <option value="D" className="text-black">D</option>
+                                    <option value="E" className="text-black">E</option>
+                                    <option value="F" className="text-black">F</option>
+                                    <option value="GH" className="text-black">GH</option>
+                                    <option value="IJ" className="text-black">IJ</option>
+                                    <option value="KM" className="text-black">KM</option>
+                                    <option value="NZ" className="text-black">NZ</option>
                                 </select>
                                 {(errors.diamond_color && touched.diamond_color) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_color}</p>}
                             </div>
@@ -711,23 +750,23 @@ const AddProduct = React.memo(() => {
                                 <label className="block text-brown text-base font-semibold mb-2">Clarity</label>
                                 <select
                                     name="clarity"
-                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    className={`w-[100%] px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.clarity === '' ? 'text-gray-400' : 'text-black'}`}
                                     onChange={handleClarityChange}
                                     onBlur={handleBlur}
                                     value={values.clarity}
                                 >
-                                    <option value="">Select clarity</option>
-                                    <option value="FL">FL</option>
-                                    <option value="IF">IF</option>
-                                    <option value="VVS1">VVS1</option>
-                                    <option value="VVS2">VVS2</option>
-                                    <option value="VS1">VS1</option>
-                                    <option value="VS2">VS2</option>
-                                    <option value="SI1">SI1</option>
-                                    <option value="SI2">SI2</option>
-                                    <option value="I1">I1</option>
-                                    <option value="I2">I2</option>
-                                    <option value="I3">I3</option>
+                                    <option value="" className="text-black" >Select</option>
+                                    <option value="FL" className="text-black">FL</option>
+                                    <option value="IF" className="text-black">IF</option>
+                                    <option value="VVS1" className="text-black">VVS1</option>
+                                    <option value="VVS2" className="text-black">VVS2</option>
+                                    <option value="VS1" className="text-black">VS1</option>
+                                    <option value="VS2" className="text-black">VS2</option>
+                                    <option value="SI1" className="text-black">SI1</option>
+                                    <option value="SI2" className="text-black">SI2</option>
+                                    <option value="I1" className="text-black">I1</option>
+                                    <option value="I2" className="text-black">I2</option>
+                                    <option value="I3" className="text-black">I3</option>
                                 </select>
                                 {(errors.clarity && touched.clarity) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.clarity}</p>}
                             </div>
@@ -742,7 +781,7 @@ const AddProduct = React.memo(() => {
                                 </button>
                             </div>
                         </div>
-                        <div className="col-span-2">
+                        <div className="col-span-2 xl:col-span-2">
                             <label className="block text-brown text-base font-semibold mb-2">Diamond Quality</label>
                             <div className="flex flex-wrap gap-2 border border-brown rounded-md p-2">
                                 {diamondQualities.length > 0 ? diamondQualities.map((quality, index) => (
@@ -771,19 +810,19 @@ const AddProduct = React.memo(() => {
                             <label className="block text-brown text-base font-semibold mb-2">Size Category</label>
                             <select
                                 name="size_id"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className={`w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.size_id === '' ? 'text-gray-400' : 'text-black'}`}
                                 onChange={handleSizeChange}
                                 onBlur={handleBlur}
                                 value={values.size_id}
                             >
-                                <option value="">Select size category</option>
+                                <option value="" className="text-black">Select size category</option>
                                 {size.map((size) => (
-                                    <option key={size.id} value={size.id}>
+                                    <option key={size.id} value={size.id} className="text-black">
                                         {size.name}
                                     </option>
                                 ))}
                             </select>
-                            {(errors.size_name && touched.size_name) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.size_name}</p>}
+                            {(errors.size_id && touched.size_id) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.size_id}</p>}
                         </div>
                         <div className="col-span-2">
                             <label className="block text-brown text-base font-semibold mb-2">Size Range </label>
@@ -858,16 +897,14 @@ const AddProduct = React.memo(() => {
                                     ))}
                                 </div>
                             </Menu>
-                            {(errors.size_id && touched.size_id) && <p
-                                name="size_id"
-                                component="div"
-                                className="text-red-500 text-sm mt-1 text-[11px]"
-                            >{errors.size_id}</p>}
+                            {errors.size_name && touched.size_name && (
+                                <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.size_name}</p>
+                            )}
                         </div>
                     </div>
 
                     {/* Product Specifications */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Weight (grams) </label>
                             <input
@@ -885,7 +922,7 @@ const AddProduct = React.memo(() => {
                             <label className="block text-brown text-base font-semibold mb-2">Diamond Setting</label>
                             <div
                                 onClick={handleSettingClick}
-                                className="w-full flex flex-wrap gap-2 px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown cursor-pointer"
+                                className={`w-full flex flex-wrap gap-2 px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown cursor-pointer ${selectedSettings.length === 0 ? 'text-gray-400' : 'text-black'}`}
                             >
                                 {selectedSettings.map((setting, index) => (
                                     <button
@@ -945,29 +982,28 @@ const AddProduct = React.memo(() => {
                             <label className="block text-brown text-base font-semibold mb-2">Diamond Shape</label>
                             <select
                                 name="diamond_shape"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className={`w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.diamond_shape === '' ? 'text-gray-400' : 'text-black'}`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.diamond_shape}
                             >
-                                <option value="">Select diamond shape</option>
-                                <option value="round">Round</option>
-                                <option value="princess">Princess</option>
-                                <option value="emerald">Emerald</option>
-                                <option value="asscher">Asscher</option>
-                                <option value="cushion">Cushion</option>
-                                <option value="oval">Oval</option>
-                                <option value="pear">Pear</option>
-                                <option value="marquise">Marquise</option>
-                                <option value="radiant">Radiant</option>
+                                <option value="" className="text-black">Select diamond shape</option>
+                                <option value="round" className="text-black">Round</option>
+                                <option value="princess" className="text-black">Princess</option>
+                                <option value="emerald" className="text-black">Emerald</option>
+                                <option value="asscher" className="text-black">Asscher</option>
+                                <option value="cushion" className="text-black">Cushion</option>
+                                <option value="oval" className="text-black">Oval</option>
+                                <option value="pear" className="text-black">Pear</option>
+                                <option value="marquise" className="text-black">Marquise</option>
+                                <option value="radiant" className="text-black">Radiant</option>
                             </select>
                             {(errors.diamond_shape && touched.diamond_shape) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_shape}</p>}
                         </div>
+                        {/* </div> */}
 
-                    </div>
-
-                    {/* Additional Details */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Additional Details */}
+                        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Number of Diamonds </label>
                             <input
@@ -985,17 +1021,17 @@ const AddProduct = React.memo(() => {
                             <label className="block text-brown text-base font-semibold mb-2">Gender </label>
                             <select
                                 name="gender"
-                                className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                className={`w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown  ${values.gender === '' ? 'text-gray-400' : 'text-black'}`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.gender}
                             >
-                                <option value="">Select gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="unisex">Unisex</option>
+                                <option value="" className="text-black">Select gender</option>
+                                <option value="male" className="text-black">Male</option>
+                                <option value="female" className="text-black">Female</option>
+                                <option value="unisex" className="text-black">Unisex</option>
                             </select>
-                                {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.gender}</p>}
+                            {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.gender}</p>}
                         </div>
                         <div>
                             <label className="block text-brown text-base font-semibold mb-2">Collection</label>

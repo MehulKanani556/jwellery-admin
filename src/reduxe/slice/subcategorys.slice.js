@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import sessionStorage from "redux-persist/es/storage/session";
 import axiosInstance from "../../utils/axiosInstance";
+import { enqueueSnackbar } from "notistack";
 
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
@@ -156,18 +157,20 @@ const subcategorysSlice = createSlice({
       //   addSubCategory
       .addCase(addSubCategory.pending, (state) => {
         state.loading = true;
-        state.message = "Data is being fetched";
+        state.message = "Adding SubCategory...";
       })
       .addCase(addSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.SubCategory = [...state.SubCategory, action.payload];
-        state.message = action.payload?.message || "Data is fetched successfully";
+        state.message = action.payload?.message || "SubCategory added successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(addSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to Data fetched";
+        state.message = action.payload?.message || "Failed to add SubCategory";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
       //   deleteSubCategory
       .addCase(deleteSubCategory.pending, (state) => {
@@ -179,11 +182,13 @@ const subcategorysSlice = createSlice({
         state.success = true;
         state.SubCategory = state.SubCategory.filter((user) => user.id !== action.payload);
         state.message = action.payload?.message || "SubCategory deleted successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(deleteSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to delete SubCategory";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
       //   editSubCategory
       .addCase(editSubCategory.pending, (state) => {
@@ -193,13 +198,15 @@ const subcategorysSlice = createSlice({
       .addCase(editSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? {...v, ...action.payload} : v);
-        state.message = action.payload?.message || "Update successfully";
+        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? { ...v, ...action.payload } : v);
+        state.message = action.payload?.message || "SubCategory updated successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(editSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to delete SubCategory";
+        state.message = action.payload?.message || "Failed to update SubCategory";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
       //   deleteAllSubCategory
 
@@ -212,11 +219,13 @@ const subcategorysSlice = createSlice({
         state.success = true;
         state.SubCategory = [];
         state.message = action.payload || "All SubCategory deleted successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(deleteAllSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to delete all SubCategory";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
 
       //   updateStatusSubCategory
@@ -227,13 +236,15 @@ const subcategorysSlice = createSlice({
       .addCase(updateStatusSubCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? {...v, status:action.payload.status} : v);
-        state.message = action.payload?.message || "Update successfully";
+        state.SubCategory = state.SubCategory.map((v) => v.id == action.payload.id ? { ...v, status: action.payload.status } : v);
+        state.message = action.payload?.message || "SubCategory status updated successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(updateStatusSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to delete SubCategory";
+        state.message = action.payload?.message || "Failed to update SubCategory status";
+        enqueueSnackbar(state.message, { variant: 'error' })
       });
   },
 });

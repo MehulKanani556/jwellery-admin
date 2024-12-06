@@ -113,29 +113,29 @@ export const editProduct = createAsyncThunk(
         formData.append('discount', data.discount);
         formData.append('description', data.description);
         formData.append('status', data.status);
-        // if (Array.isArray(data.mediaFiles)) {
-        //     data.mediaFiles.forEach((media, index) => {
-        //         if (typeof media === 'string') {
-        //             formData.append(`image[${index}][url]`, media);
-        //         } else {
-        //             formData.append(`image[${index}][file]`, media, media.name);
-        //         }
-        //     });
-        // } else if (data.mediaFiles) {
-        //     if (typeof data.mediaFiles === 'string') {
-        //         formData.append('image[url]', data.mediaFiles);
-        //     } else {
-        //         formData.append('image[file]', data.mediaFiles, data.mediaFiles.name);
-        //     }
-        // }
         if (Array.isArray(data.mediaFiles)) {
-            data.mediaFiles.forEach((image, index) => {
-                formData.append(`image[${index}]`, image);
+            data.mediaFiles.forEach((media, index) => {
+                if (typeof media === 'string') {
+                    formData.append(`image[${index}][url]`, media);
+                } else {
+                    formData.append(`image[${index}][file]`, media, media.name);
+                }
             });
-            console.log(formData);
-        } else {
-            formData.append('image', data.mediaFiles);
+        } else if (data.mediaFiles) {
+            if (typeof data.mediaFiles === 'string') {
+                formData.append('image[url]', data.mediaFiles);
+            } else {
+                formData.append('image[file]', data.mediaFiles, data.mediaFiles.name);
+            }
         }
+        // if (Array.isArray(data.mediaFiles)) {
+        //     data.mediaFiles.forEach((image, index) => {
+        //         formData.append(`image[${index}]`, image);
+        //     });
+        //     console.log(formData);
+        // } else {
+        //     formData.append('image', data.mediaFiles);
+        // }
         
         try {
             const response = await axiosInstance.post(`/products/update/${id}`, formData, {
@@ -174,6 +174,19 @@ export const deleteAllProducts = createAsyncThunk(
         }
     }
 );
+export const updateStatusProduct = createAsyncThunk(
+    "/updateStatusProduct",
+    async ({ id, status }, { rejectWithValue }) => {
+      try {
+        const response = await axiosInstance.post(`/products/updatestatus/${id}`, { status }); // Assuming the API supports deleting all users
+        // console.log(response.data.product.status);
+  
+        return { id, status }; // Assuming the API returns a success message
+      } catch (error) {
+        return handleErrors(error, null, rejectWithValue);
+      }
+    }
+  );
 
 const productsSlice = createSlice({
     name: 'product',
@@ -243,7 +256,18 @@ const productsSlice = createSlice({
             })
             .addCase(deleteAllProducts.rejected, (state, action) => {
                 state.message = action.payload?.message || 'Failed to delete all products';
-            });
+            })
+
+            .addCase(updateStatusProduct.fulfilled, (state, action) => {
+                const index = state.products.findIndex(product => product.id === action.payload.id);
+                if (index !== -1) {
+                    state.products[index] = { ...state.products[index], status: action.payload.status }; // Update the product in the products array
+                    state.message = 'Product status updated successfully';
+                }
+            })
+            .addCase(updateStatusProduct.rejected, (state, action) => {
+                state.message = action.payload?.message || 'Failed to update product status';
+            })
     }
 });
 
