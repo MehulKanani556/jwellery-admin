@@ -36,7 +36,7 @@ import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import { getAllSubCategory } from "../reduxe/slice/subcategorys.slice";
 import { getAllProducts } from "../reduxe/slice/product.slice";
 // import MenuItem from '@mui/material/MenuItem';
-
+import Loader from "../components/Loader";
 export default function AddProductOffer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function AddProductOffer() {
   const offerData = location.state?.offerData;
   const { category } = useSelector(state => state.categorys);
   const { SubCategory } = useSelector(state => state.subcategorys);
-  const { products } = useSelector(state => state.products);
+  const { products,loading } = useSelector(state => state.products);
 
   // New state to hold the selected category
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -125,7 +125,8 @@ export default function AddProductOffer() {
   };
 
   return (
-    <div className=" md:mx-[20px] p-4 ">
+    loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+    <div className=" md:mx-[20px] p-10">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-brown">

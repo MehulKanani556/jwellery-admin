@@ -5,6 +5,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAllUsers } from "../reduxe/slice/users.slice";
 import { addCategory, deleteCategory, editCategory, getAllCategory, updateStatusCategory } from "../reduxe/slice/catagorys.slice";
+import Loader from "../components/Loader";
 
 export default function Category() {
   const [categoryData, setCategoryData] = useState('');
@@ -13,7 +14,7 @@ export default function Category() {
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
   const [categoryname, setCategoryname] = useState();
-  const category = useSelector((state) => state.categorys.category);
+  const {category,loading,success} = useSelector((state) => state.categorys);
   const [error, setError] = useState('');
 
   useEffect(()=>{
@@ -99,7 +100,9 @@ export default function Category() {
    dispatch(updateStatusCategory({id:data.id,status:status}))
   };
   return (
-    <div className=" md:mx-[20px] p-4 ">
+
+    loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+    <div className=" md:mx-[20px] p-10">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-brown">Category </h1>
@@ -307,7 +310,6 @@ export default function Category() {
           </div>
         </Box>
       </Modal>
-
     </div>
   );
 }

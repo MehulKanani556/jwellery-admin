@@ -15,14 +15,14 @@ import { FaFilter } from "react-icons/fa";
 import { addOffer, deleteAllOffers, deleteOffer, editOffer, getAllOffers, updateStatusOffer } from "../reduxe/slice/offer.slice";
 import { Field, Formik } from "formik";
 import * as Yup from 'yup';
-
-export default function Offer() {
+import Loader from "../components/Loader";
+export default function  Offer() {
     const [data, setData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const [createopen, setCreateopen] = useState(false);
     const [openView, setOpenView] = useState(false);
-    const { offers } = useSelector((state) => state.offers);
+    const { offers,loading } = useSelector((state) => state.offers);
     const [delAllOpen, setDelAllOpen] = useState(false);
     const fileInputRef = useRef(null);
     const [selectType, setSelectType] = useState("");
@@ -174,7 +174,8 @@ export default function Offer() {
     });
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10 ">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Offers</h1>

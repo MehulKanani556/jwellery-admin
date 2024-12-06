@@ -37,6 +37,7 @@ import * as Yup from "yup";
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
+import Loader from "../components/Loader";
 // import MenuItem from '@mui/material/MenuItem';
 
 export default function SubCategory() {
@@ -49,6 +50,7 @@ export default function SubCategory() {
   const [image, setImage] = useState();
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
+  const loading = useSelector(state => state.subcategorys.loading);
   console.log(category);
 
   const fileInputRef = useRef(null);
@@ -235,7 +237,9 @@ export default function SubCategory() {
   });
 
   return (
-    <div className=" md:mx-[20px] p-4 ">
+
+    loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+    <div className=" md:mx-[20px] p-10">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-brown">SubCategory </h1>

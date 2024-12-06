@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import { getAllSizes } from "../reduxe/slice/size.slice";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { BsPlayCircle } from "react-icons/bs";
+import Loader from "../components/Loader";
 
 
 
@@ -32,22 +33,15 @@ const ProductView = React.memo(() => {
     const { id } = useLocation().state;
     console.log(id);
 
-    const category = useSelector((state) => state.categorys.category);
-    const subcategory = useSelector((state) => state.subcategorys.SubCategory);
-    const products = useSelector((state) => state.products.products);
-    const size = useSelector((state) => state.sizes.sizes);
-    console.log(products, category, subcategory, size);
+    const {products,loading} = useSelector((state) => state.products);
 
 
 
     useEffect(() => {
-        dispatch(getAllCategory());
-        dispatch(getAllSubCategory());
         if (id) {
             dispatch(getSingleProducts(id));
         }
-        dispatch(getAllSizes());
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         setMainImage(products?.images);
@@ -100,7 +94,8 @@ const ProductView = React.memo(() => {
     }
 
     return (
-        <div className="p-4">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className="p-10">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">View Product</h1>

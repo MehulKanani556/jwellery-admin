@@ -24,6 +24,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getAllSizes } from "../reduxe/slice/size.slice";
+import Loader from "../components/Loader";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB in bytes
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -42,6 +43,7 @@ const AddProduct = React.memo(() => {
     const subcategory = useSelector((state) => state.subcategorys.SubCategory);
     const products = useSelector((state) => state.products.products);
     const size = useSelector((state) => state.sizes.sizes);
+    const loading = useSelector(state => state.sizes.loading);
 
     // console.log(products, category, subcategory, size);
 
@@ -439,7 +441,8 @@ const AddProduct = React.memo(() => {
     const buttonText = id ? "Update" : "Add";
 
     return (
-        <div className="p-4">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className="p-10">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">{pageTitle}</h1>

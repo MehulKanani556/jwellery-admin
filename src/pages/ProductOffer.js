@@ -15,13 +15,13 @@ import { FaFilter } from "react-icons/fa";
 import { deleteAllProductOffers, deleteProductOffer, getAllProductOffers, updateStatusProductOffer } from "../reduxe/slice/productoffer.slice";
 import { useNavigate } from "react-router-dom";
 import { getAllCategory } from "../reduxe/slice/catagorys.slice";
-
+import Loader from "../components/Loader";
 export default function ProductOffer() {
     const [data, setData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const [createopen, setCreateopen] = useState(false);
-    const { productOffers } = useSelector((state) => state.productoffers);
+    const { productOffers,loading } = useSelector((state) => state.productoffers);
     const { category } = useSelector(state => state.categorys);
     const navigate = useNavigate();
     const [delAllOpen, setDelAllOpen] = useState(false);
@@ -170,7 +170,8 @@ export default function ProductOffer() {
    
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Product Offers</h1>

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
-
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -120,6 +120,9 @@ const ordersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllOrders.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllOrders.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
@@ -130,52 +133,94 @@ const ordersSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all orders';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(addOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(addOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.orders.push(action.payload); // Add the new order to the orders array
-                state.message = 'Order added successfully';
+                state.message = action.payload?.message || "Order created successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(addOrder.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add order';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create order';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(editOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(editOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.orders.findIndex(order => order.id === action.payload.id);
                 if (index !== -1) {
                     state.orders[index] = action.payload; // Update the order in the orders array
                     state.message = 'Order edited successfully';
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editOrder.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to edit order';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to update order';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(deleteOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteOrder.fulfilled, (state, action) => {
                 state.orders = state.orders.filter(order => order.id !== action.payload); // Remove the deleted order
-                state.message = 'Order deleted successfully';
+                state.message = action.payload?.message || "Order deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete order';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllOrders.fulfilled, (state) => {
+            .addCase(deleteAllOrders.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteAllOrders.fulfilled, (state, action) => {
                 state.orders = []; // Clear the orders array
-                state.message = 'All orders deleted successfully';
+                state.message = action.payload?.message || "All orders deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllOrders.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all orders';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(updateStatusOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.orders.findIndex(order => order.id === action.payload.id);
                 if (index !== -1) {
                     state.orders[index] = action.payload; // Update the order status in the orders array
                     state.message = 'Order status updated successfully';
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(updateStatusOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to update order status';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(getOrderById.pending, (state) => {
+                state.loading = true
             })
             .addCase(getOrderById.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = 'Order fetched successfully';
+                state.message = action.payload?.message || "Order fetched successfully";
                 // You can store the fetched order in a specific state if needed
                  state.selectedOrder = action.payload;
             })
@@ -183,6 +228,7 @@ const ordersSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch order';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
-
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -108,10 +108,13 @@ const returnOrdersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllReturnOrders.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllReturnOrders.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = 'All return orders fetched successfully';
+                state.message = action.payload?.message || "All return orders fetched successfully";
                 // console.log(action.payload)
                 state.returnOrders = action.payload;
             })
@@ -119,54 +122,90 @@ const returnOrdersSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all return orders';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(addReturnOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(addReturnOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.returnOrders.push(action.payload); // Add the new return order to the returnOrders array
-                state.message = 'Return order added successfully';
+                state.message = action.payload?.message || "Return order created successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(addReturnOrder.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add return order';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create return order';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(editReturnOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(editReturnOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.returnOrders.findIndex(order => order.id === action.payload.id);
                 if (index !== -1) {
                     state.returnOrders[index] = action.payload; // Update the return order in the returnOrders array
-                    state.message = 'Return order edited successfully';
+                    state.message = action.payload?.message || "Return order updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editReturnOrder.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to edit return order';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to update return order';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(deleteReturnOrder.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteReturnOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.returnOrders = state.returnOrders.filter(order => order.id !== action.payload); // Remove the deleted return order
-                state.message = 'Return order deleted successfully';
+                state.message = action.payload?.message || "Return order deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteReturnOrder.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to delete return order';
+                state.loading = false;
                 state.success = false;
-
+                state.message = action.payload?.message || 'Failed to delete return order';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllReturnOrders.fulfilled, (state) => {
-                state.returnOrders = []; // Clear the returnOrders array
-                state.message = 'All return orders deleted successfully';
+            .addCase(deleteAllReturnOrders.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteAllReturnOrders.fulfilled, (state, action) => {
+                state.loading = false;
                 state.success = true;
-
+                state.returnOrders = []; // Clear the returnOrders array
+                state.message = action.payload?.message || "All return orders deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllReturnOrders.rejected, (state, action) => {
                 state.loading = false;
-                state.message = action.payload?.message || 'Failed to delete all return orders';
                 state.success = false;
-
+                state.message = action.payload?.message || 'Failed to delete all return orders';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(updateStatusReturnOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.returnOrders.findIndex(order => order.id === action.payload.id);
                 if (index !== -1) {
                     state.returnOrders[index] = action.payload; // Update the return order status in the returnOrders array
-                    state.message = 'Return order status updated successfully';
+                    state.message = action.payload?.message || "Return order status updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(updateStatusReturnOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to update return order status';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

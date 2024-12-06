@@ -6,7 +6,7 @@ import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteAllReviews, deleteReview, getAllReviews } from '../reduxe/slice/review.slice'
 import { FaStar } from 'react-icons/fa'
-
+import Loader from '../components/Loader'
 export default function Review() {
     const [Data, setData] = useState([]);
     const [open, setOpen] = useState(false);
@@ -14,7 +14,7 @@ export default function Review() {
     const [delAllOpen, setDelAllOpen] = useState(false);
 
     const dispatch = useDispatch();
-    const { reviews } = useSelector(state => state.reviews);
+    const { reviews,loading } = useSelector(state => state.reviews);
     console.log(reviews)
     useEffect(() => {
         dispatch(getAllReviews())
@@ -91,7 +91,8 @@ export default function Review() {
     };
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10 ">
             <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Review </h1>

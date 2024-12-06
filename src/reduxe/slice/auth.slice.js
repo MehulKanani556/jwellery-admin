@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sessionStorage from 'redux-persist/es/storage/session';
 import { BASE_URL } from '../../utils/BaseUrl';
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -103,10 +104,15 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.loggedIn = true;
                 state.isLoggedOut = false;
+                state.message = action.payload?.message || "Login successful";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
+                state.isAuthenticated = false;
+                state.message = action.payload?.message || "Login Failed";
                 state.error = action.payload?.message || "Login Failed";
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(forgotPassword.pending, (state) => {
                 state.loading = true;
@@ -115,12 +121,14 @@ const authSlice = createSlice({
             .addCase(forgotPassword.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null; // Clear any previous errors
-                state.message = action.payload;
-                // Handle success message if needed
+                state.message = action.payload?.message || "Forgot Password successful";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(forgotPassword.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.message || "Forgot Password Failed";
+                state.message = action.payload?.message || "Forgot Password Failed";
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(verifyOtp.pending, (state) => {
                 state.loading = true;
@@ -129,11 +137,14 @@ const authSlice = createSlice({
             .addCase(verifyOtp.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null; // Clear any previous errors
-                // Handle success message if needed
+                state.message = action.payload?.message || "OTP Verification successful";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(verifyOtp.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.message || "OTP Verification Failed";
+                state.message = action.payload?.message || "OTP Verification Failed";
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(resetPassword.pending, (state) => {
                 state.loading = true;
@@ -142,11 +153,14 @@ const authSlice = createSlice({
             .addCase(resetPassword.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null; // Clear any previous errors
-                // Handle success message if needed
+                state.message = action.payload?.message || "Password Reset successful";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(resetPassword.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.message || "Password Reset Failed";
+                state.message = action.payload?.message || "Password Reset Failed";
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
             
             

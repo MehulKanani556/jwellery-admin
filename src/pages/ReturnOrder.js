@@ -9,12 +9,12 @@ import Pagination from "@mui/material/Pagination";
 import { useNavigate } from "react-router-dom";
 import { getAllReturnOrders , deleteAllReturnOrders, updateStatusReturnOrder} from "../reduxe/slice/returnorder.slice";
 import { useSnackbar } from "notistack";
-
-export default function ReturnOrder() {
+import Loader from "../components/Loader";
+export default function   ReturnOrder() {
     const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const  {returnOrders,message,success}  = useSelector((state) => state.returnorders);
+    const  {returnOrders,message,success,loading}  = useSelector((state) => state.returnorders);
 
     const [delAllOpen, setDelAllOpen] = useState(false);
     
@@ -85,7 +85,8 @@ export default function ReturnOrder() {
     };
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10 ">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Return Orders</h1>
