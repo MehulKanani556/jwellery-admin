@@ -17,14 +17,34 @@ import {
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
-import { deleteAllProducts, deleteProduct, getAllProducts } from "../reduxe/slice/product.slice";
+import { deleteAllProducts, deleteProduct, getAllProducts, updateStatusProduct } from "../reduxe/slice/product.slice";
 import { useNavigate } from "react-router-dom";
 import Slider from '@mui/material/Slider';
+import { FiChevronDown } from "react-icons/fi";
 // import MenuItem from '@mui/material/MenuItem';
+
+const isVideo = (filename) => {
+  const videoExtensions = [
+    '.mp4',
+    '.mov',
+    '.avi',
+    '.wmv',
+    '.flv',
+    '.mkv',
+    '.webm',
+    '.m4v',
+    '.mpeg',
+    '.3gp'
+  ];
+  return videoExtensions.some(ext =>
+    filename.toLowerCase().endsWith(ext)
+  );
+};
 
 export default function Product() {
   const [productData, setProductData] = useState("");
   const [delOpen, setDelOpen] = useState(false);
+  const [delAllOpen, setDelAllOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const category = useSelector((state) => state.categorys.category);
@@ -70,6 +90,18 @@ export default function Product() {
     setAnchorEl(null);
   };
 
+  const [sortAnchorEl, setSortAnchorEl] = useState(null);
+  const sortOpen = Boolean(sortAnchorEl);
+
+  // Add these new handler functions
+  const handleSortClick = (event) => {
+    setSortAnchorEl(event.currentTarget);
+  };
+
+  const handleSortClose = () => {
+    setSortAnchorEl(null);
+  };
+
   //  =====pagination start=====
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Set items per page
@@ -109,25 +141,25 @@ export default function Product() {
     setSortBy(sortValue);
     console.log(sortValue);
 
-    if(sortValue){
+    if (sortValue) {
 
       const sortedProducts = [...filterProducts].sort((a, b) => {
         switch (sortValue) {
-        case "price_low":
-          return Number(a.price) - Number(b.price);
-        case "price_high":
-          return Number(b.price) - Number(a.price);
-        case "best_selling":
-          // Assuming there's a sales_count field, adjust as needed
-          return (b.sales_count || 0) - (a.sales_count || 0);
-        case "low_stock":
-          return Number(a.qty) - Number(b.qty);
-        default:
-          return 0;
-      }
+          case "price_low":
+            return Number(a.price) - Number(b.price);
+          case "price_high":
+            return Number(b.price) - Number(a.price);
+          case "best_selling":
+            // Assuming there's a sales_count field, adjust as needed
+            return (b.sales_count || 0) - (a.sales_count || 0);
+          case "low_stock":
+            return Number(a.qty) - Number(b.qty);
+          default:
+            return 0;
+        }
       });
       setFilterProducts(sortedProducts);
-    }else{
+    } else {
       setFilterProducts(products)
     }
   };
@@ -142,33 +174,33 @@ export default function Product() {
 
     setFilterProducts(subcategory);
     handleClose();
-  
+
 
     setPriceRange([0, maxPrice]);
     setFilteredSubcategories([]);
 
-   let resetProducts = [...products];
-   if (sortBy) {
-     resetProducts = resetProducts.sort((a, b) => {
-       switch (sortBy) {
-         case "price_low":
-           return Number(a.price) - Number(b.price);
-         case "price_high":
-           return Number(b.price) - Number(a.price);
-         case "best_selling":
-           return (b.sales_count || 0) - (a.sales_count || 0);
-         case "low_stock":
-           return Number(a.qty) - Number(b.qty);
-         default:
-           return 0;
-       }
-     });
-   }
- 
-   setFilterProducts(resetProducts);
-   
- };
- 
+    let resetProducts = [...products];
+    if (sortBy) {
+      resetProducts = resetProducts.sort((a, b) => {
+        switch (sortBy) {
+          case "price_low":
+            return Number(a.price) - Number(b.price);
+          case "price_high":
+            return Number(b.price) - Number(a.price);
+          case "best_selling":
+            return (b.sales_count || 0) - (a.sales_count || 0);
+          case "low_stock":
+            return Number(a.qty) - Number(b.qty);
+          default:
+            return 0;
+        }
+      });
+    }
+
+    setFilterProducts(resetProducts);
+
+  };
+
 
   // Get current items based on filtered items
   const currentItems = Array.isArray(filterProducts)
@@ -206,14 +238,15 @@ export default function Product() {
     dispatch(deleteProduct({ id: productData.id }));
     setDelOpen(false);
   };
-  const handleDeleteAll = () => {
-    console.log("Delete All User ");
+  const handleDeleteAllProduct = () => {
+    // console.log("Delete All User ");
     dispatch(deleteAllProducts());
+    setDelAllOpen(false);
   };
 
   const handleToggle = (data) => {
     const status = data.status == "active" ? "inactive" : "active";
-    dispatch(updateStatusSubCategory({ id: data.id, status: status }));
+    dispatch(updateStatusProduct({ id: data.id, status: status }));
   };
 
   const handleproductadd = (id) => {
@@ -291,69 +324,78 @@ export default function Product() {
                   <p className="text-brown font-bold text-xl p-3">Filter</p>
                 </div>
                 <div className="mt-1 p-3">
-                  <label className="text-brown font-bold">Category</label>
-                  <select
-                    name="category_id"
-                    className="border border-brown rounded w-full p-3 mt-1"
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                  >
-                    <option value="">Select Category</option>
-                    {category.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className>
+                    <label className="text-brown font-bold">Category</label>
+                    <select
+                      name="category_id"
+                      className="border border-brown rounded w-full p-3 mt-1"
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
+                    >
+                      <option value="">Select Category</option>
+                      {category.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mt-3">
+                    <label className="text-brown font-bold">SubCategory</label>
+                    <select
+                      name="subcategory_id"
+                      className="border border-brown rounded w-full p-3 mt-1"
+                      value={selectedSubCategory}
+                      onChange={(e) => setSelectedSubCategory(e.target.value)}
+                      disabled={!selectedCategory}
+                    >
+                      <option value="">Select SubCategory</option>
+                      {filteredSubcategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                  <label className="text-brown font-bold mt-4">SubCategory</label>
-                  <select
-                    name="subcategory_id"
-                    className="border border-brown rounded w-full p-3 mt-1"
-                    value={selectedSubCategory}
-                    onChange={(e) => setSelectedSubCategory(e.target.value)}
-                    disabled={!selectedCategory}
-                  >
-                    <option value="">Select SubCategory</option>
-                    {filteredSubcategories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="mt-3">
+                    <label className="text-brown font-bold">Status</label>
+                    <select
+                      name="name"
+                      className="border border-brown rounded w-full p-3 mt-1"
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                    >
+                      <option value="">Select status</option>
+                      <option value="inactive">InActive</option>
+                      <option value="active">Active</option>
+                    </select>
+                  </div>
 
-                  <label className="text-brown font-bold mt-4">Price Range</label>
-                  <div className="px-3 mt-2">
-                    <Slider
-                      value={priceRange}
-                      onChange={(e, newValue) => setPriceRange(newValue)}
-                      valueLabelDisplay="auto"
-                      min={0}
-                      max={maxPrice}
-                      sx={{
-                        color: '#523C34',
-                        '& .MuiSlider-valueLabel': {
-                          backgroundColor: '#523C34',
-                        },
-                      }}
-                    />
-                    <div className="flex justify-between text-sm text-brown">
-                      <span>₹{priceRange[0]}</span>
-                      <span>₹{priceRange[1]}</span>
+                  <div className="mt-3">
+                    <label className="text-brown font-bold">Price Range</label>
+                    <div className="px-3 mt-2">
+                      <Slider
+                        value={priceRange}
+                        onChange={(e, newValue) => setPriceRange(newValue)}
+                        valueLabelDisplay="auto"
+                        min={0}
+                        max={maxPrice}
+                        sx={{
+                          color: '#523C34',
+                          '& .MuiSlider-valueLabel': {
+                            backgroundColor: '#523C34',
+                          },
+                        }}
+                      />
+                      <div className="flex justify-between text-sm text-brown">
+                        <span>₹{priceRange[0]}</span>
+                        <span>₹{priceRange[1]}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <label className="text-brown font-bold mt-4">Status</label>
-                  <select
-                    name="name"
-                    className="border border-brown rounded w-full p-3 mt-1"
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                  >
-                    <option value="">Select status</option>
-                    <option value="inactive">InActive</option>
-                    <option value="active">Active</option>
-                  </select>
+
                 </div>
                 <div className="flex justify-center gap-8 mt-2 p-3">
                   <button
@@ -377,22 +419,90 @@ export default function Product() {
             {/* ===== */}
 
 
-            <select
-              name="short"
-              className="text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-              value={sortBy}
-              onChange={handleSort}
+            <button
+              className="text-brown border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+              id="sort-button"
+              aria-controls={sortOpen ? "sort-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={sortOpen ? "true" : undefined}
+              onClick={handleSortClick}
             >
-              <option value="">Sort By</option>
-              <option value="best_selling">Best Selling</option>
-              <option value="price_low">Price Low to High</option>
-              <option value="price_high">Price High to Low</option>
-              <option value="low_stock">Low Stock</option>
-            </select>
+              <span>
+                {sortBy ? (
+                  sortBy === 'best_selling' ? 'Best Selling' :
+                    sortBy === 'price_low' ? 'Price Low to High' :
+                      sortBy === 'price_high' ? 'Price High to Low' :
+                        sortBy === 'low_stock' ? 'Low Stock' : 'Sort By'
+                ) : 'Sort By'}
+              </span>
+              <span className={`${sortOpen ? "rotate-180" : "rotate-0"} transition-all duration-500`}>
+                <FiChevronDown />
+              </span>
+            </button>
+
+            <Menu
+              id="sort-menu"
+              anchorEl={sortAnchorEl}
+              open={sortOpen}
+              onClose={handleSortClose}
+              MenuListProps={{
+                "aria-labelledby": "sort-button",
+              }}
+              PaperProps={{
+                style: { width: "200px" },
+              }}
+            >
+              <div className="px-2 pt-0">
+                <div className="flex flex-col items-start">
+                  <button
+                    className={`rounded p-1 ${sortBy === 'best_selling' ? 'font-bold text-brown' : 'text-brown'}`}
+                    onClick={() => {
+                      setSortBy('best_selling');
+                      handleSort({ target: { value: 'best_selling' } });
+                      handleSortClose();
+                    }}
+                  >
+                    Best Selling
+                  </button>
+                  <button
+                    className={`rounded p-1 ${sortBy === 'price_low' ? 'font-bold text-brown' : 'text-brown'}`}
+                    onClick={() => {
+                      setSortBy('price_low');
+                      handleSort({ target: { value: 'price_low' } });
+                      handleSortClose();
+                    }}
+                  >
+                    Price Low to High
+                  </button>
+                  <button
+                    className={`rounded p-1 ${sortBy === 'price_high' ? 'font-bold text-brown' : 'text-brown'}`}
+                    onClick={() => {
+                      setSortBy('price_high');
+                      handleSort({ target: { value: 'price_high' } });
+                      handleSortClose();
+                    }}
+                  >
+                    Price High to Low
+                  </button>
+                  <button
+                    className={`rounded p-1 ${sortBy === 'low_stock' ? 'font-bold text-brown' : 'text-brown'}`}
+                    onClick={() => {
+                      setSortBy('low_stock');
+                      handleSort({ target: { value: 'low_stock' } });
+                      handleSortClose();
+                    }}
+                  >
+                    Low Stock
+                  </button>
+                </div>
+              </div>
+            </Menu>
+
+              {/* ===== */}
 
             <button
               className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-              onClick={handleDeleteAll}
+              onClick={() => setDelAllOpen(true)}
             >
               <span>
                 <RiDeleteBin6Fill />
@@ -428,11 +538,20 @@ export default function Product() {
                 <tr key={index} className="hover:bg-gray-100 border-t">
                   <td className="py-2 px-5">{v.id}</td>
                   <td className="py-2 px-5 flex items-center">
-                    <img
-                      src={v.images?.[0]}
-                      alt="User"
-                      className="w-10 h-10 rounded-full mr-2"
-                    />
+                    {v.images?.[0] && isVideo(v.images[0]) ? (
+                      <video
+                        className="w-10 h-10 rounded-full mr-2 object-cover"
+                        src={v.images[0]}
+                      >
+                        <source src={v.images[0]} />
+                      </video>
+                    ) : (
+                      <img
+                        src={v.images?.[0]}
+                        alt="Product"
+                        className="w-10 h-10 rounded-full mr-2 object-cover"
+                      />
+                    )}
                     {v.product_name}
                   </td>
                   <td className="py-2 px-5">{v.category_name || ""}</td>
@@ -542,6 +661,35 @@ export default function Product() {
           </div>
         </Box>
       </Modal>
+
+      {/* Delete all product */}
+      <Modal open={delAllOpen} onClose={() => setDelAllOpen(false)}>
+        <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+          <div className="p-5">
+            <div className="text-center">
+              <p className="text-brown font-bold text-xl mb-2">Delete All Product</p>
+              <p className="text-brown-50 mb-4">
+                Are you sure you want to delete all Product?
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-4 justify-center">
+              <button
+                onClick={() => setDelAllOpen(false)}
+                className="text-brown w-32 border-brown border px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAllProduct}
+                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { addCategory, deleteCategory, editCategory, getAllCategory, updateStatus
 export default function Category() {
   const [categoryData, setCategoryData] = useState('');
   const [delOpen, setDelOpen] = useState(false);
+  const [delAllOpen, setDelAllOpen] = useState(false);
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
   const [categoryname, setCategoryname] = useState();
@@ -110,7 +111,7 @@ export default function Category() {
           <div className="flex gap-4  mb-4">
             <button
               className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-              onClick={handleDeleteAll}
+              onClick={()=>setDelAllOpen(true)}
             >
               <span>
                 <RiDeleteBin6Fill />
@@ -256,11 +257,11 @@ export default function Category() {
           <div className="  p-5">
             <div className="text-center">
               <p className="text-brown font-bold text-xl">Delete Category</p>
-              <p className="text-brown-50">
+              <p className="text-brown-50 mt-2">
                 Are you sure you want to delete Category?
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 mt-4  justify-center">
+            <div className="flex flex-wrap gap-3 mt-6  justify-center">
               <button
                 onClick={handleDeleteClose}
                 className="text-brown w-32 border-brown border px-4 py-2 rounded"
@@ -277,6 +278,36 @@ export default function Category() {
           </div>
         </Box>
       </Modal>
+
+    
+      {/* Delete All category */}
+      <Modal open={delAllOpen} onClose={()=>setDelAllOpen(false)}>
+        <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+          <div className="  p-5">
+            <div className="text-center">
+              <p className="text-brown font-bold text-xl">Delete All Category</p>
+              <p className="text-brown-50 mt-2">
+                Are you sure you want to delete All Category?
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-6  justify-center">
+              <button
+                onClick={()=>setDelAllOpen(false)}
+                className="text-brown w-32 border-brown border px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAll}
+                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+
     </div>
   );
 }

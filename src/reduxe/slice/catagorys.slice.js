@@ -1,29 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import sessionStorage from "redux-persist/es/storage/session";
 import axiosInstance from "../../utils/axiosInstance";
-// import { BASE_URL } from "../../utils/BaseUrl";
-
-// // Create an Axios instance
-// const axiosInstance = axios.create();
-// async function getToken() {
-//   const token = await sessionStorage.getItem("token");
-//   return token;
-// }
-// // Add a request interceptor to include the token
-// axiosInstance.interceptors.request.use(
-//   async (config) => {
-//     // const token = sessionStorage.getItem("token"); // Retrieve the token from session storage
-//     const token =await getToken();// Retrieve the token from session storage
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+import { enqueueSnackbar } from "notistack";
 
 
 
@@ -147,6 +124,7 @@ const categorysSlice = createSlice({
       .addCase(getAllCategory.pending, (state) => {
         state.loading = true;
         state.message = "Data is being fetched";
+
       })
       .addCase(getAllCategory.fulfilled, (state, action) => {
         state.loading = false;
@@ -184,12 +162,14 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.category = [...state.category, action.payload];
-        state.message = action.payload?.message || "Data is fetched successfully";
+        state.message = action.payload?.message || "Category added successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(addCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to Data fetched";
+        state.message = action.payload?.message || "Failed to add category";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   deleteCategory
       .addCase(deleteCategory.pending, (state) => {
@@ -201,11 +181,13 @@ const categorysSlice = createSlice({
         state.success = true;
         state.category = state.category.filter((user) => user.id !== action.payload);
         state.message = action.payload?.message || "category deleted successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to delete category";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   editCategory
       .addCase(editCategory.pending, (state) => {
@@ -216,12 +198,14 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.category = state.category.map((v) => v.id == action.payload.id ? action.payload  :  v);
-        state.message = action.payload?.message || "Update successfully";
+        state.message = action.payload?.message || "Category updated successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(editCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to delete category";
+        state.message = action.payload?.message || "Failed to update category";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   deleteAllCategory
 
@@ -234,14 +218,15 @@ const categorysSlice = createSlice({
         state.success = true;
         state.category = []; 
         state.message = action.payload || "All category deleted successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(deleteAllCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to delete all category";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
-
-      //   updateStatusCategory
+    //   updateStatusCategory
       .addCase(updateStatusCategory.pending, (state) => {
         state.loading = true;
         state.message = "Update category...";
@@ -250,12 +235,14 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.category = state.category.map((v) => v.id == action.payload.id ? action.payload  :  v);
-        state.message = action.payload?.message || "Update successfully";
+        state.message = action.payload?.message || "Category status updated successfully";
+        enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(updateStatusCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to delete category";
+        state.message = action.payload?.message || "Failed to update category status";
+        enqueueSnackbar(state.message, { variant: 'error' })
       });
   },
 });
