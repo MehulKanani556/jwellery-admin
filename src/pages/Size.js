@@ -11,6 +11,8 @@ import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../r
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
 import { Form } from 'react-router-dom'
+import Loader from '../components/Loader'
+
 
 export default function Size() {
     const [sizeData, setSizeData] = useState([]);
@@ -20,6 +22,7 @@ export default function Size() {
     const [addOpen, setAddOpen] = useState(false);
     const dispatch = useDispatch();
     const size = useSelector(state => state.sizes.sizes);
+    const loading = useSelector(state => state.sizes.loading);
     console.log(size)
     useEffect(() => {
         dispatch(getAllSizes())
@@ -95,7 +98,8 @@ export default function Size() {
     // }
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10">
             <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Size </h1>

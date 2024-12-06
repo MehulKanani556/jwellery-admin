@@ -21,6 +21,7 @@ import { deleteAllProducts, deleteProduct, getAllProducts, updateStatusProduct }
 import { useNavigate } from "react-router-dom";
 import Slider from '@mui/material/Slider';
 import { FiChevronDown } from "react-icons/fi";
+import Loader from "../components/Loader";
 // import MenuItem from '@mui/material/MenuItem';
 
 const isVideo = (filename) => {
@@ -49,8 +50,7 @@ export default function Product() {
   const navigate = useNavigate();
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
-  const products = useSelector((state) => state.products.products);
-  console.log(products);
+  const {products, loading} = useSelector((state) => state.products);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -269,7 +269,8 @@ export default function Product() {
 
 
   return (
-    <div className=" md:mx-[20px] p-4 ">
+    loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+    <div className=" md:mx-[20px] p-10">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-brown">Product </h1>

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
-
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -99,6 +99,9 @@ const couponsSlice = createSlice({
                 state.message = 'All coupons fetched successfully';
                 state.coupons = action.payload;
             })
+            .addCase(getAllCoupons.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllCoupons.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
@@ -106,44 +109,89 @@ const couponsSlice = createSlice({
             })
             .addCase(addCoupon.fulfilled, (state, action) => {
                 state.coupons.push(action.payload); // Add the new coupon to the coupons array
-                state.message = 'Coupon added successfully';
+                state.message = action.payload?.message || "Coupon created successfully";
+                state.loading = false;
+                state.success = true;
+                enqueueSnackbar(state.message, { variant: 'success' })
+            })
+            .addCase(addCoupon.pending, (state) => {
+                state.loading = true
             })
             .addCase(addCoupon.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add coupon';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create coupon';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(editCoupon.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.coupons.findIndex(coupon => coupon.id === action.payload.id);
                 if (index !== -1) {
                     state.coupons[index] = action.payload; // Update the coupon in the coupons array
-                    state.message = 'Coupon edited successfully';
+                    state.message = action.payload?.message || "Coupon updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
+            })
+            .addCase(editCoupon.pending, (state) => {
+                state.loading = true
             })
             .addCase(editCoupon.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to edit coupon';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to update coupon';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(deleteCoupon.fulfilled, (state, action) => {
                 state.coupons = state.coupons.filter(coupon => coupon.id !== action.payload); // Remove the deleted coupon
-                state.message = 'Coupon deleted successfully';
+                state.message = action.payload?.message || "Coupon deleted successfully";
+                state.loading = false;
+                state.success = true;
+                enqueueSnackbar(state.message, { variant: 'success' })
+            })
+            .addCase(deleteCoupon.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteCoupon.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete coupon';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllCoupons.fulfilled, (state) => {
+            .addCase(deleteAllCoupons.fulfilled, (state, action) => {
                 state.coupons = []; // Clear the coupons array
-                state.message = 'All coupons deleted successfully';
+                state.message = action.payload?.message || "All coupons deleted successfully";
+                state.loading = false;
+                state.success = true;
+                enqueueSnackbar(state.message, { variant: 'success' })
+            })
+            .addCase(deleteAllCoupons.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteAllCoupons.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all coupons';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(updateStatusCoupon.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.coupons.findIndex(coupon => coupon.id === action.payload.id);
                 if (index !== -1) {
                     state.coupons[index] = action.payload; // Update the coupon status in the coupons array
-                    state.message = 'Coupon status updated successfully';
+                    state.message = action.payload?.message || "Coupon status updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
+            // .addCase(updateStatusCoupon.pending, (state) => {
+            //     state.loading = true
+            // })
             .addCase(updateStatusCoupon.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to update coupon status';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

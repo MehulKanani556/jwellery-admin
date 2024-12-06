@@ -3,20 +3,22 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
-
+import Loader from "../components/Loader";
 export default function OrderView() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const { selectedOrder } = useSelector((state) => state.orders);
+    const { selectedOrder,loading } = useSelector((state) => state.orders);
     console.log(selectedOrder)
 
     useEffect(() => {
         dispatch(getOrderById(id));
     }, [dispatch]);
+    
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">View Orders</h1>

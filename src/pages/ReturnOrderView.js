@@ -11,12 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { getAllReturnOrders, deleteAllReturnOrders, updateStatusReturnOrder } from "../reduxe/slice/returnorder.slice";
 import { FiArrowLeft } from "react-icons/fi";
 import { FaFilter } from "react-icons/fa";
-
+import Loader from "../components/Loader";
 export default function ReturnOrderView() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { returnOrders } = useSelector((state) => state.returnorders);
+    const { returnOrders,loading } = useSelector((state) => state.returnorders);
 
     const [delAllOpen, setDelAllOpen] = useState(false);
 
@@ -108,7 +108,8 @@ export default function ReturnOrderView() {
     };
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10 ">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">View Return Orders</h1>

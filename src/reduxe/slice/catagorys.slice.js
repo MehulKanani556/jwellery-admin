@@ -136,6 +136,7 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to Data fetched";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   getSingleCategory
       .addCase(getSingleCategory.pending, (state) => {
@@ -152,6 +153,7 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = false;
         state.message = action.payload?.message || "Failed to Data fetched";
+        enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   addCategory
       .addCase(addCategory.pending, (state) => {
@@ -162,13 +164,13 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.category = [...state.category, action.payload];
-        state.message = action.payload?.message || "Category added successfully";
+        state.message = action.payload?.message || "Category created successfully";
         enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(addCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to add category";
+        state.message = action.payload?.message || "Failed to create category";
         enqueueSnackbar(state.message, { variant: 'error' })
       })
     //   deleteCategory
@@ -180,7 +182,7 @@ const categorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.category = state.category.filter((user) => user.id !== action.payload);
-        state.message = action.payload?.message || "category deleted successfully";
+        state.message = action.payload?.message || "Category deleted successfully";
         enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(deleteCategory.rejected, (state, action) => {

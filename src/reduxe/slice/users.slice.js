@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
+import { enqueueSnackbar } from 'notistack';
 
 
 
@@ -125,23 +126,29 @@ const usersSlice = createSlice({
                 state.success = true;
                 state.users = state.users.filter((user) => user._id !== action.payload);
                 state.message = action.payload?.message || 'User deleted successfully';
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to delete user';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
 
+            .addCase(getAllUsers.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllUsers.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = 'All users fetched successfully';
+                state.message = action.payload?.message || "All users fetched successfully";
                 state.users =  action.payload   ;
             })
             .addCase(getAllUsers.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all users';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(getSingleUser.pending, (state) => {
                 state.loading = true;
@@ -151,12 +158,13 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.currUser = action.payload;
-                state.message = 'User fetched successfully';
+                state.message = action.payload?.message || "User fetched successfully";
             })
             .addCase(getSingleUser.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch user';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(deleteAllUsers.pending, (state) => {
                 state.loading = true;
@@ -166,12 +174,14 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.users = []; // Clear the users array
-                state.message = action.payload || 'All users deleted successfully';
+                state.message = action.payload?.message || "All users deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllUsers.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all users';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(editUser.pending, (state) => {
                 state.loading = true;
@@ -183,12 +193,14 @@ const usersSlice = createSlice({
                 state.users = state.users.map((user) => 
                     user._id === action.payload._id ? action.payload : user
                 ); // Update the user in the users array
-                state.message = 'User edited successfully';
+                state.message = action.payload?.message || "User updated successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editUser.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to edit user';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(editUserProfile.pending, (state) => {
                 state.loading = true;
@@ -198,12 +210,14 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.currUser = action.payload; // Update the current user with the new profile data
-                state.message = 'Profile edited successfully';
+                state.message = action.payload?.message || "Profile updated successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editUserProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to edit profile';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(changePassword.pending, (state) => {
                 state.loading = true;
@@ -212,12 +226,14 @@ const usersSlice = createSlice({
             .addCase(changePassword.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = action.payload || 'Password changed successfully';
+                state.message = action.payload?.message || 'Password changed successfully';
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(changePassword.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to change password';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

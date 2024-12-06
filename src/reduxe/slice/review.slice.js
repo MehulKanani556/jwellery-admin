@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sessionStorage from 'redux-persist/es/storage/session';
 import axiosInstance from '../../utils/axiosInstance';
+import { enqueueSnackbar } from 'notistack';
 
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
@@ -80,47 +81,87 @@ const reviewsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllReviews.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllReviews.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = 'All reviews fetched successfully';
+                state.message = action.payload?.message || "All reviews fetched successfully";
                 state.reviews = action.payload;
             })
             .addCase(getAllReviews.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all reviews';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(addReview.pending, (state) => {
+                state.loading = true
             })
             .addCase(addReview.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.reviews.push(action.payload); // Add the new review to the reviews array
-                state.message = 'Review added successfully';
+                state.message = action.payload?.message || "Review created successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(addReview.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add review';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create review';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(editReview.pending, (state) => {
+                state.loading = true
             })
             .addCase(editReview.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.reviews.findIndex(review => review.id === action.payload.id);
                 if (index !== -1) {
                     state.reviews[index] = action.payload; // Update the review in the reviews array
-                    state.message = 'Review edited successfully';
+                    state.message = action.payload?.message || "Review updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editReview.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to edit review';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to update review';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(deleteReview.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteReview.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.reviews = state.reviews.filter(review => review.id !== action.payload); // Remove the deleted review
-                state.message = 'Review deleted successfully';
+                state.message = action.payload?.message || "Review deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteReview.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete review';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllReviews.fulfilled, (state) => {
+            .addCase(deleteAllReviews.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteAllReviews.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.reviews = []; // Clear the reviews array
-                state.message = 'All reviews deleted successfully';
+                state.message = action.payload?.message || "All reviews deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllReviews.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all reviews';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

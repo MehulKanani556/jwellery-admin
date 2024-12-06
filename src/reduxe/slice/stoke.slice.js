@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sessionStorage from 'redux-persist/es/storage/session';
 import axiosInstance from '../../utils/axiosInstance';
-
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -90,10 +90,13 @@ const stocksSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllStocks.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllStocks.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = 'All stocks fetched successfully';
+                state.message = action.payload?.message || "All stocks fetched successfully";
                 state.stocks =  action.payload   ;
                 // console.log(state.stocks)
             })
@@ -101,37 +104,75 @@ const stocksSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all stocks';
+                enqueueSnackbar(state.message, { variant: 'error' })    
+            })
+            .addCase(addStock.pending, (state) => {
+                state.loading = true
             })
             .addCase(addStock.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.stocks.push(action.payload); // Add the new size to the sizes array
-                state.message = 'Stock added successfully';
+                state.message = action.payload?.message || "Stock created successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
+
             .addCase(addStock.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add stock';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create stock';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(editStock.pending, (state) => {
+                state.loading = true
             })
             .addCase(editStock.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.stocks.findIndex(stock => stock.id === action.payload.id);
                 if (index !== -1) {
                     state.stocks[index] = action.payload; // Update the size in the sizes array
-                    state.message = 'Stock edited successfully';
+                    state.message = action.payload?.message || "Stock updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editStock.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to edit stock';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(deleteStock.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteStock.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.stocks = state.stocks.filter(stock => stock.id !== action.payload); // Remove the deleted size
-                state.message = 'Stock deleted successfully';
+                state.message = action.payload?.message || "Stock deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteStock.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete stock';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllStocks.fulfilled, (state) => {
+            .addCase(deleteAllStocks.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteAllStocks.fulfilled, (state, action) => {    
+                state.loading = false;
+                state.success = true;
                 state.stocks = []; // Clear the sizes array
-                state.message = 'All stocks deleted successfully';
+                state.message = action.payload?.message || "All stocks deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllStocks.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all stocks';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

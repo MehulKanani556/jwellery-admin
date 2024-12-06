@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
-
+import { enqueueSnackbar } from 'notistack';
 
 const handleErrors = (error, dispatch, rejectWithValue) => {
     const errorMessage = error.response?.data?.message || 'An error occurred';
@@ -109,6 +109,9 @@ const productOffersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllProductOffers.pending, (state) => {
+                state.loading = true
+            })
             .addCase(getAllProductOffers.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
@@ -119,48 +122,90 @@ const productOffersSlice = createSlice({
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload?.message || 'Failed to fetch all product offers';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(addProductOffer.pending, (state) => {
+                state.loading = true
             })
             .addCase(addProductOffer.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.productOffers.push(action.payload); // Add the new product offer to the productOffers array
-                state.message = 'Product offer added successfully';
+                state.message = action.payload?.message || "Product offer created successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(addProductOffer.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to add product offer';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to create product offer';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(editProductOffer.pending, (state) => {
+                state.loading = true
             })
             .addCase(editProductOffer.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 const index = state.productOffers.findIndex(offer => offer.id === action.payload.id);
                 if (index !== -1) {
                     state.productOffers[index] = action.payload; // Update the product offer in the productOffers array
-                    state.message = 'Product offer edited successfully';
+                    state.message = action.payload?.message || "Product offer updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(editProductOffer.rejected, (state, action) => {
-                state.message = action.payload?.message || 'Failed to edit product offer';
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload?.message || 'Failed to update product offer';
+                enqueueSnackbar(state.message, { variant: 'error' })
+            })
+            .addCase(deleteProductOffer.pending, (state) => {
+                state.loading = true
             })
             .addCase(deleteProductOffer.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.productOffers = state.productOffers.filter(offer => offer.id !== action.payload); // Remove the deleted product offer
-                state.message = 'Product offer deleted successfully';
+                state.message = action.payload?.message || "Product offer deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteProductOffer.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete product offer';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
-            .addCase(deleteAllProductOffers.fulfilled, (state) => {
+            .addCase(deleteAllProductOffers.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteAllProductOffers.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
                 state.productOffers = []; // Clear the productOffers array
-                state.message = 'All product offers deleted successfully';
+                state.message = action.payload?.message || "All product offers deleted successfully";
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(deleteAllProductOffers.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to delete all product offers';
+                enqueueSnackbar(state.message, { variant: 'error' })
             })
             .addCase(updateStatusProductOffer.fulfilled, (state, action) => {
-                
+                state.loading = false;
+                state.success = true;
                 const index = state.productOffers.findIndex(offer => offer.id === action.payload.id);
                 if (index !== -1) {
                     state.productOffers[index] = action.payload; // Update the product offer status in the productOffers array
-                    state.message = 'Product offer status updated successfully';
+                    state.message = action.payload?.message || "Product offer status updated successfully";
                 }
+                enqueueSnackbar(state.message, { variant: 'success' })
             })
             .addCase(updateStatusProductOffer.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
                 state.message = action.payload?.message || 'Failed to update product offer status';
+                enqueueSnackbar(state.message, { variant: 'error' })
             });
     }
 });

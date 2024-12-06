@@ -22,13 +22,13 @@ import {
     updateStatusCoupon,
 } from "../reduxe/slice/coupons.slice";
 // import MenuItem from '@mui/material/MenuItem';
-
+import Loader from "../components/Loader";
 export default function Coupons() {
     const [couponData, setCouponData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const [createopen, setCreateopen] = useState(false);
-    const { coupons } = useSelector((state) => state.coupons);
+    const { coupons,loading } = useSelector((state) => state.coupons);
     const [delAllOpen, setDelAllOpen] = useState(false);
 
     const [selectedCategory, setSelectedCategory] = useState("");
@@ -174,7 +174,8 @@ export default function Coupons() {
     });
 
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10">
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Invoice </h1>

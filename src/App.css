@@ -208,7 +208,6 @@ body {
 input{
   height: 45px !important;
   /* color: rgb(153 153 153 / 87%); */
-
 }
 select{
   height: 45px !important;
@@ -400,5 +399,5 @@ color: #727272;
   }
 
   :focus-visible {
-    outline: transparent auto 1px !important;   
+    outline: #4D1F08 auto 1px !important;   
   }

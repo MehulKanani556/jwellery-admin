@@ -11,6 +11,7 @@ import { getAllCategory } from '../reduxe/slice/catagorys.slice'
 import { getAllSubCategory } from '../reduxe/slice/subcategorys.slice'
 import { getAllProducts } from '../reduxe/slice/product.slice'
 import { FaFilter } from 'react-icons/fa'
+import Loader from '../components/Loader'
 
 export default function Stoke() {
     const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ export default function Stoke() {
     const [addOpen, setAddOpen] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
     const dispatch = useDispatch();
-    const { stocks } = useSelector(state => state.stocks);
+    const { stocks,loading } = useSelector(state => state.stocks);
     const { category } = useSelector(state => state.categorys);
     const { SubCategory } = useSelector(state => state.subcategorys);
     const { products } = useSelector(state => state.products);
@@ -138,7 +139,8 @@ export default function Stoke() {
         setAnchorEl(null);
     };
     return (
-        <div className=" md:mx-[20px] p-4 ">
+        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
+        <div className=" md:mx-[20px] p-10">
             <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Stock </h1>

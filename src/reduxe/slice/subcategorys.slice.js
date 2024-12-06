@@ -163,13 +163,13 @@ const subcategorysSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.SubCategory = [...state.SubCategory, action.payload];
-        state.message = action.payload?.message || "SubCategory added successfully";
+        state.message = action.payload?.message || "SubCategory created successfully";
         enqueueSnackbar(state.message, { variant: 'success' })
       })
       .addCase(addSubCategory.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.message = action.payload?.message || "Failed to add SubCategory";
+        state.message = action.payload?.message || "Failed to create SubCategory";
         enqueueSnackbar(state.message, { variant: 'error' })
       })
       //   deleteSubCategory

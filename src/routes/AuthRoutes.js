@@ -21,12 +21,10 @@ import ReturnOrderView from '../pages/ReturnOrderView'
 import Orders from '../pages/Orders'
 import OrderView from '../pages/OrderView'
 import InvoiceList from '../pages/InvoiceList'
-import { SnackbarProvider } from 'notistack'
 
 export default function AuthRoutes() {
     return (
         <div>
-            <SnackbarProvider maxSnack={3}>
                 <Layout>
                     <Routes>
                         <Route path="/dashboard" element={<DashBord />} />
@@ -50,7 +48,6 @@ export default function AuthRoutes() {
                         <Route path="/invoice" element={<InvoiceList />} />
                     </Routes>
                 </Layout>
-            </SnackbarProvider>
         </div>
     )
 }
