@@ -56,7 +56,7 @@ function Layout({ children }) {
   const fileInputRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  console.log(user);
+  // console.log(user);
 
   // Memoize the user data
   const memoizedUser = useMemo(() => user, [user]);

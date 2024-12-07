@@ -1032,7 +1032,7 @@ const AddProduct = React.memo(() => {
                                 <option value="" className="text-black">Select gender</option>
                                 <option value="male" className="text-black">Male</option>
                                 <option value="female" className="text-black">Female</option>
-                                <option value="unisex" className="text-black">Unisex</option>
+                                <option value="kids" className="text-black">Kids</option>
                             </select>
                             {(errors.gender && touched.gender) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.gender}</p>}
                         </div>

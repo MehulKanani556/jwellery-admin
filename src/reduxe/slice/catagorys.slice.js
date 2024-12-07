@@ -37,9 +37,9 @@ export const getSingleCategory = createAsyncThunk(
 
 export const addCategory = createAsyncThunk(
   "/addCategory",
-  async ({ name }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`/categories/create`, { name });
+      const response = await axiosInstance.post(`/categories/create`, data);
       if (response.status === 200) {
         console.log(response);
         return response.data.category; // Assuming the API returns a success message
@@ -52,11 +52,11 @@ export const addCategory = createAsyncThunk(
 
 export const editCategory = createAsyncThunk(
     "/editCategory",
-    async ({ data }, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
       console.log(data);
       
       try {
-        const response = await axiosInstance.post(`/categories/update/${data.id}`, { name:data.name });
+        const response = await axiosInstance.post(`/categories/update/${data.get('id')}`, data);
         if (response.status === 200) {
           console.log(response);
           
