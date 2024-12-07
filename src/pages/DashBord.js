@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import IndiaMap from '../components/IndiaMap'
 import Aa from '../components/Aa'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDashboard } from '../reduxe/slice/dashboard.slice';
+import { GoDotFill } from 'react-icons/go';
+import { FaStar } from 'react-icons/fa';
 
 export default function DashBord() {
+  const dispatch = useDispatch();
+  const { dashboardData } = useSelector((state) => state.dashboard)
+
+
+  console.log(dashboardData)
+
+  useEffect(() => {
+    dispatch(getDashboard());
+  }, [dispatch])
+
   const payMethodData = {
     cash: 100,
     debit: 50,
@@ -17,38 +31,38 @@ export default function DashBord() {
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#527cbf] '>
           <div className=' p-2 rounded-full mr-4'>
-            <img src={require('../Images/1.png')} alt="" />
+            <img src={require('../Images/1.png')} className='min-w-10' alt="" />
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Revenue</h2>
-            <p className='text-2xl'>₹1200000</p>
+            <p className='text-2xl'>₹{dashboardData?.total_revenue}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#66948f] '>
           <div className=' p-2 rounded-full mr-4'>
-            <img src={require('../Images/2.png')} alt="" />
+            <img src={require('../Images/2.png')} className='min-w-10' alt="" />
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Orders</h2>
-            <p className='text-2xl'>300</p>
+            <p className='text-2xl'>{dashboardData?.total_orders}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#6a6bba] '>
           <div className=' p-2 rounded-full mr-4'>
-            <img src={require('../Images/3.png')} alt="" />
+            <img src={require('../Images/3.png')} className='min-w-10' alt="" />
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Customers</h2>
-            <p className='text-2xl'>6569</p>
+            <p className='text-2xl'>{dashboardData?.total_customers}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#a16482] '>
           <div className=' p-2 rounded-full mr-4'>
-            <img src={require('../Images/4.png')} alt="" />
+            <img src={require('../Images/4.png')} className='min-w-10' alt="" />
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Products</h2>
-            <p className='text-2xl'>278</p>
+            <p className='text-2xl'>{dashboardData?.total_products?.total_products}</p>
           </div>
         </div>
       </div>
@@ -113,9 +127,21 @@ export default function DashBord() {
         <div className='bg-white py-4 rounded shadow'>
           <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Top Categories</h2>
           <div className='p-4 '>
-            <Aa data={payMethodData} />
-            <div>
-              <div></div>
+            <Aa data={dashboardData?.top_category} />
+            <div className='pt-3'>
+              <div className='flex flex-wrap  gap-4'>
+                {dashboardData?.top_category.map((ele, index) => (
+                  <div className='text-center border p-3 w-1/3 rounded-md' key={index}>
+                    <div className='font-semibold text-3xl' style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>{ele.product_count}</div>
+                    <div className='flex items-center justify-center gap-1'>
+                      <span style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>
+                        <GoDotFill />
+                      </span>
+                      <span className='font-semibold text-center'>{ele.category_name}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -128,37 +154,75 @@ export default function DashBord() {
             </p>
           </div>
           <div className='p-4'>
-
+            <div className='overflow-y-auto'>
+              {dashboardData?.reviews.map((review) => (
+                <>
+                  <div className='p-3 px-4 border-b'>
+                    <div className='flex justify-between items-center '>
+                      <div className='flex gap-2 items-center'>
+                        <div>
+                          <img src={review.image} className='w-[40px] h-[40px] rounded-full object-cover' alt={review.customer_name} />
+                        </div>
+                        <div className='font-semibold'>{review.customer_name}</div>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span className='text-yellow-300'>
+                          <FaStar />
+                        </span>
+                        <span className='font-semibold text-xl '>
+                          {review.rating}
+                        </span>
+                      </div>
+                    </div>
+                    <div className='text-gray-500 mt-2'>
+                      {review.description}
+                    </div>
+                  </div>
+                </>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-      <div className='bg-white p-4 rounded shadow mb-4'>
-        <h2 className='text-lg'>Stock Report</h2>
-        <table className='min-w-full'>
-          <thead>
-            <tr>
-              <td>ID</td>
-              <td>Name</td>
-              <td>Update Date</td>
-              <td>Amount</td>
-              <td>Stock Status</td>
-              <td>Quantity</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>001</td>
-              <td>Diamond Ring</td>
-              <td>21-01-2024</td>
-              <td>₹1200</td>
-              <td className='text-red-500'>Low Stock</td>
-              <td>5</td>
-            </tr>
-            {/* More rows can be added here */}
-          </tbody>
-        </table>
+      <div className='bg-white py-4  rounded shadow mb-4'>
+        <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Stock Report</h2>
+        <div className='py-4 '>
+          <table className='min-w-full px-4'>
+            <thead>
+              <tr>
+                <td className='font-semibold text-brown py-2  px-4'>ID</td>
+                <td className='font-semibold text-brown py-2  px-4'>Category</td>
+                <td className='font-semibold text-brown py-2  px-4 text-nowrap'>Sub Category</td>
+                <td className='font-semibold text-brown py-2  px-4 text-nowrap'>Product Name</td>
+                <td className='font-semibold text-brown py-2  px-4 text-nowrap'>Update Date</td>
+                <td className='font-semibold text-brown py-2  px-4 text-nowrap'>Stock Status</td>
+                <td className='font-semibold text-brown py-2  px-4'>Qty</td>
+              </tr>
+            </thead>
+            <tbody>
+
+              {dashboardData?.stock.length > 0 ? (
+                dashboardData?.stock.map((ele, index) => (
+                  <tr key={index} className="hover:bg-gray-100 border-t">
+                    <td className="py-2 px-4 ">{ele.id}</td>
+                    <td className="py-2 px-4 ">{ele.customer_name}</td>
+                    <td className="py-2 px-4 ">{ele.product_name}</td>
+                    <td className="py-2 px-4 ">{ele.date}</td>
+                    <td className="py-2 px-4 ">{ele.description}</td>
+
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="py-2 px-4 text-center text-gray-500 border-t">No records found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
       </div>
-      
+
     </div>
   )
 }

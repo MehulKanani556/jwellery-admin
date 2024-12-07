@@ -3,17 +3,12 @@ import ApexCharts from "apexcharts"; // Make sure to install ApexCharts
 // import "bootstrap/dist/css/bootstrap.min.css"; // Ensure you have bootstrap installed
 
 export default function Aa({ data }) {
-  // console.log(data);
-  
+  const seriesData = Array.isArray(data) ? data.map(item => item.product_count) : [];
+  console.log('Series Data:', seriesData);
   const getChartOptions = () => {
     return {
-      series: [
-        data?.cash || 0,
-        data?.debit || 0,
-        data?.credit || 0,
-        data?.transfer || 0
-      ],
-      colors: ["#147BDE", "#16BDCA", "#9061F9", "#FDBA8C"],
+      series: seriesData,
+      colors: ["#639993", "#364F77", "#5558AF", "#AF5280","#F0BA48"],
       chart: {
         height: 320,
         width: "100%",
@@ -117,55 +112,24 @@ export default function Aa({ data }) {
   };
 
   useEffect(() => {
-    if (
-      document.getElementById("donut-chart") &&
-      typeof ApexCharts !== "undefined"
-    ) {
+    if (seriesData.length === 0) {
+      console.log('No data available for the chart.');
+      return;
+    }
+
+    try {
       const chart = new ApexCharts(
         document.getElementById("donut-chart"),
         getChartOptions()
       );
       chart.render();
-
-      const checkboxes = document.querySelectorAll(
-        '#devices input[type="checkbox"]'
-      );
-
-      function handleCheckboxChange(event) {
-        const checkbox = event.target;
-        if (checkbox.checked) {
-          switch (checkbox.value) {
-            case "desktop":
-              chart.updateSeries([50.1, 22.5, 4.4, 8.4]);
-              break;
-            case "tablet":
-              chart.updateSeries([60.1, 26.5, 1.4, 3.4]);
-              break;
-            case "mobile":
-              chart.updateSeries([45.1, 27.5, 8.4, 2.4]);
-              break;
-            default:
-              chart.updateSeries([55.1, 28.5, 1.4, 5.4]);
-          }
-        } else {
-          chart.updateSeries([35.1, 23.5, 2.4, 5.4]);
-        }
-      }
-
-      checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", handleCheckboxChange);
-      });
-
-      return () => {
-        checkboxes.forEach((checkbox) => {
-          checkbox.removeEventListener("change", handleCheckboxChange);
-        });
-      };
+    } catch (error) {
+      console.error('Error rendering chart:', error);
     }
-  }, []);
+  }, [data]);
 
   return (
-    <div className="shadow-sm sjbg_none">
+    <div className="">
       <div className="card-body">
         <div className="d-flex justify-content-between mb-3">
           <div className="d-flex align-items-center " />

@@ -14,10 +14,12 @@ import productofferSlice from "./slice/productoffer.slice";
 import offerSlice from "./slice/offer.slice";
 import returnorderSlice from "./slice/returnorder.slice";
 import ordersSlice from "./slice/orders.slice";
+import dashboardSlice from "./slice/dashboard.slice";
 
 
 export const rootReducer = combineReducers({
     auth:authSlice,
+    dashboard:dashboardSlice,
     users:usersSlice,
     sizes:sizeSlice,
     categorys:categorysSlice,
@@ -29,5 +31,6 @@ export const rootReducer = combineReducers({
     productoffers:productofferSlice,
     offers:offerSlice,
     returnorders:returnorderSlice,
-    orders:ordersSlice
+    orders:ordersSlice,
+
 });
