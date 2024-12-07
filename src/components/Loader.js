@@ -20,83 +20,83 @@
 
 // export default Loader;
 
-import React from 'react';
-import styled from 'styled-components';
+// import React from 'react';
+// import styled from 'styled-components';
 
-const Loader = () => {
-  return (
-    <StyledWrapper>
-      <div className="loading-spinner">
-        <div className="loading-spinner-inner">
-          <div className="loading-spinner-circle" />
-          <div className="loading-spinner-circle" />
-          <div className="loading-spinner-circle" />
-          <div className="loading-spinner-circle" />
-          <div className="loading-spinner-circle" />
-        </div>
-      </div>
-    </StyledWrapper>
-  );
-}
+// const Loader = () => {
+//   return (
+//     <StyledWrapper>
+//       <div className="loading-spinner">
+//         <div className="loading-spinner-inner">
+//           <div className="loading-spinner-circle" />
+//           <div className="loading-spinner-circle" />
+//           <div className="loading-spinner-circle" />
+//           <div className="loading-spinner-circle" />
+//           <div className="loading-spinner-circle" />
+//         </div>
+//       </div>
+//     </StyledWrapper>
+//   );
+// }
 
-const StyledWrapper = styled.div`
-  .loading-spinner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // height: 8em;
-    transform: translate(0%, -150%);
-  }
+// const StyledWrapper = styled.div`
+//   .loading-spinner {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     // height: 8em;
+//     transform: translate(0%, -150%);
+//   }
 
-  .loading-spinner-inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+//   .loading-spinner-inner {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//   }
 
-  .loading-spinner-circle {
-    width: 1em;
-    height: 1em;
-    border-radius: 50%;
-    background-color: #db9334;
-    margin: 0 5px;
-    animation: loading-spinner 1s ease-in-out infinite;
-  }
+//   .loading-spinner-circle {
+//     width: 1em;
+//     height: 1em;
+//     border-radius: 50%;
+//     background-color: #db9334;
+//     margin: 0 5px;
+//     animation: loading-spinner 1s ease-in-out infinite;
+//   }
 
-  .loading-spinner-circle:nth-child(2) {
-    animation-delay: 0.2s;
-  }
+//   .loading-spinner-circle:nth-child(2) {
+//     animation-delay: 0.2s;
+//   }
 
-  .loading-spinner-circle:nth-child(3) {
-    animation-delay: 0.4s;
-  }
+//   .loading-spinner-circle:nth-child(3) {
+//     animation-delay: 0.4s;
+//   }
 
-  .loading-spinner-circle:nth-child(4) {
-    animation-delay: 0.6s;
-  }
+//   .loading-spinner-circle:nth-child(4) {
+//     animation-delay: 0.6s;
+//   }
 
-  .loading-spinner-circle:nth-child(5) {
-    animation-delay: 0.8s;
-  }
+//   .loading-spinner-circle:nth-child(5) {
+//     animation-delay: 0.8s;
+//   }
 
-  @keyframes loading-spinner {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
+//   @keyframes loading-spinner {
+//     0% {
+//       transform: scale(1);
+//       opacity: 1;
+//     }
 
-    20% {
-      transform: scale(1.5);
-      opacity: 0.5;
-    }
+//     20% {
+//       transform: scale(1.5);
+//       opacity: 0.5;
+//     }
 
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }`;
+//     100% {
+//       transform: scale(1);
+//       opacity: 1;
+//     }
+//   }`;
 
-export default Loader;
+// export default Loader;
 
 
 // import React from 'react';
@@ -149,6 +149,33 @@ export default Loader;
 //   }`;
 
 // export default Loader;
+
+
+
+import React from 'react';
+import styled from 'styled-components';
+
+const Loader = () => {
+  return (
+    <StyledWrapper>
+      <video className="loader-video" autoPlay loop muted playsInline>
+        <source src={require("../Images/qqqq.mp4")} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </StyledWrapper>
+  );
+}
+
+const StyledWrapper = styled.div`
+  .loader-video {
+    width: 400px;  // Adjust size as needed
+    height: 400px; // Adjust size as needed
+    object-fit: contain;
+    transform: translate(-10%, -10%);
+  }
+`;
+
+export default Loader;
 
 
 

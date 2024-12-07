@@ -239,16 +239,16 @@ export default function SubCategory() {
   return (
 
     loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
-    <div className=" md:mx-[20px] p-10">
-      <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-        <div>
+    <div className="p-10">
+      <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+        <div className="text-center lg:text-left">
           <h1 className="text-2xl font-bold text-brown">SubCategory </h1>
           <p className="text-brown-50">
             Dashboard /{" "}
             <span className="text-brown font-medium">SubCategory</span>
           </p>
         </div>
-        <div>
+        <div className="flex justify-center lg:justify-end">
           <div className="flex gap-4  mb-4">
             {filtersApplied ? (
               <button
