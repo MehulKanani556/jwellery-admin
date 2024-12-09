@@ -26,10 +26,10 @@ export default function Review() {
     const itemsPerPage = 10; // Set items per page
 
     // State for selected date
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
     // Filter reviews by selected date
-    const filteredReviews = selectedDate ? reviews.filter(review => review.date === selectedDate) : reviews;
+    const filteredReviews = selectedDate ? reviews.filter(review => new Date(review.date).toISOString().split('T')[0] == selectedDate) : reviews;
 
     // Calculate total pages after defining filteredReviews
     const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
@@ -105,7 +105,7 @@ export default function Review() {
                     <div className="flex gap-4  mb-4">
 
                         <button className="text-brown border-brown border  px-4 py-1 rounded">
-                            <input type="date" value={selectedDate} onChange={handleDateChange} /> {/* Update input to use selected date */}
+                            <input type="date" value={selectedDate} onChange={handleDateChange} className='outline-none ' /> {/* Update input to use selected date */}
                         </button>
                         <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                     </div>
@@ -119,7 +119,7 @@ export default function Review() {
                             <td className="py-2  px-4">No</td>
                             <td className="py-2  px-4 text-nowrap">Customer name</td>
                             <td className="py-2  px-4">Product</td>
-                            <td className="py-2  px-4">Date</td>
+                            <td className="py-2  px-4 text-nowrap">Date</td>
                             <td className="py-2  px-4 ">Rate</td>
                             <td className="py-2  px-4">Description</td>
                             <td className="py-2  px-4">Action</td>
@@ -132,7 +132,7 @@ export default function Review() {
                                     <td className="py-2 px-4 ">{ele.id}</td>
                                     <td className="py-2 px-4 ">{ele.customer_name}</td>
                                     <td className="py-2 px-4 ">{ele.product_name}</td>
-                                    <td className="py-2 px-4 ">{ele.date}</td>
+                                    <td className="py-2 px-4 text-nowrap">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
                                     <td className="py-2 px-4 flex ">{renderStars(ele.rating)}</td>
                                     <td className="py-2 px-4 ">{ele.description}</td>
                                     <td className="py-2 px-4 flex items-center gap-2">
@@ -205,7 +205,7 @@ export default function Review() {
                                     </div>
                                 </div>
                                 <div>
-                                    <span className="ml-2 text-gray-500">{Data.date}</span>
+                                    <span className="ml-2 text-gray-500">{Data.date ? new Date(Data.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</span>
                                 </div>
                             </div>
                             <p className="mt-2 border-t pt-4">{Data.description}</p> {/* Assuming Data.description is available */}

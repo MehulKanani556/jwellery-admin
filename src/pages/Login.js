@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../reduxe/slice/auth.slice';
+import { login, logout } from '../reduxe/slice/auth.slice';
 import session from 'redux-persist/es/storage/session';
 
 export default function Login() {
@@ -27,9 +27,13 @@ export default function Login() {
     // Use an effect to navigate after the data is updated
     useEffect(() => {
         if (data) {
-            navigate('/dashboard');
+            if (data.role === 'admin') {
+                navigate('/dashboard');
+            } else {
+                dispatch(logout({ message: 'Access denied. Admin access required.'}));
+            }
         }
-    }, [data, navigate]);
+    }, [data, navigate, dispatch]);
 
     return (
         <div>

@@ -13,7 +13,7 @@ import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
 import { addOffer, deleteAllOffers, deleteOffer, editOffer, getAllOffers, updateStatusOffer } from "../reduxe/slice/offer.slice";
-import { Field, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import * as Yup from 'yup';
 import Loader from "../components/Loader";
 export default function  Offer() {
@@ -164,6 +164,7 @@ export default function  Offer() {
     };
 
     const validationSchema = Yup.object({
+        type: Yup.string().required('Type is required'),
         name: Yup.string().required('Name is required'),
         description: Yup.string().required('Description is required'),
         type: Yup.string().required('Type is required'),
@@ -372,9 +373,9 @@ export default function  Offer() {
                                     <td className="py-2 px-5">{v.description}</td>
                                     <td className="py-2 px-5">{v.name}</td>
                                     <td className="py-2 px-5">{v.button_text}</td>
-                                    <td className="py-2 px-5">{v.type === 'fixed' ? `₹ ${v.discount}` : `${v.discount}%`}</td>
-                                    <td className="py-2 px-5">{v.start_date}</td>
-                                    <td className="py-2 px-5">{v.end_date}</td>
+                                    <td className="py-2 px-5">{v.type === 'fixed' ? `₹${v.discount}` : `${v.discount}%`}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.start_date ? new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.end_date ? new Date(v.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                     <td className="py-2 px-5">
                                         <label className="inline-flex items-center cursor-pointer">
                                             <input
@@ -451,7 +452,6 @@ export default function  Offer() {
                     <div>
                         <Formik
                             initialValues={{
-
                                 type: data.type || '',
                                 description: data.description || '',
                                 name: data.name || '',
@@ -489,6 +489,7 @@ export default function  Offer() {
                                             <option value="percentage">Percentage</option>
                                             <option value="fixed">Fixed Amount</option>
                                         </Field>
+                                        <ErrorMessage name="type" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="description" className="block text-sm font-bold text-brown">Description</label>
@@ -499,6 +500,7 @@ export default function  Offer() {
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                             placeholder="Enter Description"
                                         />
+                                        <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="name" className="block text-sm font-bold text-brown">Offer Name</label>
@@ -509,6 +511,7 @@ export default function  Offer() {
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                             placeholder="Enter Offer Name"
                                         />
+                                        <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="image" className="block text-sm font-bold text-brown">Offer Image</label>
@@ -579,6 +582,7 @@ export default function  Offer() {
                                                 </>
                                             )}
                                         </div>
+                                        <ErrorMessage name="image" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="button_text" className="block text-sm font-bold text-brown">Button Text</label>
@@ -589,6 +593,7 @@ export default function  Offer() {
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                             placeholder="Enter Button Text"
                                         />
+                                        <ErrorMessage name="button_text" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="discount" className="block text-sm font-bold text-brown">Discount</label>
@@ -599,6 +604,7 @@ export default function  Offer() {
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                             placeholder="Enter Discount"
                                         />
+                                        <ErrorMessage name="discount" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="start_date" className="block text-sm font-bold text-brown">Start Date</label>
@@ -608,6 +614,7 @@ export default function  Offer() {
                                             id="start_date"
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                         />
+                                        <ErrorMessage name="start_date" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className="mb-4">
                                         <label htmlFor="end_date" className="block text-sm font-bold text-brown">End Date</label>
@@ -618,6 +625,7 @@ export default function  Offer() {
                                             min={values.start_date || ''}
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                         />
+                                        <ErrorMessage name="end_date" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className='flex flex-col md:flex-row gap-2 p-5 pb-2'>
                                         <button className='text-brown hover:bg-brown-50 border-brown border p-2 rounded w-full' onClick={handleCreateClose}>
@@ -674,11 +682,11 @@ export default function  Offer() {
                                         
                                         <tr className=" border-t ">
                                             <td className="text-gray-500 p-2 px-4">Offer Start Date:</td>
-                                            <td className="font-semibold text-brown">{data.start_date}</td>
+                                            <td className="font-semibold text-brown text-nowrap">{data.start_date ? new Date(data.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                         </tr>
                                         <tr className=" border-t ">
                                             <td className="text-gray-500 p-2 px-4">Offer End Date:</td>
-                                            <td className="font-semibold text-brown">{data.end_date}</td>
+                                            <td className="font-semibold text-brown text-nowrap">{data.end_date ? new Date(data.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                         </tr>
                                         <tr className=" border-t ">
                                             <td className="text-gray-500 p-2 px-4">Status:</td>

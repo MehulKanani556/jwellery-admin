@@ -270,7 +270,7 @@ export default function Product() {
 
   return (
     loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
-      <div className=" p-10">
+      <div className="p-10">
         <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
           <div className="text-center lg:text-left">
             <h1 className="text-2xl font-bold text-brown">Product </h1>
@@ -279,8 +279,8 @@ export default function Product() {
               <span className="text-brown font-medium">Product</span>
             </p>
           </div>
-          <div className="flex flex-wrap gap-4 justify-center lg:justify-end w-auto">
-            <div className="flex gap-4 flex-wrap mb-4">
+          <div className="flex flex-wrap gap-2 justify-center lg:justify-end w-auto">
+            <div className="flex gap-2 md:gap-x-8 lg:gap-x-2 flex-wrap mb-4 justify-center lg:justify-end">
               {filtersApplied ? (
                 <button
                   type="button"
@@ -307,9 +307,6 @@ export default function Product() {
                   <span>Filter</span>
                 </button>
               )}
-            
-
-
               <button
                 className="text-brown border-brown border px-4 py-2 rounded flex justify-center items-center gap-2 w-[130px]"
                 id="sort-button"
@@ -409,18 +406,18 @@ export default function Product() {
             </div>
           </div>
         </div>
-        <div className="overflow-auto shadow mt-5 rounded">
-          <table className="w-full bg-white">
+        <div className="overflow-x-auto shadow mt-5 rounded">
+          <table className="bg-white w-full min-w-[1000px]">
             <thead>
               <tr className="text-brown font-bold">
-                <td className="py-2 px-5 w-1/4">ID</td>
-                <td className="py-2 px-5 w-1/4">Product name</td>
-                <td className="py-2 px-5 w-1/4">Category</td>
-                <td className="py-2 px-5 w-1/4">SubCategory</td>
-                <td className="py-2 px-5 w-1/4">Price</td>
-                <td className="py-2 px-5 w-1/4">Qty</td>
-                <td className="py-2 px-5 w-1/4">Status</td>
-                <td className="py-2 px-5 w-1/4">Action</td>
+                <th className="py-2 px-5 text-left whitespace-nowrap">ID</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Product name</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Category</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">SubCategory</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Price</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Qty</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Status</th>
+                <th className="py-2 px-5 text-left whitespace-nowrap">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -450,12 +447,12 @@ export default function Product() {
                     <td className="py-2 px-5">{v.price}</td>
                     <td className="py-2 px-5">{v.qty}</td>
                     <td className="py-2 px-5">
-                      <label className="inline-flex items-center cursor-pointer">
+                      <label className="items-center cursor-pointer">
                         <input
                           type="checkbox"
                           checked={v.status}
                           onChange={() => handleToggle(v)}
-                          className="sr-only peer"
+                          className="hidden peer"
                         />
                         <div
                           className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
@@ -581,117 +578,117 @@ export default function Product() {
           </Box>
         </Modal>
 
-          {/* ====== */}
-          <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-                PaperProps={{
-                  style: { width: "300px" },
-                }}
-              >
-                <div className="">
-                  <div className="border-b-2">
-                    <p className="text-brown font-bold text-xl p-3">Filter</p>
-                  </div>
-                  <div className="mt-1 p-3">
-                    <div className>
-                      <label className="text-brown font-bold">Category</label>
-                      <select
-                        name="category_id"
-                        className="border border-brown rounded w-full p-3 mt-1"
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                      >
-                        <option value="">Select Category</option>
-                        {category.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="mt-3">
-                      <label className="text-brown font-bold">SubCategory</label>
-                      <select
-                        name="subcategory_id"
-                        className="border border-brown rounded w-full p-3 mt-1"
-                        value={selectedSubCategory}
-                        onChange={(e) => setSelectedSubCategory(e.target.value)}
-                        disabled={!selectedCategory}
-                      >
-                        <option value="">Select SubCategory</option>
-                        {filteredSubcategories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+        {/* ====== */}
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+          PaperProps={{
+            style: { width: "300px" },
+          }}
+        >
+          <div className="">
+            <div className="border-b-2">
+              <p className="text-brown font-bold text-xl p-3">Filter</p>
+            </div>
+            <div className="mt-1 p-3">
+              <div className>
+                <label className="text-brown font-bold">Category</label>
+                <select
+                  name="category_id"
+                  className="border border-brown rounded w-full p-3 mt-1"
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                >
+                  <option value="">Select Category</option>
+                  {category.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mt-3">
+                <label className="text-brown font-bold">SubCategory</label>
+                <select
+                  name="subcategory_id"
+                  className="border border-brown rounded w-full p-3 mt-1"
+                  value={selectedSubCategory}
+                  onChange={(e) => setSelectedSubCategory(e.target.value)}
+                  disabled={!selectedCategory}
+                >
+                  <option value="">Select SubCategory</option>
+                  {filteredSubcategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                    <div className="mt-3">
-                      <label className="text-brown font-bold">Status</label>
-                      <select
-                        name="name"
-                        className="border border-brown rounded w-full p-3 mt-1"
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                      >
-                        <option value="">Select status</option>
-                        <option value="inactive">InActive</option>
-                        <option value="active">Active</option>
-                      </select>
-                    </div>
+              <div className="mt-3">
+                <label className="text-brown font-bold">Status</label>
+                <select
+                  name="name"
+                  className="border border-brown rounded w-full p-3 mt-1"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                >
+                  <option value="">Select status</option>
+                  <option value="inactive">InActive</option>
+                  <option value="active">Active</option>
+                </select>
+              </div>
 
-                    <div className="mt-3">
-                      <label className="text-brown font-bold">Price Range</label>
-                      <div className="px-3 mt-2">
-                        <Slider
-                          value={priceRange}
-                          onChange={(e, newValue) => setPriceRange(newValue)}
-                          valueLabelDisplay="auto"
-                          min={0}
-                          max={maxPrice}
-                          sx={{
-                            color: '#523C34',
-                            '& .MuiSlider-valueLabel': {
-                              backgroundColor: '#523C34',
-                            },
-                          }}
-                        />
-                        <div className="flex justify-between text-sm text-brown">
-                          <span>₹{priceRange[0]}</span>
-                          <span>₹{priceRange[1]}</span>
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </div>
-                  <div className="flex justify-center gap-8 mt-2 p-3">
-                    <button
-                      type="button"
-                      onClick={handleClose}
-                      className="text-brown w-36 border-brown border px-5 py-2 rounded"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleApplyFilter}
-                      className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-                    >
-                      Apply
-                    </button>
+              <div className="mt-3">
+                <label className="text-brown font-bold">Price Range</label>
+                <div className="px-3 mt-2">
+                  <Slider
+                    value={priceRange}
+                    onChange={(e, newValue) => setPriceRange(newValue)}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={maxPrice}
+                    sx={{
+                      color: '#523C34',
+                      '& .MuiSlider-valueLabel': {
+                        backgroundColor: '#523C34',
+                      },
+                    }}
+                  />
+                  <div className="flex justify-between text-sm text-brown">
+                    <span>₹{priceRange[0]}</span>
+                    <span>₹{priceRange[1]}</span>
                   </div>
                 </div>
-              </Menu>
+              </div>
 
-              {/* ===== */}
+
+            </div>
+            <div className="flex justify-center gap-8 mt-2 p-3">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="text-brown w-36 border-brown border px-5 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleApplyFilter}
+                className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </Menu>
+
+        {/* ===== */}
 
       </div>
   );

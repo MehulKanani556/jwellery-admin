@@ -257,7 +257,7 @@ export default function ReturnOrderView() {
                                     <td className="py-2 px-5 ">{v.id}</td>
                                     <td className="py-2 px-5 capitalize">{v.customer}</td>
                                     <td className="py-2 px-5">{v.product}</td>
-                                    <td className="py-2 px-5">{v.return_date}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.return_date ? new Date(v.return_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                     <td className="py-2 px-5 flex gap-2 capitalize">
                                         <span className={`font-semibold w-24 text-center text-sm px-3 py-1 rounded ${v.return_status === 'accepted' ? 'bg-green-200 text-green-800 ' : v.return_status === 'rejected' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-700'}`}>
                                             {v.return_status}

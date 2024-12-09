@@ -21,10 +21,12 @@ import ReturnOrderView from '../pages/ReturnOrderView'
 import Orders from '../pages/Orders'
 import OrderView from '../pages/OrderView'
 import InvoiceList from '../pages/InvoiceList'
+import ProtectedRoute from './ProtectedRoute'
 
 export default function AuthRoutes() {
     return (
         <div>
+            <ProtectedRoute>
                 <Layout>
                     <Routes>
                         <Route path="/dashboard" element={<DashBord />} />
@@ -46,8 +48,10 @@ export default function AuthRoutes() {
                         <Route path="/return-order" element={<ReturnOrder />} />
                         <Route path="/return-order/view" element={<ReturnOrderView />} />
                         <Route path="/invoice" element={<InvoiceList />} />
+                        <Route path="/invoice/view" element={<InvoiceView />} />      
                     </Routes>
                 </Layout>
+            </ProtectedRoute>
         </div>
     )
 }

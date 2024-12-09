@@ -37,7 +37,7 @@ export default function Coupons() {
     const [filterCoupon, setFilterCoupon] = useState(coupons);
 
     const [selectedStartDate, setSelectedStartDate] = useState("");
-    const [selectedEndDate, setSelectedEndDate] = useState("");
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
         dispatch(getAllCoupons());
@@ -159,7 +159,7 @@ export default function Coupons() {
         code: Yup.string().required("Code is required"),
         description: Yup.string().required("Description is required"),
         type: Yup.string().required("Coupon type is required"),
-        price: Yup.number().required("Price is required"),
+        price: Yup.number().required("Price is required").moreThan(0,"Price must be greater than 0"),
         start_date: Yup.date().required("Start date is required"),
         end_date: Yup.date()
             .required("End date is required")
@@ -325,8 +325,8 @@ export default function Coupons() {
                                     <td className="py-2 px-5">{v.description}</td>
                                     <td className="py-2 px-5 capitalize ">{v.type}</td>
                                     <td className="py-2 px-5">₹ {v.price}</td>
-                                    <td className="py-2 px-5">{v.start_date}</td>
-                                    <td className="py-2 px-5">{v.end_date}</td>
+                                    <td className="py-2 px-5 text-nowrap">{new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
+                                    <td className="py-2 px-5 text-nowrap">{new Date(v.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
 
                                     <td className="py-2 px-5">
                                         <label className="inline-flex items-center cursor-pointer">

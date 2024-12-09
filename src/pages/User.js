@@ -12,7 +12,7 @@ export default function User() {
     const [open, setOpen] = useState(false);
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
-    const data = useSelector(state =>state.users.users);
+    const data = useSelector(state =>state.users.users).filter(user => user.role_id != 1);
     const loading = useSelector(state => state.users.loading);
     console.log(data);
     
@@ -84,13 +84,11 @@ export default function User() {
                     <thead>
                         <tr className="text-brown font-bold">
                             <td className="py-2  px-4">No</td>
-                            <td className="py-2  px-4">Image</td>
                             <td className="py-2  px-4">Name</td>
-                            <td className="py-2  px-4">Surname</td>
                             <td className="py-2  px-4">Mobile No.</td>
-                            <td className="py-2  px-4">Username</td>
+                            <td className="py-2  px-4">D.O.B</td>
+                            <td className="py-2  px-4">Gender</td>
                             <td className="py-2  px-4">Email</td>
-
                             <td className="py-2  px-4">Action</td>
                         </tr>
                     </thead>
@@ -98,13 +96,10 @@ export default function User() {
                         {currentItems.map((user, index) => (
                             <tr key={index} className="hover:bg-gray-100 border-t">
                                 <td className="py-2 px-4 ">{user.id}</td>
-                                <td className="py-2 px-4 ">
-                                    <img src={user.image} alt="User" className="w-10 h-10 rounded-full" />
-                                </td>
                                 <td className="py-2 px-4 ">{user.name}</td>
-                                <td className="py-2 px-4 ">{user.surname}</td>
                                 <td className="py-2 px-4 ">{user.phone}</td>
-                                <td className="py-2 px-4 ">{user.username}</td>
+                                <td className="py-2 px-4">{user.dob ? new Date(user.dob).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
+                                <td className="py-2 px-4 ">{user.gender}</td>
                                 <td className="py-2 px-4 ">{user.email}</td>
 
                                 <td className="py-2 px-4 flex items-center gap-2">
@@ -151,30 +146,29 @@ export default function User() {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box className="bg-gray-50 absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                    <p className='text-brown font-bold text-xl  flex justify-between'>
-                        <p >View User</p>
+                <Box className="bg-gray-50 absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 rounded">
+                    <p className='text-brown font-bold text-xl  flex justify-between border-b border-gray-500 p-4'>
+                        <p>View User</p>
                         <button onClick={handleClose} className=" font-bold"><RxCross2 /></button>
                     </p>
-                    <div>
-                        <img src={userData?.image} alt="User" className="w-32 h-32 rounded-full mx-auto mb-4" />
+                    <div className='p-4'>
                         <table className="table-auto">
                             <tbody>
-                                <tr className='border-t'>
+                                <tr className=''>
                                     <td className="px-4 py-2 text-brown font-bold">Name:</td>
                                     <td className="px-4 py-2">{userData?.name}</td>
-                                </tr>
-                                <tr className='border-t'>
-                                    <td className="px-4 py-2 text-brown font-bold">Surname:</td>
-                                    <td className="px-4 py-2">{userData?.surname}</td>
                                 </tr>
                                 <tr className='border-t'>
                                     <td className="px-4 py-2 text-brown font-bold">Mobile No.:</td>
                                     <td className="px-4 py-2">{userData?.phone}</td>
                                 </tr>
                                 <tr className='border-t'>
-                                    <td className="px-4 py-2 text-brown font-bold">Username:</td>
-                                    <td className="px-4 py-2">{userData?.username}</td>
+                                    <td className="px-4 py-2 text-brown font-bold">D.O.B:</td>
+                                    <td className="px-4 py-2">{userData?.dob ? new Date(userData.dob).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
+                                </tr>
+                                <tr className='border-t'>
+                                    <td className="px-4 py-2 text-brown font-bold">Gender:</td>
+                                    <td className="px-4 py-2">{userData?.gender}</td>
                                 </tr>
                                 <tr className='border-t'>
                                     <td className="px-4 py-2 text-brown font-bold">Email:</td>

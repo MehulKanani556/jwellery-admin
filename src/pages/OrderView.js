@@ -101,7 +101,7 @@ export default function OrderView() {
                                 <tr className="">
                                     <td className="px-5 text-gray-400 py-1">Order Date</td>
                                     <td>:</td>
-                                    <td className="px-5 py-1 font-semibold">{selectedOrder?.order_date}</td>
+                                    <td className="px-5 py-1 font-semibold">{new Date(selectedOrder?.order_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
 
                                 </tr>
                                 <tr className="">

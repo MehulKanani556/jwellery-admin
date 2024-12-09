@@ -17,14 +17,14 @@ export const login = createAsyncThunk(
            
             
             const response = await axios.post(`${BASE_URL}/auth/login`, { email, password });
-            if (response.status == 200) {            
-                console.log(response)
-              
-                localStorage.setItem("userId", response.data.result.id);
-                sessionStorage.setItem("userId", response.data.result.id);
-                sessionStorage.setItem("token", response.data.result.access_token);
-                sessionStorage.setItem("email", response.data.result.email);
-                sessionStorage.setItem("role", response.data.result.role);
+            if (response.status == 200 ) {            
+                if(response.data.result.role === "admin"){
+                    localStorage.setItem("userId", response.data.result.id);
+                    sessionStorage.setItem("userId", response.data.result.id);
+                    sessionStorage.setItem("token", response.data.result.access_token);
+                    sessionStorage.setItem("email", response.data.result.email);
+                    sessionStorage.setItem("role", response.data.result.role);
+                }
                 return response.data.result;
             } else {
                 return rejectWithValue({ message: `Login failed with status: ${response.status}` });
@@ -78,18 +78,35 @@ export const resetPassword = createAsyncThunk(
     }
 );
 
-
+const initialState = {
+  user: null,
+  isAuthenticated: !!sessionStorage.getItem('token') && sessionStorage.getItem('role') === 'admin',
+  loading: false,
+  error: null,
+  loggedIn: false,
+  isLoggedOut: false,
+  message: null
+};
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: {
-        user: null,
-        isAuthenticated: true,
-        loading: false,
-        error: null,
-        loggedIn: false,
-        isLoggedOut: false,
-        message:null
+    initialState,
+    reducers: {
+        logout: (state, action) => {
+            console.log(action.payload);
+            state.user = null;
+            state.isAuthenticated = false;
+            state.loggedIn = false;
+            state.isLoggedOut = true;
+            state.message = action.payload?.message || "Logged out successfully";
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            if(action.payload?.message){
+                enqueueSnackbar(action.payload?.message, { variant: 'error' });
+            }else{
+                enqueueSnackbar(state.message, { variant: 'success' });
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -98,14 +115,16 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, action) => {
-                // console.log("Login fulfilled with user:", action.payload);
                 state.user = action.payload;
-                state.isAuthenticated = true;
+                state.isAuthenticated = action.payload.role === "admin";
                 state.loading = false;
                 state.loggedIn = true;
                 state.isLoggedOut = false;
-                state.message = action.payload?.message || "Login successful";
-                enqueueSnackbar(state.message, { variant: 'success' })
+                if (action.payload.role === "admin") {
+                    state.message = "Login successful";
+                    enqueueSnackbar(state.message, { variant: 'success' });
+
+                }
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -167,5 +186,5 @@ const authSlice = createSlice({
     },
 });
 
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

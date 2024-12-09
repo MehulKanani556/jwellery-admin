@@ -25,6 +25,7 @@ export default function ProductOffer() {
     const { category } = useSelector(state => state.categorys);
     const navigate = useNavigate();
     const [delAllOpen, setDelAllOpen] = useState(false);
+    // console.log("productOffers",productOffers)
 
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -368,10 +369,10 @@ export default function ProductOffer() {
                                     <td className="py-2 px-5">{v.category}</td>
                                     <td className="py-2 px-5">{v.product}</td>
                                     <td className="py-2 px-5">{v.code}</td>
-                                    <td className="py-2 px-5">{v.type === 'fixed' ? `₹ ${v.discount}` : `${v.discount}%`}</td>
-                                    <td className="py-2 px-5">₹ {v.price}</td>
-                                    <td className="py-2 px-5">{v.start_date}</td>
-                                    <td className="py-2 px-5">{v.end_date}</td>
+                                    <td className="py-2 px-5">{v.type === 'fixed' ? `₹${v.discount}` : `${v.discount}%`}</td>
+                                    <td className="py-2 px-5 text-nowrap">₹ {v.price}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.start_date ? new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.end_date ? new Date(v.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                     <td className="py-2 px-5">
                                         <label className="inline-flex items-center cursor-pointer">
                                             <input
@@ -494,11 +495,11 @@ export default function ProductOffer() {
                                         </tr>
                                         <tr className=" border-t ">
                                             <td className="text-gray p-1 px-4">Offer Start Date:</td>
-                                            <td className="font-semibold ">{data.start_date}</td>
+                                            <td className="font-semibold ">{data.start_date ? new Date(data.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                         </tr>
                                         <tr className=" border-t ">
                                             <td className="text-gray p-1 px-4">Offer End Date:</td>
-                                            <td className="font-semibold ">{data.end_date}</td>
+                                            <td className="font-semibold ">{data.end_date ? new Date(data.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                         </tr>
                                         <tr className=" border-t ">
                                             <td className="text-gray p-1 px-4">Minimum Purchase:</td>
