@@ -12,6 +12,7 @@ import { getAllSubCategory } from '../reduxe/slice/subcategorys.slice'
 import { getAllProducts } from '../reduxe/slice/product.slice'
 import { FaFilter } from 'react-icons/fa'
 import Loader from '../components/Loader'
+import { enqueueSnackbar } from 'notistack'
 
 export default function Stoke() {
     const [data, setData] = useState([]);
@@ -20,28 +21,28 @@ export default function Stoke() {
     const [addOpen, setAddOpen] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
     const dispatch = useDispatch();
-    const { stocks,loading } = useSelector(state => state.stocks);
-    const { category } = useSelector(state => state.categorys);
-    const { SubCategory } = useSelector(state => state.subcategorys);
-    const { products } = useSelector(state => state.products);
+    const { stocks, loading } = useSelector(state => state.stocks);
+    const category  = useSelector(state => state.categorys.category).filter(v => !stocks.some(stock => stock.category_id == v.id));
+    const  SubCategory  = useSelector(state => state.subcategorys.SubCategory).filter(v => !stocks.some(stock => stock.sub_category_id == v.id));
+    const products = useSelector(state => state.products.products).filter(v => !stocks.some(stock => stock.product_id == v.id));
     const [filteredItems, setFilteredItems] = useState(stocks);
     const [filtersApplied, setFiltersApplied] = useState(false);
+    const [filteredSubCategories, setFilteredSubCategories] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    console.log(category,stocks,SubCategory);
     useEffect(() => {
-        // Fetch stocks and other data on component mount
         const fetchData = async () => {
-            await dispatch(getAllStocks()); // Wait for stocks to be fetched
+            await dispatch(getAllStocks()); 
         };
-
-        fetchData(); // Call the fetch function
+        fetchData(); 
         dispatch(getAllCategory());
         dispatch(getAllSubCategory());
         dispatch(getAllProducts());
     }, [dispatch]);
 
     useEffect(() => {
-        // Update filteredItems whenever stocks change
         setFilteredItems(stocks);
-    }, [stocks]); // Add stocks to the dependency array
+    }, [stocks]);
 
     const validationSchema = Yup.object({
         category_id: Yup.string().required('Category is required'),
@@ -49,7 +50,7 @@ export default function Stoke() {
         product_id: Yup.string().required('Product is required'),
         date: Yup.date().required('Update Date is required'),
         status: Yup.string().required('Stock Status is required'),
-        qty: Yup.number().required('Quantity is required').positive().integer(),
+        qty: Yup.number().required('Quantity is required').moreThan(0, 'Quantity must be greater than 0').integer(),
     });
 
     // Pagination state
@@ -82,8 +83,12 @@ export default function Stoke() {
         }
     };
     const handleDeleteOpen = (data) => {
-        setDelOpen(true);
-        setData(data)
+        if(data?.qty > 0){
+            enqueueSnackbar('Stock is not empty', { variant: 'error' });
+        }else{
+            setDelOpen(true);
+            setData(data)
+        }
     }
     const handleDeleteClose = () => {
         setDelOpen(false);
@@ -138,6 +143,23 @@ export default function Stoke() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleCategoryChange = (categoryId, setFieldValue) => {
+        setFieldValue('category_id', categoryId);
+        setFieldValue('sub_category_id', '');
+        setFieldValue('product_id', ''); 
+        const relevantSubCategories = SubCategory.filter(sub => sub.category_id == categoryId);
+        setFilteredSubCategories(relevantSubCategories);
+    };
+
+    const handleSubCategoryChange = (subCategoryId, setFieldValue) => {
+        setFieldValue('sub_category_id', subCategoryId);
+        setFieldValue('product_id', ''); // Reset product
+
+        const relevantProducts = products.filter(prod => prod.sub_category_id == subCategoryId);
+        setFilteredProducts(relevantProducts);
+    };
+
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
         <div className=" md:mx-[20px] p-10">
@@ -204,6 +226,7 @@ export default function Stoke() {
                                             type="date"
                                             name="date"
                                             id="date"
+                                            max={new Date().toISOString().split('T')[0]}
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                         />
                                     </div>
@@ -269,7 +292,7 @@ export default function Stoke() {
                                     <td className="py-2  px-4">{ele?.category_name || ''}</td>
                                     <td className="py-2  px-4">{ele?.sub_category_name || ''}</td>
                                     <td className="py-2  px-4">{ele?.product_name || ''}</td>
-                                    <td className="py-2  px-4">{new Date(ele?.date).toLocaleDateString('en-IN') || ''}</td>
+                                    <td className="py-2  px-4">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
                                     <td className="py-2 px-4">
                                         <span className={`font-bold p-1 px-2 text-sm rounded text-nowrap ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
                                             {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
@@ -284,7 +307,7 @@ export default function Stoke() {
                                             <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleAddOpen(ele)}><BiSolidEditAlt /></button>
                                         </div>
                                         <div>
-                                            <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)}><RiDeleteBin6Fill /></button>
+                                            <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)} ><RiDeleteBin6Fill /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -338,7 +361,7 @@ export default function Stoke() {
                                 category_id: data.category_id || '',
                                 sub_category_id: data.sub_category_id || '',
                                 product_id: data.product_id || '',
-                                date: data.date || '',
+                                date: data.date ? new Date(data.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                                 status: data.status || '',
                                 qty: data.qty || '',
                                 id: data.id || '',
@@ -354,7 +377,7 @@ export default function Stoke() {
                                 handleAddClose();
                             }}
                         >
-                            {({ handleSubmit, isSubmitting }) => (
+                            {({ handleSubmit, isSubmitting, setFieldValue }) => (
                                 <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
                                     <div className="mb-4">
                                         <label htmlFor="category_id" className="block text-sm font-bold text-brown">Category</label>
@@ -363,6 +386,7 @@ export default function Stoke() {
                                             name="category_id"
                                             id="category_id"
                                             className="mt-1 block w-full border border-brown p-2 rounded"
+                                            onChange={(e) => handleCategoryChange(e.target.value, setFieldValue)}
                                         >
                                             <option value="">Enter category name</option>
                                             {category?.map((ele) => (
@@ -380,9 +404,10 @@ export default function Stoke() {
                                             name="sub_category_id"
                                             id="sub_category_id"
                                             className="mt-1 block w-full border border-brown p-2 rounded"
+                                            onChange={(e) => handleSubCategoryChange(e.target.value, setFieldValue)}
                                         >
                                             <option value="">Enter subcategory name</option>
-                                            {SubCategory?.map((ele) => (
+                                            {filteredSubCategories.map((ele) => (
                                                 <option key={ele.id} value={ele.id}>
                                                     {ele.name}
                                                 </option>
@@ -399,7 +424,7 @@ export default function Stoke() {
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                         >
                                             <option value="">Enter product name</option>
-                                            {products?.map((ele) => (
+                                            {filteredProducts.map((ele) => (
                                                 <option key={ele.id} value={ele.id}>
                                                     {ele.product_name}
                                                 </option>
@@ -413,6 +438,7 @@ export default function Stoke() {
                                             type="date"
                                             name="date"
                                             id="date"
+                                            max={new Date().toISOString().split('T')[0]}
                                             className="mt-1 block w-full border border-brown p-2 rounded"
                                         />
                                         <ErrorMessage name="date" component="div" className="text-red-500" />

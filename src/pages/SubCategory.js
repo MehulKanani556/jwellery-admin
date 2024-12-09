@@ -495,11 +495,11 @@ export default function SubCategory() {
                       <Field
                         as="select"
                         name="category_id"
-                        className="border border-brown rounded w-full p-3 mt-1"
+                        className={`border border-brown rounded w-full p-3 mt-1 ${values.category_id == "" ? "text-gray-500" : "text-black"}`}
                       >
-                        <option value="">Select Category</option>
+                        <option value="" className="text-black">Select Category</option>
                         {category.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
+                          <option key={cat.id} value={cat.id} className="text-black">
                             {cat.name}
                           </option>
                         ))}

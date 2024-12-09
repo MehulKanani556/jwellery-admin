@@ -275,7 +275,7 @@ export default function   ReturnOrder() {
                                     <td className="py-2 px-5 ">{v.id}</td>                                    
                                     <td className="py-2 px-5 capitalize">{v.customer}</td>
                                     <td className="py-2 px-5">{v.product}</td>
-                                    <td className="py-2 px-5">{v.return_date}</td>
+                                    <td className="py-2 px-5 text-nowrap">{v.return_date ? new Date(v.return_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                                     <td className="py-2 px-5 flex gap-2">
                                         <button onClick={() => handleToggle({ id: v.id, status: 'accepted' })} className="bg-green-200 text-green-800 font-semibold text-sm px-3 py-1 rounded">Accept</button>
                                         <button onClick={() => handleToggle({ id: v.id, status: 'rejected' })}  className="bg-red-200 text-red-800 font-semibold text-sm px-3 py-1 rounded">Reject</button>

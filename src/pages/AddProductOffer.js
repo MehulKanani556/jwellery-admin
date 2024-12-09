@@ -90,6 +90,9 @@ export default function AddProductOffer() {
 
   // Validation schema
   const validationSchema = Yup.object().shape({
+    category_id: Yup.string().required("Category is required"),
+    subcategory_id: Yup.string().required("Subcategory is required"),
+    product_id: Yup.string().required("Product is required"),
     name: Yup.string().required("Coupon Name is required"),
     code: Yup.string().required("Code is required"),
     description: Yup.string().required("Description is required"),

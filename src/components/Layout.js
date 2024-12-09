@@ -36,6 +36,7 @@ import { changePassword, editUserProfile, getSingleUser } from '../reduxe/slice/
 import { RxCross2 } from 'react-icons/rx';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { logout } from '../reduxe/slice/auth.slice';
 
 const drawerWidth = 250;
 
@@ -60,6 +61,7 @@ function Layout({ children }) {
 
   // Memoize the user data
   const memoizedUser = useMemo(() => user, [user]);
+  
 
   useEffect(() => {
     if (userId) {
@@ -102,10 +104,7 @@ function Layout({ children }) {
 
 
   const handleLogout= () => {
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('role');
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('email');
+    dispatch(logout());
     navigate('/');
   }
 
@@ -139,8 +138,9 @@ function Layout({ children }) {
     email: Yup.string().email('Invalid email').required('Email is required'),
     phone: Yup.string().required('Mobile No. is required'),
     gender: Yup.string().required('Gender is required'),
+    dob: Yup.date().required('D.O.B is required').max(new Date().toISOString().split('T')[0], 'D.O.B cannot be in the future'),
   });
-
+  
   const drawer = (
     <div>
       <Toolbar></Toolbar>
@@ -261,7 +261,9 @@ function Layout({ children }) {
               <div color="inherit" sx={{ ml: 2 }} className='relative'>
                 <div className='flex gap-2 items-center' onClick={() => setDropdownOpen(!dropdownOpen)} style={{ cursor: 'pointer' }}>
                   <div>
-                    <img src={memoizedUser?.image} alt="User Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#523C34', color: 'white', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      {memoizedUser?.name.charAt(0).toUpperCase()}
+                    </div>
                   </div>
                   <div>
                     <div style={{ fontSize: '16px', fontWeight: 500 }} className='capitalize'>{memoizedUser?.name}</div>
@@ -301,10 +303,6 @@ function Layout({ children }) {
                     </p>
                     <div className=' p-5'>
                       <div className='flex gap-6 items-center'>
-
-                        <div>
-                          <img src={memoizedUser?.image} alt="User Profile" className='rounded-full w-24 h-24' />
-                        </div>
                         <div>
 
                           <table className='text-brown'>
@@ -320,6 +318,10 @@ function Layout({ children }) {
                               <tr>
                                 <td className='p-1'>Mobile No.:</td>
                                 <td className=' font-semibold ps-3'>{memoizedUser?.phone}</td>
+                              </tr>
+                              <tr>
+                                <td className='p-1'>D.O.B:</td>
+                                <td className='capitalize font-semibold ps-3'>{memoizedUser?.dob ? new Date(memoizedUser.dob).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>
                               </tr>
                               <tr>
                                 <td className='p-1'>Gender:</td>
@@ -354,18 +356,22 @@ function Layout({ children }) {
                     <div>
                       <Formik
                         initialValues={{
-                          image: memoizedUser ? memoizedUser.image : '',
                           name: memoizedUser ? memoizedUser.name : '',
                           email: memoizedUser ? memoizedUser.email : '',
                           phone: memoizedUser ? memoizedUser.phone : '',
                           gender: memoizedUser ? memoizedUser.gender : '',
-                          id: memoizedUser ? memoizedUser.id : ''
-
+                          id: memoizedUser ? memoizedUser.id : '',
+                          dob: memoizedUser ? memoizedUser.dob : ''
                         }}
                         validationSchema={validationSchema}
                         onSubmit={(values, { resetForm }) => {
                           if (memoizedUser.id) {
-                            dispatch(editUserProfile(values)).then((response) => {
+                            console.log(values);
+                            const submitData = {
+                              ...values,
+                              role_id: memoizedUser.role_id
+                            }
+                            dispatch(editUserProfile(submitData)).then((response) => {
                               resetForm();
                               setEditProfile(false);
 
@@ -375,81 +381,6 @@ function Layout({ children }) {
                       >
                         {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
                           <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
-                            <div className="mb-4">
-                              <label className="text-brown font-bold mt-4">Image</label>
-                              <div className="flex justify-between items-center border border-brown rounded w-full p-2 mt-1">
-                                {values.image ? (
-                                  <>
-                                    <div className="flex items-center bg-[#72727226] px-2 py-1">
-                                      <img
-                                        src={typeof values.image === "string" ? values.image : URL.createObjectURL(values.image)}
-                                        alt="Preview"
-                                        className="w-8 h-8 rounded-full mr-2"
-                                      />
-                                      <span className="flex-1">
-                                        {typeof values.image === "string" ? values.image.split("/").pop() : values.image.name}
-                                      </span>
-                                      <button
-                                        type="button"
-                                        onClick={() => setFieldValue("image", null)} // Clear the image
-                                        className="text-red-500 ml-1"
-                                      >
-                                        X
-                                      </button>
-                                    </div>
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      ref={fileInputRef}
-                                      onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                          setFieldValue("image", file); // Update the image
-                                        }
-                                      }}
-                                      className="hidden"
-                                      id="file-upload"
-                                    />
-                                    <label
-                                      htmlFor="file-upload"
-                                      className="cursor-pointer text-center bg-brown text-white rounded p-[5px] px-3 text-[13px]"
-                                    >
-                                      Change
-                                    </label>
-                                  </>
-                                ) : (
-                                  <>
-                                    <p className="flex-1 text-[16px] text-[#727272]">
-                                      Choose Image
-                                    </p>
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      ref={fileInputRef}
-                                      onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                          setFieldValue("image", file); // Update the image
-                                        }
-                                      }}
-                                      className="hidden"
-                                      id="file-upload"
-                                    />
-                                    <label
-                                      htmlFor="file-upload"
-                                      className="cursor-pointer text-center bg-brown text-white rounded p-1 px-2 text-[13px]"
-                                    >
-                                      Browse
-                                    </label>
-                                  </>
-                                )}
-                              </div>
-                              <ErrorMessage
-                                name="image"
-                                component="div"
-                                className="text-red-500"
-                              />
-                            </div>
                             <div className="mb-4">
                               <label htmlFor="name" className="block text-sm font-bold text-brown">Name</label>
                               <Field
@@ -497,6 +428,17 @@ function Layout({ children }) {
                                 <option value="other">Other</option>
                               </Field>
                               <ErrorMessage name="gender" component="div" className="text-red-500" />
+                            </div>
+                            <div className="mb-4">
+                              <label htmlFor="dob" className="block text-sm font-bold text-brown">D.O.B</label>
+                              <Field
+                                type="date"
+                                name="dob"
+                                id="dob"
+                                max={new Date().toISOString().split('T')[0]}
+                                className="mt-1 block w-full border border-brown p-2 rounded"
+                              />
+                              <ErrorMessage name="dob" component="div" className="text-red-500" />
                             </div>
 
                             <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 justify-center'>
