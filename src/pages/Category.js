@@ -142,9 +142,9 @@ export default function Category() {
       <Loader />
     </div>
   ) : (
-    <div className=" md:mx-[20px] p-10">
-      <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-        <div>
+    <div className="p-10">
+      <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+        <div className="text-center lg:text-left">
           <h1 className="text-2xl font-bold text-brown">Category </h1>
           <p className="text-brown-50">
             Dashboard / <span className="text-brown font-medium">Category</span>
@@ -175,9 +175,9 @@ export default function Category() {
           <thead>
             <tr className="text-brown font-bold">
               <td className="py-2 px-5 w-1/4">ID</td>
-              <td className="py-2 px-5 w-1/4">Name</td>
-              <td className="py-2 px-5 w-1/4">Status</td>
-              <td className="py-2 px-5 w-1/4">Action</td>
+              <td className="py-2 px-5 w-1/4 ">  Name</td>
+              <td className="py-2 px-5 w-1/4 text-center">Status</td>
+              <td className="py-2 px-5 w-1/4 text-end">Action</td>
             </tr>
           </thead>
           <tbody>
@@ -185,7 +185,7 @@ export default function Category() {
               <tr key={index} className="hover:bg-gray-100 border-t">
                 <td className="py-2 px-5">{category.id}</td>
                 {/* <td className="py-2 px-5">{category.name}</td> */}
-                <td className="py-2 px-5 flex items-center">
+                <td className="py-2 px-5 flex ">
                   <img
                     src={category.image}
                     alt="User"
@@ -193,8 +193,8 @@ export default function Category() {
                   />
                   {category.name}
                 </td>
-                <td className="py-2 px-5">
-                  <label className="inline-flex items-center cursor-pointer">
+                <td className="py-2 px-5 text-center">
+                  <label className="inline-flex items-end cursor-pointer">
                     <input
                       type="checkbox"
                       checked={category.status}
@@ -218,7 +218,7 @@ export default function Category() {
                     </div>
                   </label>
                 </td>
-                <td className="py-2 px-5 flex items-center gap-2">
+                <td className="py-2 px-5 flex justify-end gap-2">
                   <div>
                     <button
                       className="text-green-700 text-xl p-1 border border-brown-50 rounded"
