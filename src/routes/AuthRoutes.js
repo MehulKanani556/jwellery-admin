@@ -22,6 +22,7 @@ import Orders from '../pages/Orders'
 import OrderView from '../pages/OrderView'
 import InvoiceList from '../pages/InvoiceList'
 import ProtectedRoute from './ProtectedRoute'
+import InvoiceView from '../pages/InvoiceView'
 
 export default function AuthRoutes() {
     return (
