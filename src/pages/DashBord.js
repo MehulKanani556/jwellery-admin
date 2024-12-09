@@ -10,7 +10,7 @@ import { FaStar } from 'react-icons/fa';
 export default function DashBord() {
   const dispatch = useDispatch();
   const { dashboardData } = useSelector((state) => state.dashboard)
-
+const color= 
 
   console.log(dashboardData)
 
@@ -71,54 +71,26 @@ export default function DashBord() {
         <div className='bg-white py-4 rounded shadow'>
           <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Top Sales Location</h2>
           <div className='p-4 px-6'>
-            <IndiaMap stateNames={["Mumbai", "Delhi", "Surat", "rajkot", "kolkata"]} />
+            <IndiaMap stateNames={dashboardData?.top_sales_location} />
           </div>
         </div>
         <div className='bg-white py-4 rounded shadow'>
           <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Top Products</h2>
           <div className='p-4'>
-            <div className='mb-3'>
-              <div className='flex justify-between items-center mb-2'>
-                <span>Diamond Ring</span>
-                <span>93%</span>
-              </div>
-              <div className='bg-gray-200 rounded-full h-2'>
-                <div className='bg-blue-500 h-2 rounded-full' style={{ width: '93%' }}></div>
-              </div>
-            </div>
-            <div className='mb-3'>
-              <div className='flex justify-between items-center mb-2'>
-                <span>Engagement Ring</span>
-                <span>84%</span>
-              </div>
-              <div className='bg-gray-200 rounded-full h-2'>
-                <div className='bg-green-500 h-2 rounded-full' style={{ width: '84%' }}></div>
-              </div>
-            </div>
-            <div className='mb-3'>
-              <div className='flex justify-between items-center mb-2'>
-                <span>Bronze Earrings</span>
-                <span>79%</span>
-              </div>
-              <div className='bg-gray-200 rounded-full h-2'>
-                <div className='bg-yellow-500 h-2 rounded-full' style={{ width: '79%' }}></div>
-              </div>
-            </div>
-            <div className='mb-3'>
-              <div className='flex justify-between items-center mb-2'>
-                <span>Platinum Necklace</span>
-                <span>75%</span>
-              </div>
-              <div className='bg-gray-200 rounded-full h-2'>
-                <div className='bg-purple-500 h-2 rounded-full' style={{ width: '75%' }}></div>
-              </div>
-            </div>
-
-
-
-
-
-
+            {dashboardData?.top_products.map((ele) => (
+              <>
+                <div className='mb-3'>
+                  <div className='flex justify-between items-center mb-2'>
+                    <span>{ele.product_name}</span>
+                    <span>{ele?.sales_percentage}%</span>
+                  </div>
+                  <div className='bg-gray-200 rounded-full h-2'>
+                    <div className={`h-2 rounded-full`} style={{ width: `${ele?.sales_percentage}%`, backgroundColor: ['#59A1FF','#219F5A','#612DB9','#B131C5','#A1574D','#9B68F4'][dashboardData?.top_products.indexOf(ele) % 6] }}></div>
+                  </div>
+                </div>
+              </>
+            ))}
+            
           </div>
         </div>
       </div>
@@ -129,9 +101,9 @@ export default function DashBord() {
           <div className='p-4 '>
             <Aa data={dashboardData?.top_category} />
             <div className='pt-3'>
-              <div className='flex flex-wrap  gap-4'>
+              <div className='flex flex-wrap justify-between  gap-4'>
                 {dashboardData?.top_category.map((ele, index) => (
-                  <div className='text-center border p-3 w-1/3 rounded-md' key={index}>
+                  <div className='text-center border p-3 w-[30%] rounded-md' key={index}>
                     <div className='font-semibold text-3xl' style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>{ele.product_count}</div>
                     <div className='flex items-center justify-center gap-1'>
                       <span style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>
@@ -161,7 +133,11 @@ export default function DashBord() {
                     <div className='flex justify-between items-center '>
                       <div className='flex gap-2 items-center'>
                         <div>
-                          <img src={review.image} className='w-[40px] h-[40px] rounded-full object-cover' alt={review.customer_name} />
+                          <div>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#523C34', color: 'white', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                              {review.customer_name.charAt(0).toUpperCase()}
+                            </div>
+                          </div>
                         </div>
                         <div className='font-semibold'>{review.customer_name}</div>
                       </div>
@@ -186,7 +162,7 @@ export default function DashBord() {
       </div>
       <div className='bg-white py-4  rounded shadow mb-4'>
         <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Stock Report</h2>
-        <div className='py-4 '>
+        <div className='py-4 overflow-auto'>
           <table className='min-w-full px-4'>
             <thead>
               <tr>
@@ -205,11 +181,16 @@ export default function DashBord() {
                 dashboardData?.stock.map((ele, index) => (
                   <tr key={index} className="hover:bg-gray-100 border-t">
                     <td className="py-2 px-4 ">{ele.id}</td>
-                    <td className="py-2 px-4 ">{ele.customer_name}</td>
+                    <td className="py-2 px-4 ">{ele.category_name}</td>
+                    <td className="py-2 px-4 ">{ele.sub_category_name}</td>
                     <td className="py-2 px-4 ">{ele.product_name}</td>
-                    <td className="py-2 px-4 ">{ele.date}</td>
-                    <td className="py-2 px-4 ">{ele.description}</td>
-
+                    <td className="py-2 px-4 ">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</td>
+                    <td className="py-2 px-4  ">
+                      <span className={`font-bold p-1 px-2  block text-center text-sm rounded text-nowrap w-28 ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
+                        {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
+                      </span>
+                    </td>
+                    <td className={`py-2 px-4 ${ele?.status === 'out-stock' ? 'text-red-600 ' : ''}`}>{ele.qty}</td>
                   </tr>
                 ))
               ) : (

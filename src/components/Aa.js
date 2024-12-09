@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts"; // Make sure to install ApexCharts
 // import "bootstrap/dist/css/bootstrap.min.css"; // Ensure you have bootstrap installed
 
 export default function Aa({ data }) {
+  const chartRef = useRef(null); // Create a ref to store the chart instance
+
   const seriesData = Array.isArray(data) ? data.map(item => item.product_count) : [];
   console.log('Series Data:', seriesData);
   const getChartOptions = () => {
@@ -79,7 +81,7 @@ export default function Aa({ data }) {
           top: -2
         }
       },
-      labels: [], // Remove labels from the chart itself
+      labels: data.map(item => item.category_name), // Add labels for each segment
       dataLabels: {
         enabled: false // Disable data labels
       },
@@ -107,7 +109,15 @@ export default function Aa({ data }) {
         axisBorder: {
           show: false
         }
-      }
+      },
+      tooltip: {
+        enabled: true,
+        y: {
+          formatter: function (value) {
+            return Number(value).toFixed(1);
+          }
+        }
+      },
     };
   };
 
@@ -117,32 +127,39 @@ export default function Aa({ data }) {
       return;
     }
 
+    // Destroy the previous chart instance if it exists
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+
     try {
       const chart = new ApexCharts(
         document.getElementById("donut-chart"),
         getChartOptions()
       );
       chart.render();
+      chartRef.current = chart; // Store the chart instance in the ref
     } catch (error) {
       console.error('Error rendering chart:', error);
     }
+
+    // Cleanup function to destroy the chart on component unmount
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+    };
   }, [data]);
 
   return (
     <div className="">
       <div className="card-body">
-        <div className="d-flex justify-content-between mb-3">
-          <div className="d-flex align-items-center " />
-        </div>
+        
 
         {/* Donut Chart */}
         <div id="donut-chart" className="py-3" />
 
-        <div className=" pt-3 mt-3">
-          <div className="d-flex justify-content-between align-items-center">
-            {/* Add any other UI elements here if needed */}
-          </div>
-        </div>
+       
       </div>
     </div>
   );
