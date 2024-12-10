@@ -214,9 +214,9 @@ const InvoiceView = () => {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-2 text-gray-700">Item</th>
-                        <th className="text-left py-2 text-gray-700 text-center">Qty.</th>
-                        <th className="text-left py-2 text-gray-700 text-center">Price</th>
-                        <th className="text-left py-2 text-gray-700 text-right">Amount</th>
+                        <th className=" py-2 text-gray-700 text-center">Qty.</th>
+                        <th className=" py-2 text-gray-700 text-center">Price</th>
+                        <th className=" py-2 text-gray-700 text-right">Amount</th>
                       </tr>
                     </thead>
                     <tbody>
