@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 import { Form, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
 import { addTerm, deleteAllTerms, deleteTerm, editTerm, getAllTerms } from '../reduxe/slice/terms.slice'
-import { getAllPrivacyPolicies } from '../reduxe/slice/privacy.slice'
+import { addPrivacyPolicy, deleteAllPrivacyPolicies, deletePrivacyPolicy, editPrivacyPolicy, getAllPrivacyPolicies } from '../reduxe/slice/privacy.slice'
 
 
 export default function TermsCondition() {
@@ -86,12 +86,12 @@ export default function TermsCondition() {
         setAddOpen(false);
     }
     const handleDelete = () => {
-        dispatch(deleteTerm({ id: data.id }))
+        dispatch(deletePrivacyPolicy({ id: data.id }))
         // dispatch(getAllUsers())
         setDelOpen(false);
     }
     const handleDeleteAll = () => {
-        dispatch(deleteAllTerms());
+        dispatch(deleteAllPrivacyPolicies());
         setDelAllOpen(false);
 
     }
@@ -101,15 +101,15 @@ export default function TermsCondition() {
             <div className=" md:mx-[20px] p-10">
                 <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
                     <div>
-                        <h1 className="text-2xl font-bold text-brown">Terms & Condition </h1>
-                        <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Terms & Condition</span>
+                        <h1 className="text-2xl font-bold text-brown">Privacy Policy </h1>
+                        <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Privacy Policy</span>
                         </p>
 
                     </div>
                     <div>
 
                         <div className="flex gap-4  mb-4">
-                            <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { navigate('/tc/view') }}><span>View</span></button>
+                            <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { navigate('/privacy/view') }}><span>View</span></button>
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                             <button className="bg-brown w-32 text-white px-4 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
                         </div>
@@ -176,14 +176,14 @@ export default function TermsCondition() {
                     }}
                 />
 
-                {/* Add Size */}
+                {/* Add Privacy */}
                 <Modal
                     open={addOpen}
                     onClose={handleAddClose}
                 >
                     <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
                         <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>{data.id ? 'Edit Terms & Condition' : 'Add Terms & Condition'}</p>
+                            <p>{data.id ? 'Edit Privacy Policy' : 'Add Privacy Policy'}</p>
                             <button onClick={handleAddClose} className=" font-bold"><RxCross2 /></button>
                         </p>
                         <div>
@@ -192,9 +192,9 @@ export default function TermsCondition() {
                                 validationSchema={validationSchema}
                                 onSubmit={(values, { resetForm }) => {
                                     if (values.id) {
-                                        dispatch(editTerm(values));
+                                        dispatch(editPrivacyPolicy(values));
                                     } else {
-                                        dispatch(addTerm(values));
+                                        dispatch(addPrivacyPolicy(values));
                                     }
                                     resetForm();
                                     handleAddClose(); // Close the modal after successful submission
@@ -243,72 +243,8 @@ export default function TermsCondition() {
                         </div>
                     </Box>
                 </Modal>
-                {/* Edit Size */}
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                        <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>Edit Size</p>
-                            <button onClick={handleClose} className=" font-bold"><RxCross2 /></button>
-                        </p>
-                        <div>
-                            <Formik
-                                initialValues={{ id: data.id || '', name: data.name || '', size: data.size || '' }}
-                                validationSchema={validationSchema}
-                                onSubmit={(values, { resetForm }) => {
-                                    dispatch(editSize(values));
-                                    resetForm();
-                                    handleClose(); // Close the modal after successful submission
-                                }}
-                            >
-                                {({ handleSubmit, isSubmitting }) => (
-                                    <form onSubmit={handleSubmit} className=" p-4 md:p-8 rounded-lg  ">
-                                        <div className="mb-4">
-                                            <label htmlFor="name" className="block text-sm font-bold text-brown">Name</label>
-                                            <Field
-                                                type="text"
-                                                name="name"
-                                                id="name"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Name"
-                                            />
-                                            <ErrorMessage name="name" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="size" className="block text-sm font-bold text-brown">Size</label>
-                                            <Field
-                                                type="text"
-                                                name="size"
-                                                id="size"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Size"
-                                            />
-                                            <ErrorMessage name="size" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 '>
-                                            <button className='text-brown hover:bg-brown-50  border-brown border p-2 rounded w-full' onClick={handleAddClose}>
-                                                Cancel
-                                            </button>
-
-                                            <button
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                                className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
-                                            >
-                                                {isSubmitting ? 'Submitting...' : 'Edit Size'}
-                                            </button>
-                                        </div>
-                                    </form>
-                                )}
-                            </Formik>
-                        </div>
-                    </Box>
-                </Modal>
-                {/* Delete Size */}
+            
+                {/* Delete Privacy */}
                 <Modal
                     open={delOpen}
                     onClose={handleDeleteClose}
@@ -319,9 +255,9 @@ export default function TermsCondition() {
                         <div className='  p-5'>
                             <div className='text-center'>
 
-                                <p className='text-brown font-bold text-xl'>Delete Terms & Condition</p>
+                                <p className='text-brown font-bold text-xl'>Delete Privacy Policy</p>
                                 <p className='text-brown-50'>Are you sure you want to delete
-                                    Terms & Condition?</p>
+                                    Privacy Policy?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
@@ -333,7 +269,7 @@ export default function TermsCondition() {
 
                     </Box>
                 </Modal>
-                {/* Delete All Size */}
+                {/* Delete All Privacy */}
                 <Modal
                     open={delAllOpen}
                     onClose={() => setDelAllOpen(false)}
@@ -344,9 +280,9 @@ export default function TermsCondition() {
                         <div className='  p-5'>
                             <div className='text-center'>
 
-                                <p className='text-brown font-bold text-xl'>Delete All Terms & Condition</p>
+                                <p className='text-brown font-bold text-xl'>Delete All Privacy Policy</p>
                                 <p className='text-brown-50'>Are you sure you want to delete all
-                                    Terms & Condition?</p>
+                                    Privacy Policy?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>

@@ -131,7 +131,7 @@ function Layout({ children }) {
       dropdownIcon: <FaAngleDown />
     },
     { title: 'Return Orders', icon: <FaArrowsRotate />, path: '/return-order' },
-    { title: 'Invoice', icon: <FaReceipt />, path: '/invoice' },
+    // { title: 'Invoice', icon: <FaReceipt />, path: '/invoice' },
     {
       title: 'Reason For Cancellation',
       icon: (
@@ -178,7 +178,7 @@ function Layout({ children }) {
         {
           pages.map((v) => (
             <div key={v.title}>
-              <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+              <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px'  }}>
                 <ListItemButton
                   onClick={() => {
                     handleSubmenuToggle(v.title);

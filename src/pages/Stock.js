@@ -294,9 +294,9 @@ export default function Stoke() {
                                     <td className="py-2  px-4">{ele?.product_name || ''}</td>
                                     <td className="py-2  px-4">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
                                     <td className="py-2 px-4">
-                                        <span className={`font-bold p-1 px-2 text-sm rounded text-nowrap ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
+                                        <div className={`font-bold  text-center p-1 px-2 text-sm rounded text-nowrap w-28 ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
                                             {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
-                                        </span>
+                                        </div>
                                     </td>
                                     <td className="py-2  px-4">{ele?.qty || 0}</td>
 

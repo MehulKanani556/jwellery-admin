@@ -342,10 +342,8 @@ const AddProduct = React.memo(() => {
             .min(0, 'Discount must be at least 0')
             .max(100, 'Discount cannot exceed 100'),
         description: Yup.string()
-            .required('Description is required')
-            .test('min-words', 'Description must have at least 5 words',
-                (value) => value && value.trim().split(/\s+/).length >= 5
-            ),
+            .required('Description is required'),
+           
         mediaFiles: Yup.array()
             .test('required', 'At least one image or video is required', function (value) {
                 return value && value.length > 0;

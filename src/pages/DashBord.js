@@ -92,7 +92,7 @@ export default function DashBord() {
         </div>
         <div className='bg-white py-4 rounded shadow'>
           <h2 className='text-lg pb-3 border-b px-4 font-semibold text-brown'>Top Products</h2>
-          <div className='p-4'>
+          <div className='p-4 overflow-hidden'>
             {dashboardData?.top_products.map((ele) => (
               <>
                 <div className='mb-3'>
