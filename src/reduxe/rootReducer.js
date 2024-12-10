@@ -18,7 +18,8 @@ import dashboardSlice from "./slice/dashboard.slice";
 import reasonSlice from "./slice/reason.slice";
 import termsSlice from "./slice/terms.slice";
 import privacySlice from "./slice/privacy.slice";
-
+import faqsSlice from "./slice/faqs.slice";
+import subFaqsSlice from "./slice/subFaqs.slice";
 
 export const rootReducer = combineReducers({
     auth:authSlice,
@@ -37,5 +38,7 @@ export const rootReducer = combineReducers({
     orders:ordersSlice,
     reasons:reasonSlice,
     terms:termsSlice,
-    privacy:privacySlice
+    privacy:privacySlice,
+    faqs:faqsSlice,
+    subfaqs:subFaqsSlice
 });

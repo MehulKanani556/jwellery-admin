@@ -27,6 +27,9 @@ import ReasonForCancel from '../pages/ReasonForCancel'
 import TermsCondition from '../pages/TermsCondition'
 import TermsConditionView from '../pages/TermsConditionView'
 import Privacy from '../pages/Privacy'
+import Faqs from '../pages/FAQ\'s'
+import FaqType from '../pages/FAQ_Type'
+import FAQsView from '../pages/FAQsView'
 
 export default function AuthRoutes() {
     return (
@@ -53,15 +56,15 @@ export default function AuthRoutes() {
                         <Route path="/return-order" element={<ReturnOrder />} />
                         <Route path="/return-order/view" element={<ReturnOrderView />} />
                         <Route path="/invoice" element={<InvoiceList />} />
-
                         <Route path="/invoice/view" element={<InvoiceView />} />      
                         <Route path="/cancel-reason" element={<ReasonForCancel />} />      
                         <Route path="/tc" element={<TermsCondition />} />      
                         <Route path="/tc/view" element={<TermsConditionView />} />      
                         <Route path="/privacy" element={<Privacy />} />      
-
                         <Route path="/order/InvoiceView/:id" element={<InvoiceView />} />      
-
+                        <Route path="/faqs" element={<Faqs />} />      
+                        <Route path="/faqs-type" element={<FaqType/>} />      
+                        <Route path="/faqs/view" element={<FAQsView />} />      
                     </Routes>
                 </Layout>
             </ProtectedRoute>
