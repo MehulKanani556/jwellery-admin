@@ -62,13 +62,10 @@ export default function AuthRoutes() {
                         <Route path="/tc" element={<TermsCondition />} />      
                         <Route path="/tc/view" element={<TermsConditionView />} />      
                         <Route path="/privacy" element={<Privacy />} />      
-
-                        <Route path="/privacy/view" element={<PrivacyView />} />   
-
-
+                        <Route path="/privacy/view" element={<PrivacyView />} /> 
                         <Route path="/order/InvoiceView/:id" element={<InvoiceView />} />      
                         <Route path="/faqs" element={<Faqs />} />      
-                        <Route path="/faqs-type" element={<FaqType/>} />      
+                        <Route path="/faq-type" element={<FaqType/>} />      
                         <Route path="/faqs/view" element={<FAQsView />} />      
                     </Routes>
                 </Layout>

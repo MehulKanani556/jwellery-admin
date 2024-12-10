@@ -60,7 +60,7 @@ export default function FAQsView() {
 
                 <div className="mt-6 bg-white p-5 shadow rounded">
                     {faqs.map(faq => (
-                        <div key={faq.id} className="mb-8">
+                        <div key={faq.id} className="mb-4">
                             <h2 className="text-2xl font-semibold mb-4 text-brown">{faq.name}</h2>
                             <div className="space-y-4">
                                 {subFaqs && subFaqs
@@ -86,11 +86,12 @@ export default function FAQsView() {
                                                 expandIcon={<ExpandMoreIcon />}
                                                 aria-controls={`panel-${subfaq.id}-content`}
                                                 id={`panel-${subfaq.id}-header`}
+                                                sx={{marginY: '5px'}}
                                             >
                                                 <span className="font-medium text-brown">{subfaq.question}</span>
                                             </AccordionSummary>
-                                            <AccordionDetails>
-                                                <div className="text-gray-700">
+                                            <AccordionDetails sx={{padding:0}}>
+                                                <div className="text-gray-700 ms-[30px]">
                                                     {subfaq.answer}
                                                 </div>
                                             </AccordionDetails>

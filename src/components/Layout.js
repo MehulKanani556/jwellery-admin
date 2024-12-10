@@ -147,7 +147,7 @@ function Layout({ children }) {
       title: 'FAQ’s',
       icon: <BiSolidOffer />,
       subItems: [
-        { title: 'FAQ Type', path: '/faqs-type' },
+        { title: 'FAQ Type', path: '/faq-type' },
         { title: 'FAQ’s', path: '/faqs' },
       ],
       dropdownIcon: <FaAngleDown />
