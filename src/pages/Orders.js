@@ -20,6 +20,9 @@ import * as Yup from 'yup';
 import { deleteAllOrders, getAllOrders } from "../reduxe/slice/orders.slice";
 import { FiChevronDown } from "react-icons/fi";
 import Loader from "../components/Loader";
+import { RiPrinterFill } from "react-icons/ri";
+
+
 export default function Orders() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -283,6 +286,7 @@ export default function Orders() {
 
                                         <td className="py-2 px-5 flex items-center gap-2">
                                             <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => navigate(`/order/view/${v.id}`)}><BsFillEyeFill /></button>
+                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => navigate(`/order/InvoiceView/${v.id}`)}><RiPrinterFill /></button>
                                         </td>
                                     </tr>
                                 ))

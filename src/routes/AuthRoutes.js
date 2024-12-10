@@ -53,11 +53,15 @@ export default function AuthRoutes() {
                         <Route path="/return-order" element={<ReturnOrder />} />
                         <Route path="/return-order/view" element={<ReturnOrderView />} />
                         <Route path="/invoice" element={<InvoiceList />} />
+
                         <Route path="/invoice/view" element={<InvoiceView />} />      
                         <Route path="/cancel-reason" element={<ReasonForCancel />} />      
                         <Route path="/tc" element={<TermsCondition />} />      
                         <Route path="/tc/view" element={<TermsConditionView />} />      
                         <Route path="/privacy" element={<Privacy />} />      
+
+                        <Route path="/order/InvoiceView/:id" element={<InvoiceView />} />      
+
                     </Routes>
                 </Layout>
             </ProtectedRoute>
