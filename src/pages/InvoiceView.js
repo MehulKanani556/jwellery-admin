@@ -140,8 +140,6 @@ const InvoiceView = () => {
     }
   };
 
-
-
   return (
     loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
       <div className="p-10">
@@ -184,7 +182,7 @@ const InvoiceView = () => {
                       <div className="text-right">
                         <p className="text-dark font-semibold">#{selectedOrder?.invoice_number}</p>
                         <p className="text-dark font-semibold">{selectedOrder?.order_date? new Date(selectedOrder?.order_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</p>
-                        <p className="text-dark font-semibold">#{selectedOrder?.id}</p>
+                        <p className="text-dark font-semibold">#{selectedOrder?.order_number}</p>
                         <p className="text-dark font-semibold">CGHCJU554451JH</p>
                       </div>
                     </div>
@@ -223,14 +221,12 @@ const InvoiceView = () => {
                     </thead>
                     <tbody>
                       {selectedOrder?.order_items?.map((item, index) => {
-                        const product = products.find((p) => p.id == item.product_id);
-                        console.log(product)
                         return (
                       <tr className="border-b">
                         <td className="py-2">
                           <div className="font-semibold">{item?.product_name}</div>
-                          <p className="text-gray-500 mb-0">Size: <span className="font-semibold">{product?.size}</span></p>
-                          <p className="text-gray-500">Metal: <span className="font-semibold">{product?.metal}</span></p>
+                          <p className="text-gray-500 mb-0">Size: <span className="font-semibold">{item?.size}</span></p>
+                          <p className="text-gray-500">Metal: <span className="font-semibold">{item?.metal}</span></p>
                         </td>
                         <td className="font-semibold text-center">{item?.qty}</td>
                         <td className="font-semibold text-center">₹{item?.price}</td>
