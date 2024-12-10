@@ -22,13 +22,13 @@ import { CgArrowsShrinkH } from "react-icons/cg";
 import { BsBoxFill } from "react-icons/bs";
 import { LuBoxes } from "react-icons/lu";
 import { TbMessageStar } from "react-icons/tb";
-import { RiCoupon3Fill } from "react-icons/ri";
+import { RiCoupon3Fill, RiFileListFill } from "react-icons/ri";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { FaReceipt } from "react-icons/fa6";
 import { useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import {  Modal } from '@mui/material';
+import { Modal } from '@mui/material';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { logout } from '../reduxe/slice/auth.slice';
 
-const drawerWidth = 250;
+const drawerWidth = 275;
 
 function Layout({ children }) {
   const { window } = children;
@@ -61,7 +61,7 @@ function Layout({ children }) {
 
   // Memoize the user data
   const memoizedUser = useMemo(() => user, [user]);
-  
+
 
   useEffect(() => {
     if (userId) {
@@ -103,7 +103,7 @@ function Layout({ children }) {
 
 
 
-  const handleLogout= () => {
+  const handleLogout = () => {
     dispatch(logout());
     navigate('/');
   }
@@ -131,7 +131,36 @@ function Layout({ children }) {
       dropdownIcon: <FaAngleDown />
     },
     { title: 'Return Orders', icon: <FaArrowsRotate />, path: '/return-order' },
-    { title: 'Invoice', icon: <FaReceipt />, path: '/invoice' }
+    { title: 'Invoice', icon: <FaReceipt />, path: '/invoice' },
+    {
+      title: 'Reason For Cancellation',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.9954 5.91906C23.9815 5.79087 23.9348 5.66843 23.8598 5.56355C23.7848 5.45867 23.684 5.3749 23.5672 5.32033L12.3172 0.0703301C12.1161 -0.0234668 11.8839 -0.0234199 11.6828 0.0703301L0.432844 5.32033C0.316051 5.37488 0.21529 5.45861 0.140285 5.56345C0.0652792 5.66828 0.0185618 5.79068 0.00464063 5.91883C0.00283146 5.94586 0.00128451 5.97291 5.75795e-10 5.99997L5.75795e-10 18.75C-5.87192e-06 18.8999 0.0449082 19.0463 0.128947 19.1704C0.212985 19.2946 0.332291 19.3906 0.471469 19.4463L11.7215 23.9463C11.9003 24.0178 12.0997 24.0178 12.2785 23.9463L15.3269 22.7273C16.2467 23.52 17.4433 24 18.75 24C21.6449 24 24 21.6448 24 18.75V5.99997C24 5.99622 23.9959 5.92422 23.9954 5.91906ZM12 1.5776L21.363 5.947L17.7577 7.38911L8.21845 3.3423L12 1.5776ZM11.25 22.1422L1.5 18.2422V7.10772L11.25 11.0077V22.1422ZM12 9.69217L2.637 5.947L6.38948 4.19585L15.7807 8.17989L12 9.69217ZM18.75 22.5C16.6823 22.5 15 20.8177 15 18.75C15 16.6822 16.6823 15 18.75 15C20.8177 15 22.5 16.6822 22.5 18.75C22.5 20.8177 20.8177 22.5 18.75 22.5ZM18.75 13.5C15.8551 13.5 13.5 15.8551 13.5 18.75C13.5 19.7679 13.7915 20.7189 14.295 21.5244L12.75 22.1423V11.0077L22.5 7.10772V15.0798C21.5464 14.1056 20.2177 13.5 18.75 13.5Z" />
+          <path d="M19.8107 18.75L20.4053 18.1554C20.6983 17.8625 20.6983 17.3876 20.4053 17.0947C20.1125 16.8018 19.6376 16.8018 19.3447 17.0947L18.75 17.6894L18.1553 17.0947C17.8625 16.8018 17.3876 16.8018 17.0947 17.0947C16.8018 17.3876 16.8018 17.8624 17.0947 18.1553L17.6894 18.75L17.0947 19.3447C16.8018 19.6376 16.8018 20.1125 17.0947 20.4054C17.2412 20.5518 17.4331 20.625 17.625 20.625C17.817 20.625 18.0089 20.5518 18.1553 20.4054L18.75 19.8107L19.3447 20.4054C19.4912 20.5518 19.6831 20.625 19.875 20.625C20.067 20.625 20.2589 20.5518 20.4053 20.4054C20.6983 20.1125 20.6983 19.6376 20.4053 19.3447L19.8107 18.75Z" />
+        </svg>
+      ),
+      path: '/cancel-reason'
+    },
+    { title: 'Terms & Condition', icon: <RiFileListFill />, path: '/tc' },
+    {
+      title: 'FAQ’s',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.0628 9.09375C15.9774 9.09375 15.0942 9.97688 15.0942 11.0624C15.0942 12.5031 16.5973 13.4532 17.8944 12.8461L17.5485 12.5002C17.2739 12.2257 17.2739 11.7805 17.5485 11.5059C17.8231 11.2313 18.2683 11.2313 18.5429 11.5059L18.8728 11.8358C19.4279 10.5422 18.4729 9.09375 17.0628 9.09375Z" />
+          <path d="M21.8906 3.30469H2.10938C0.946266 3.30469 0 4.25095 0 5.41406V16.7112C0 17.8744 0.946266 18.8206 2.10938 18.8206H10.2422L11.4375 20.4143C11.7188 20.7894 12.2818 20.7886 12.5625 20.4143L13.7578 18.8206H21.8906C23.0537 18.8206 24 17.8744 24 16.7112V5.41406C24 4.25095 23.0537 3.30469 21.8906 3.30469ZM6.22439 10.3288C6.6127 10.3288 6.92752 10.6436 6.92752 11.0319C6.92752 11.4202 6.6127 11.7351 6.22439 11.7351H4.94841V13.7343C4.94841 14.1226 4.63355 14.4374 4.24528 14.4374C3.85697 14.4374 3.54216 14.1226 3.54216 13.7343V8.43C3.54216 8.04169 3.85697 7.72688 4.24528 7.72688H6.39511C6.78342 7.72688 7.09823 8.04169 7.09823 8.43C7.09823 8.81831 6.78342 9.13313 6.39511 9.13313H4.94841V10.3288H6.22439ZM12.5531 14.3921C12.1897 14.5293 11.7841 14.3458 11.647 13.9825L11.3235 13.1253H9.07045L8.74317 13.9846C8.6047 14.3481 8.19797 14.5294 7.83586 14.3914C7.473 14.2532 7.29084 13.847 7.42903 13.484L9.43547 8.21583C9.55008 7.91081 9.84966 7.68806 10.2039 7.68769C10.3675 7.68713 10.5275 7.73544 10.6635 7.82643C10.7994 7.91742 10.9051 8.04694 10.9669 8.19839C10.9737 8.21494 10.8846 7.97934 12.9627 13.486C13.0998 13.8493 12.9164 14.2551 12.5531 14.3921ZM20.2521 14.2099C19.9775 14.4845 19.5323 14.4845 19.2577 14.2099L18.9238 13.8759C18.3898 14.2303 17.75 14.4374 17.0625 14.4374C15.2016 14.4374 13.6877 12.9235 13.6877 11.0626C13.6877 9.2017 15.2016 7.68773 17.0625 7.68773C18.9234 7.68773 20.4374 9.2017 20.4374 11.0626C20.4374 11.7282 20.2429 12.3489 19.9089 12.8723L20.2521 13.2155C20.5267 13.4901 20.5267 13.9353 20.2521 14.2099Z" />
+          <path d="M9.60596 11.7195H10.7927L10.2021 10.1543L9.60596 11.7195Z" />
+        </svg>
+      ),
+      path: '/faq'
+    },
+    {
+      title: 'Privacy Policy', icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.182 4.1813C18.8413 4.03855 17.5217 3.74021 16.25 3.2923C15.083 2.87987 13.9636 2.34347 12.911 1.6923C12.6364 1.52563 12.3213 1.4375 12 1.4375C11.6787 1.4375 11.3636 1.52563 11.089 1.6923L11.088 1.6933C10.0356 2.34395 8.91657 2.88 7.75 3.2923C6.47891 3.74003 5.16004 4.03837 3.82 4.1813C3.38954 4.22513 2.99066 4.42716 2.70062 4.74824C2.41057 5.06932 2.25 5.48661 2.25 5.9193V11.1143C2.25073 13.0313 2.76378 14.9133 3.73605 16.5654C4.70832 18.2176 6.10447 19.5799 7.78 20.5113L11.15 22.3843C11.4095 22.5303 11.7023 22.6069 12 22.6069C12.2977 22.6069 12.5905 22.5303 12.85 22.3843L16.22 20.5113C17.8955 19.5799 19.2917 18.2176 20.264 16.5654C21.2362 14.9133 21.7493 13.0313 21.75 11.1143V5.9203C21.7505 5.48758 21.5905 5.07005 21.3008 4.7486C21.0111 4.42714 20.6124 4.22563 20.182 4.1813ZM15.979 10.1833L12.229 14.1833C12.0509 14.3733 11.8055 14.4863 11.5453 14.498C11.2851 14.5098 11.0306 14.4195 10.836 14.2463L8.586 12.2463C8.48287 12.1606 8.39805 12.055 8.33656 11.9358C8.27508 11.8166 8.23819 11.6863 8.2281 11.5525C8.21801 11.4188 8.23493 11.2844 8.27783 11.1574C8.32074 11.0303 8.38876 10.9132 8.47786 10.8129C8.56696 10.7127 8.6753 10.6314 8.79645 10.5739C8.9176 10.5164 9.04909 10.4839 9.18307 10.4782C9.31706 10.4725 9.45082 10.4939 9.57639 10.541C9.70196 10.5881 9.81677 10.6599 9.914 10.7523L11.437 12.1053L14.521 8.8153C14.6146 8.71575 14.7275 8.63637 14.8529 8.58203C14.9782 8.52769 15.1134 8.49954 15.25 8.4993C15.4451 8.4992 15.6359 8.55616 15.7991 8.66317C15.9622 8.77019 16.0904 8.92257 16.168 9.10157C16.2456 9.28056 16.2692 9.47834 16.2357 9.67054C16.2023 9.86275 16.1124 10.041 15.979 10.1833Z" />
+        </svg>
+      ), path: '/privacy'
+    },
   ]
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -140,7 +169,7 @@ function Layout({ children }) {
     gender: Yup.string().required('Gender is required'),
     dob: Yup.date().required('D.O.B is required').max(new Date().toISOString().split('T')[0], 'D.O.B cannot be in the future'),
   });
-  
+
   const drawer = (
     <div>
       <Toolbar></Toolbar>
@@ -177,7 +206,7 @@ function Layout({ children }) {
                   <ListItemIcon className="icon" sx={{ color: location.pathname.includes(v.path) ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
                     {v.icon}
                   </ListItemIcon>
-                  <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 }} />
+                  <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 ,whiteSpace: 'nowrap'}} />
                   {v.dot && <span style={{ color: 'red', marginLeft: '5px' }}>•</span>}
                   {v.subItems && openSubmenu === v.title ? <FaAngleUp /> : v.dropdownIcon}
                 </ListItemButton>
@@ -257,7 +286,7 @@ function Layout({ children }) {
               />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }} className="gap-4 me-4">
-              
+
               <div color="inherit" sx={{ ml: 2 }} className='relative'>
                 <div className='flex gap-2 items-center' onClick={() => setDropdownOpen(!dropdownOpen)} style={{ cursor: 'pointer' }}>
                   <div>
@@ -593,7 +622,7 @@ function Layout({ children }) {
         <Toolbar />
         {children}
       </Box>
-     
+
     </Box>
   );
 }

@@ -23,6 +23,10 @@ import OrderView from '../pages/OrderView'
 import InvoiceList from '../pages/InvoiceList'
 import ProtectedRoute from './ProtectedRoute'
 import InvoiceView from '../pages/InvoiceView'
+import ReasonForCancel from '../pages/ReasonForCancel'
+import TermsCondition from '../pages/TermsCondition'
+import TermsConditionView from '../pages/TermsConditionView'
+import Privacy from '../pages/Privacy'
 
 export default function AuthRoutes() {
     return (
@@ -50,6 +54,10 @@ export default function AuthRoutes() {
                         <Route path="/return-order/view" element={<ReturnOrderView />} />
                         <Route path="/invoice" element={<InvoiceList />} />
                         <Route path="/invoice/view" element={<InvoiceView />} />      
+                        <Route path="/cancel-reason" element={<ReasonForCancel />} />      
+                        <Route path="/tc" element={<TermsCondition />} />      
+                        <Route path="/tc/view" element={<TermsConditionView />} />      
+                        <Route path="/privacy" element={<Privacy />} />      
                     </Routes>
                 </Layout>
             </ProtectedRoute>

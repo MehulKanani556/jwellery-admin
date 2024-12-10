@@ -6,13 +6,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDashboard } from '../reduxe/slice/dashboard.slice';
 import { GoDotFill } from 'react-icons/go';
 import { FaStar } from 'react-icons/fa';
-
+const isVideo = (filename) => {
+  const videoExtensions = [
+    '.mp4',
+    '.mov',
+    '.avi',
+    '.wmv',
+    '.flv',
+    '.mkv',
+    '.webm',
+    '.m4v',
+    '.mpeg',
+    '.3gp'
+  ];
+  return videoExtensions.some(ext =>
+    filename.toLowerCase().endsWith(ext)
+  );
+};
 export default function DashBord() {
   const dispatch = useDispatch();
   const { dashboardData } = useSelector((state) => state.dashboard)
-const color= 
+  const color =
 
-  console.log(dashboardData)
+    console.log(dashboardData)
 
   useEffect(() => {
     dispatch(getDashboard());
@@ -85,12 +101,12 @@ const color=
                     <span>{ele?.sales_percentage}%</span>
                   </div>
                   <div className='bg-gray-200 rounded-full h-2'>
-                    <div className={`h-2 rounded-full`} style={{ width: `${ele?.sales_percentage}%`, backgroundColor: ['#59A1FF','#219F5A','#612DB9','#B131C5','#A1574D','#9B68F4'][dashboardData?.top_products.indexOf(ele) % 6] }}></div>
+                    <div className={`h-2 rounded-full`} style={{ width: `${ele?.sales_percentage}%`, backgroundColor: ['#59A1FF', '#219F5A', '#612DB9', '#B131C5', '#A1574D', '#9B68F4'][dashboardData?.top_products.indexOf(ele) % 6] }}></div>
                   </div>
                 </div>
               </>
             ))}
-            
+
           </div>
         </div>
       </div>
@@ -183,7 +199,24 @@ const color=
                     <td className="py-2 px-4 ">{ele.id}</td>
                     <td className="py-2 px-4 ">{ele.category_name}</td>
                     <td className="py-2 px-4 ">{ele.sub_category_name}</td>
-                    <td className="py-2 px-4 ">{ele.product_name}</td>
+                    {/* <td className="py-2 px-4 ">{ele.product_name}</td> */}
+                    <td className="py-2 px-4 flex items-center">
+                      {ele.product_image && isVideo(ele.product_image) ? (
+                        <video
+                          className="w-10 h-10 rounded-full mr-2 object-cover"
+                          src={ele.product_image}
+                        >
+                          <source src={ele.product_image} />
+                        </video>
+                      ) : (
+                        <img
+                          src={ele.product_image}
+                          alt="Product"
+                          className="w-10 h-10 rounded-full mr-2 object-cover"
+                        />
+                      )}
+                      {ele.product_name}
+                    </td>
                     <td className="py-2 px-4 ">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</td>
                     <td className="py-2 px-4  ">
                       <span className={`font-bold p-1 px-2  block text-center text-sm rounded text-nowrap w-28 ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>

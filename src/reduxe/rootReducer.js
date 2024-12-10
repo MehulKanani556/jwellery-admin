@@ -15,6 +15,9 @@ import offerSlice from "./slice/offer.slice";
 import returnorderSlice from "./slice/returnorder.slice";
 import ordersSlice from "./slice/orders.slice";
 import dashboardSlice from "./slice/dashboard.slice";
+import reasonSlice from "./slice/reason.slice";
+import termsSlice from "./slice/terms.slice";
+import privacySlice from "./slice/privacy.slice";
 
 
 export const rootReducer = combineReducers({
@@ -32,5 +35,7 @@ export const rootReducer = combineReducers({
     offers:offerSlice,
     returnorders:returnorderSlice,
     orders:ordersSlice,
-
+    reasons:reasonSlice,
+    terms:termsSlice,
+    privacy:privacySlice
 });
