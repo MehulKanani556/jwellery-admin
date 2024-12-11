@@ -78,11 +78,19 @@ const InvoiceView = () => {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
+                font-family: Poppins, sans-serif;
               }
               @page {
                 size: A4;
                 margin: 0;
               }
+            }
+            p,h5,h6{
+              margin:0;
+              margin-bottom:5px;
+            }
+            .border-print{
+              border-right:1px solid #D1D5DB;
             }
           </style>
         </head>
@@ -170,10 +178,10 @@ const InvoiceView = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   marginTop: "16px",
-                  width: "100%",
+                  // width: "100%",
                 }}
               >
-                <div>
+                <div style={{ paddingRight: "20px" }}>
                   <p style={{ color: "#6B7280", marginBottom: "0" }}>
                     Invoice No
                   </p>
@@ -192,12 +200,12 @@ const InvoiceView = () => {
                   <p style={{ color: "#1F2937", fontWeight: "600" }}>
                     {selectedOrder?.order_date
                       ? new Date(selectedOrder?.order_date)
-                          .toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })
-                          .replace(/\//g, "-")
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")
                       : ""}
                   </p>
                   <p style={{ color: "#1F2937", fontWeight: "600" }}>
@@ -214,13 +222,13 @@ const InvoiceView = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
               gap: "16px",
               marginTop: "16px",
             }}
           >
-            <div
-              style={{ borderRight: "1px solid #D1D5DB", paddingRight: "12px" }}
+            <div className="border-r border-gray-400  pr-4 border-print"
+              style={{ paddingRight: "12px" }}
             >
               <p
                 style={{
@@ -245,8 +253,8 @@ const InvoiceView = () => {
                 Maharashtra, 421302 IN
               </p>
             </div>
-            <div
-              style={{ borderRight: "1px solid #D1D5DB", paddingRight: "12px" }}
+            <div className="border-r-0 sm:border-r-0 md:border-r  border-gray-400 pr-4 border-print"
+              style={{ paddingRight: "12px" }}
             >
               <p
                 style={{
@@ -270,7 +278,7 @@ const InvoiceView = () => {
                 {selectedOrder?.deliveryAddress?.address}
               </p>
             </div>
-            <div>
+            <div className="col-span-3 md:col-span-1 text-center">
               <p
                 style={{
                   color: "#6B7280",
@@ -305,9 +313,9 @@ const InvoiceView = () => {
           ></div>
 
           <div style={{ overflow: "auto", marginTop: "16px" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table style={{ width: "100%", borderCollapse: "-moz-initial" }}>
               <thead>
-                <tr style={{ borderBottom: "1px solid #D1D5DB" }}>
+                <tr style={{ borderBottom: "1px solid #D1D5DB", backgroundColor: "rgb(247 246 244)" }}>
                   <th
                     style={{
                       textAlign: "left",
@@ -353,14 +361,14 @@ const InvoiceView = () => {
                       <div style={{ fontWeight: "600" }}>
                         {item?.product_name}
                       </div>
-                      <p style={{ color: "#6B7280", marginBottom: "0" }}>
+                      {item?.size && <p style={{ color: "#6B7280", marginBottom: "0" }}>
                         Size:{" "}
                         <span style={{ fontWeight: "600" }}>{item?.size}</span>
-                      </p>
-                      <p style={{ color: "#6B7280" }}>
+                      </p>}
+                      {item?.metal && <p style={{ color: "#6B7280" }}>
                         Metal:{" "}
                         <span style={{ fontWeight: "600" }}>{item?.metal}</span>
-                      </p>
+                      </p>}
                     </td>
                     <td style={{ fontWeight: "600", textAlign: "center" }}>
                       {item?.qty}
@@ -395,7 +403,7 @@ const InvoiceView = () => {
             }}
           >
             <div style={{ marginTop: "16px" }}>
-              <h6 style={{ color: "#6B7280", fontWeight: "600" }}>
+              <h6 style={{ color: "#6B7280", fontWeight: "bold", fontSize: "18px" }}>
                 Payment Method
               </h6>
               <p style={{ color: "#374151" }}>
@@ -404,20 +412,13 @@ const InvoiceView = () => {
               <p style={{ color: "#374151" }}>Card No.: 1234 5678 9123 4567</p>
               <p style={{ color: "#374151" }}>Name: Jhon Wick</p>
             </div>
-            <div
-              style={{
-                marginTop: "16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}
-            >
+            <div className="w-[100%] sm:w-[100%] md:w-auto " style={{marginTop: "16px", display: "flex", gap: "50px", justifyContent:"space-between"}}>
               <div>
                 <p style={{ color: "#6B7280" }}>Sub Total</p>
                 <p style={{ color: "#6B7280" }}>Discount</p>
                 <p style={{ color: "#6B7280" }}>SGST</p>
                 <p style={{ color: "#6B7280" }}>CGST</p>
-                <h6 style={{ fontWeight: "700", color: "#374151" }}>
+                <h6 style={{ fontWeight: "bold", fontSize: "16px", borderTop: "1px solid #D1D5DB", paddingTop: "10px" }}>
                   Total Amount
                 </h6>
               </div>
@@ -430,14 +431,14 @@ const InvoiceView = () => {
                 </p>
                 <p style={{ fontWeight: "600", color: "#374151" }}>₹{sgst}</p>
                 <p style={{ fontWeight: "600", color: "#374151" }}>₹{cgst}</p>
-                <h6 style={{ fontWeight: "700", color: "#374151" }}>
+                <h6 style={{ fontWeight: "bold", fontSize: "16px", borderTop: "1px solid #D1D5DB", paddingTop: "10px" }}>
                   ₹{total}
                 </h6>
               </div>
             </div>
           </div>
 
-          <div style={{ marginTop: "112px", textAlign: "center" }}>
+          <div style={{ marginTop: "50px", textAlign: "center" }}>
             <p style={{ color: "#374151", fontWeight: "600" }}>
               Thank you for shopping with us!
             </p>
