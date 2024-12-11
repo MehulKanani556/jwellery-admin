@@ -173,8 +173,8 @@ export default function ProductOffer() {
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
         <div className=" md:mx-[20px] p-10">
-            <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-                <div>
+            <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+                <div className="text-center lg:text-left">
                     <h1 className="text-2xl font-bold text-brown">Product Offers</h1>
                     <p className="text-brown-50">
                         Dashboard /{" "}
@@ -379,7 +379,7 @@ export default function ProductOffer() {
                                                 type="checkbox"
                                                 checked={v.status}
                                                 onChange={() => handleToggle(v)}
-                                                className="sr-only peer"
+                                                className="hidden peer"
                                             />
                                             <div
                                                 className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"

@@ -99,8 +99,8 @@ export default function TermsCondition() {
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
             <div className=" md:mx-[20px] p-10">
-                <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
-                    <div>
+                <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
+                    <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Privacy Policy </h1>
                         <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Privacy Policy</span>
                         </p>

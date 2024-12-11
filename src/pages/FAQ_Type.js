@@ -100,8 +100,8 @@ export default function FaqType() {
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
             <div className=" md:mx-[20px] p-10">
-                <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
-                    <div>
+                <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
+                    <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">FAQ's Type </h1>
                         <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>FAQ's Type</span>
                         </p>
@@ -178,7 +178,7 @@ export default function FaqType() {
                 >
                     <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
                         <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>{data.id ? "Edit FAQ's Type" : "Add FAQ's Type"}</p>
+                            <p className='text-center justify-self-center'>{data.id ? "Edit FAQ's Type" : "Add FAQ's Type"}</p>
                             <button onClick={handleAddClose} className=" font-bold"><RxCross2 /></button>
                         </p>
                         <div>

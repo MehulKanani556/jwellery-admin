@@ -8,277 +8,466 @@ import { FiArrowLeft } from "react-icons/fi";
 import Loader from "../components/Loader";
 import { RiPrinterFill } from "react-icons/ri";
 import { getAllProducts } from "../reduxe/slice/product.slice";
-import html2canvas from 'html2canvas';
 
 const InvoiceView = () => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const [netAmount, setNetAmount] = useState(0);
   const [sgst, setSgst] = useState(0);
-  const [cgst, setCgst]= useState(0);
-  const [total ,setTotal] = useState(0);
+  const [cgst, setCgst] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const { selectedOrder, loading } = useSelector((state) => state.orders);
-  const {products} = useSelector((state) => state.products);
-  console.log(products,selectedOrder)
+  const { products } = useSelector((state) => state.products);
+  console.log(products, selectedOrder);
 
   useEffect(() => {
     dispatch(getOrderById(id));
     dispatch(getAllProducts());
   }, [dispatch]);
 
-  useEffect(()=>{
-    if(selectedOrder){
-  const discount = parseFloat(selectedOrder?.discount ? selectedOrder?.discount : 0);
-  const deliveryCharge = parseFloat(selectedOrder?.delivery_charge ? selectedOrder?.delivery_charge : 0);
-  const netAmount = parseFloat((selectedOrder?.total_amount - discount + deliveryCharge).toFixed(2));
-  const sgst = parseFloat((netAmount * 0.065).toFixed(2));
-  const cgst = parseFloat((netAmount * 0.065).toFixed(2));
-  const total = parseFloat((netAmount + sgst + cgst).toFixed(2));
-    setNetAmount(netAmount);
-    setSgst(sgst);
-    setCgst(cgst);
-    setTotal(total);
-  }
-  },[selectedOrder])
+  useEffect(() => {
+    if (selectedOrder) {
+      const discount = parseFloat(
+        selectedOrder?.discount ? selectedOrder?.discount : 0
+      );
+      const deliveryCharge = parseFloat(
+        selectedOrder?.delivery_charge ? selectedOrder?.delivery_charge : 0
+      );
+      const netAmount = parseFloat(
+        (selectedOrder?.total_amount - discount + deliveryCharge).toFixed(2)
+      );
+      const sgst = parseFloat((netAmount * 0.065).toFixed(2));
+      const cgst = parseFloat((netAmount * 0.065).toFixed(2));
+      const total = parseFloat((netAmount + sgst + cgst).toFixed(2));
+      setNetAmount(netAmount);
+      setSgst(sgst);
+      setCgst(cgst);
+      setTotal(total);
+    }
+  }, [selectedOrder]);
 
   const printRef = useRef();
 
-  
-  const handlePrint = async () => {
-    if (window.printing) return; // Prevent multiple prints
+  const handlePrint = () => {
+    if (window.printing) return;
     window.printing = true;
 
-    const content = printRef.current;
+    const printFrame = document.createElement("iframe");
+    printFrame.style.display = "block";
+    document.body.appendChild(printFrame);
 
-    // Wait for images and other resources to load
-    const waitForImages = () => {
-      const images = content.getElementsByTagName('img');
-      const promises = Array.from(images).map(img => {
-        if (img.complete) {
-          return Promise.resolve();
-        } else {
-          return new Promise(resolve => {
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
+    const styleSheets = Array.from(document.styleSheets)
+      .map((styleSheet) => {
+        if (styleSheet.href) {
+          return `<link rel="stylesheet" href="${styleSheet.href}" />`;
         }
-      });
-      return Promise.all(promises);
+        return "";
+      })
+      .join("");
+
+    printFrame.contentDocument.write(`
+      <html>
+        <head>
+          ${styleSheets}
+          <style>
+            @media print {
+              body {
+                padding: 20px;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+              }
+              @page {
+                size: A4;
+                margin: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${printRef.current.innerHTML}
+        </body>
+      </html>
+    `);
+    printFrame.contentDocument.close();
+
+    printFrame.contentWindow.onafterprint = () => {
+      document.body.removeChild(printFrame);
+      window.printing = false;
     };
 
-    try {
-      // Wait for all images to load
-      await waitForImages();
-
-      const canvas = await html2canvas(content, {
-        scale: 2,
-        useCORS: true,
-        logging: true,
-        backgroundColor: '#ffffff',
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-
-      // Create a temporary container for the print content
-      const printContainer = document.createElement('div');
-      printContainer.innerHTML = `
-      <style>
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #printContainer, #printContainer * {
-            visibility: visible;
-          }
-          #printContainer {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-          }
-          #printContainer img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            page-break-inside: avoid;
-          }
-          @page {
-            size: A4;
-            margin: 0mm !important;
-            padding: 0mm !important;
-          }
-          html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: 100%;
-            overflow: hidden;
-          }
-        }
-      </style>
-      <div id="printContainer">
-        <img src="${imgData}" />
-      </div>
-    `;
-
-      document.body.appendChild(printContainer);
-
-      const img = printContainer.querySelector('img');
-      img.onload = () => {
-        window.print();
-        document.body.removeChild(printContainer);
-        window.printing = false; // Reset the printing flag
-      };
-
-    } catch (error) {
-      console.error('Error generating print preview:', error);
-      window.printing = false; // Reset the printing flag in case of error
-    }
+    printFrame.contentWindow.print();
   };
 
-  return (
-    loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
-      <div className="p-10">
-        <div className="flex flex-col sm:flex-row gap-3 justify-between items-center max-w-[1500px]">
-          <div>
-            <h1 className="text-2xl font-bold text-brown">View Invoice</h1>
-            <p className="text-brown-50">
-              Dashboard / Invoice / {' '}
-              <span className="text-brown font-medium">View Invoice</span>
-            </p>
-          </div>
-          <div className="flex gap-4 items-center">
-                    <div>
-                        <button
-                            className="w-[100px] h-[40px] text-[25px] text-brown  border-brown border px-3 py-2 rounded flex justify-center items-center gap-2 hover:bg-[#523C34] hover:text-white"
-                            onClick={handlePrint}
-                        >
-                            <RiPrinterFill/>
-                        </button>
-                    </div>
-                </div>
+  return loading ? (
+    <div className="flex justify-center items-center h-[calc(100vh-64px)]">
+      <Loader />
+    </div>
+  ) : (
+    <div className="p-10">
+      <div className="flex flex-col sm:flex-row gap-3 justify-between items-center max-w-[1500px]">
+        <div>
+          <h1 className="text-2xl font-bold text-brown">View Invoice</h1>
+          <p className="text-brown-50">
+            Dashboard / Invoice /{" "}
+            <span className="text-brown font-medium">View Invoice</span>
+          </p>
         </div>
-            <section className="mb-5 mt-5 p-10 bg-white rounded-lg shadow-md max-w-[1500px]" ref={printRef} id="print-content">
-              <div>
-                <div className="bg-[#F5F4F1] p-5">
-                  <h5 className="font-bold">LOGO</h5>
-                  <div className="flex flex-wrap justify-between">
-                    <div className="mt-4">
-                      <h5 className="font-semibold">{selectedOrder?.customer?.name}</h5>
-                      <h6 className="text-gray-500">{selectedOrder?.customer?.email}</h6>
-                      <h6 className="text-gray-500">{selectedOrder?.customer?.phone}</h6>
-                    </div>
-                    <div className="flex justify-between mt-4 w-full sm:w-auto">
-                      <div>
-                        <p className="text-gray-500 mb-0">Invoice No</p>
-                        <p className="text-gray-500 mb-0">Invoice Date</p>
-                        <p className="text-gray-500 mb-0">Order ID</p>
-                        <p className="text-gray-500 mb-0">GSTIN</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-dark font-semibold">#{selectedOrder?.invoice_number}</p>
-                        <p className="text-dark font-semibold">{selectedOrder?.order_date? new Date(selectedOrder?.order_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</p>
-                        <p className="text-dark font-semibold">#{selectedOrder?.order_number}</p>
-                        <p className="text-dark font-semibold">CGHCJU554451JH</p>
-                      </div>
-                    </div>
-                  </div>
+        <div className="flex gap-4 items-center">
+          <div>
+            <button
+              className="w-[100px] h-[40px] text-[25px] text-brown  border-brown border px-3 py-2 rounded flex justify-center items-center gap-2 hover:bg-[#523C34] hover:text-white"
+              onClick={handlePrint}
+            >
+              <RiPrinterFill />
+            </button>
+          </div>
+        </div>
+      </div>
+      <section
+        style={{
+          marginBottom: "20px",
+          marginTop: "20px",
+          padding: "40px",
+          backgroundColor: "white",
+          borderRadius: "8px",
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+          maxWidth: "1500px",
+        }}
+        ref={printRef}
+        id="print-content"
+      >
+        <div>
+          <div
+            style={{
+              backgroundColor: "#F5F4F1",
+              padding: "20px",
+            }}
+          >
+            <h5 style={{ fontWeight: "bold" }}>LOGO</h5>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ marginTop: "16px" }}>
+                <h5 style={{ fontWeight: "600" }}>
+                  {selectedOrder?.customer?.name}
+                </h5>
+                <h6 style={{ color: "#6B7280" }}>
+                  {selectedOrder?.customer?.email}
+                </h6>
+                <h6 style={{ color: "#6B7280" }}>
+                  {selectedOrder?.customer?.phone}
+                </h6>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: "16px",
+                  width: "100%",
+                }}
+              >
+                <div>
+                  <p style={{ color: "#6B7280", marginBottom: "0" }}>
+                    Invoice No
+                  </p>
+                  <p style={{ color: "#6B7280", marginBottom: "0" }}>
+                    Invoice Date
+                  </p>
+                  <p style={{ color: "#6B7280", marginBottom: "0" }}>
+                    Order ID
+                  </p>
+                  <p style={{ color: "#6B7280", marginBottom: "0" }}>GSTIN</p>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                  <div className="border-r border-gray-400 pr-3">
-                    <p className="text-gray-500 font-semibold mb-2">SOLD BY</p>
-                    <p className="font-semibold text-gray-800 mb-0">COCOBLU RETAIL LIMITED</p>
-                    <p className="text-gray-600">Renaissance industrial smart city, Kalyan Sape road, Thane, Maharashtra, 421302 IN</p>
-                  </div>
-                  <div className="border-r border-gray-400 pr-3">
-                    <p className="text-gray-500 font-semibold mb-2">BILLED TO</p>
-                    <p className="font-semibold text-gray-800 mb-0">{selectedOrder?.customer?.name}</p>
-                    <p className="text-gray-600">{selectedOrder?.deliveryAddress?.address}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 font-semibold mb-2">SHIPPED TO</p>
-                    <p className="font-semibold text-gray-800 mb-0">{selectedOrder?.customer?.name}</p>
-                    <p className="text-gray-600">{selectedOrder?.deliveryAddress?.address}</p>
-                  </div>
-                </div>
-
-                <div className="bg-gray-400 h-[1px] my-3"></div>
-
-                <div className="overflow-auto mt-4">
-                  <table className="w-full min-w-[600px] border-collapse">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-2 text-gray-700">Item</th>
-                        <th className=" py-2 text-gray-700 text-center">Qty.</th>
-                        <th className=" py-2 text-gray-700 text-center">Price</th>
-                        <th className=" py-2 text-gray-700 text-right">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedOrder?.order_items?.map((item, index) => {
-                        return (
-                      <tr className="border-b">
-                        <td className="py-2">
-                          <div className="font-semibold">{item?.product_name}</div>
-                          <p className="text-gray-500 mb-0">Size: <span className="font-semibold">{item?.size}</span></p>
-                          <p className="text-gray-500">Metal: <span className="font-semibold">{item?.metal}</span></p>
-                        </td>
-                        <td className="font-semibold text-center">{item?.qty}</td>
-                        <td className="font-semibold text-center">₹{item?.price}</td>
-                        <td className="font-semibold text-right">₹{item?.price * item?.qty}</td>
-                      </tr>
-                      )
-                    })}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="bg-gray-400 h-[1px] my-5"></div>
-
-                <div className="flex flex-wrap justify-between items-end">
-                  <div className="mt-4">
-                    <h6 className="text-gray-500 font-semibold">Payment Method</h6>
-                    <p className="text-gray-800">Bank Name: Bank Central Asia (BCA)</p>
-                    <p className="text-gray-800">Card No.: 1234 5678 9123 4567</p>
-                    <p className="text-gray-800">Name: Jhon Wick</p>
-                  </div>
-                  <div className="mt-4 flex flex-col sm:flex-row gap-5">
-                    <div>
-                      <p className="text-gray-500">Sub Total</p>
-                      <p className="text-gray-500">Discount</p>
-                      <p className="text-gray-500">SGST</p>
-                      <p className="text-gray-500">CGST</p>
-                      <h6 className="font-bold text-gray-800">Total Amount</h6>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-gray-800">₹{selectedOrder?.total_amount}</p>
-                      <p className="font-semibold text-green-600">-₹{selectedOrder?.discount ? selectedOrder?.discount : 0}</p>
-                      <p className="font-semibold text-gray-800">₹{sgst}</p>
-                      <p className="font-semibold text-gray-800">₹{cgst}</p>
-                      <h6 className="font-bold text-gray-800">₹{total}</h6>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-28 text-center">
-                  <p className="text-gray-700 font-semibold">Thank you for shopping with us!</p>
-                  <p className="text-gray-700">Have a nice day 😊</p>
-                </div>
-
-                <div className="bg-[#523C34] py-5 text-center mt-5">
-                  <p className="text-white text-sm max-w-md mx-auto">
-                    If you have any questions, feel free to call customer care at +1 565 5656 565 or use Contact Us section.
+                <div style={{ textAlign: "right" }}>
+                  <p style={{ color: "#1F2937", fontWeight: "600" }}>
+                    #{selectedOrder?.invoice_number}
+                  </p>
+                  <p style={{ color: "#1F2937", fontWeight: "600" }}>
+                    {selectedOrder?.order_date
+                      ? new Date(selectedOrder?.order_date)
+                          .toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })
+                          .replace(/\//g, "-")
+                      : ""}
+                  </p>
+                  <p style={{ color: "#1F2937", fontWeight: "600" }}>
+                    #{selectedOrder?.order_number}
+                  </p>
+                  <p style={{ color: "#1F2937", fontWeight: "600" }}>
+                    CGHCJU554451JH
                   </p>
                 </div>
               </div>
-            </section>
-        </div>
-  )
-}
+            </div>
+          </div>
 
-export default InvoiceView
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "16px",
+              marginTop: "16px",
+            }}
+          >
+            <div
+              style={{ borderRight: "1px solid #D1D5DB", paddingRight: "12px" }}
+            >
+              <p
+                style={{
+                  color: "#6B7280",
+                  fontWeight: "600",
+                  marginBottom: "8px",
+                }}
+              >
+                SOLD BY
+              </p>
+              <p
+                style={{
+                  fontWeight: "600",
+                  color: "#374151",
+                  marginBottom: "0",
+                }}
+              >
+                COCOBLU RETAIL LIMITED
+              </p>
+              <p style={{ color: "#4B5563" }}>
+                Renaissance industrial smart city, Kalyan Sape road, Thane,
+                Maharashtra, 421302 IN
+              </p>
+            </div>
+            <div
+              style={{ borderRight: "1px solid #D1D5DB", paddingRight: "12px" }}
+            >
+              <p
+                style={{
+                  color: "#6B7280",
+                  fontWeight: "600",
+                  marginBottom: "8px",
+                }}
+              >
+                BILLED TO
+              </p>
+              <p
+                style={{
+                  fontWeight: "600",
+                  color: "#374151",
+                  marginBottom: "0",
+                }}
+              >
+                {selectedOrder?.customer?.name}
+              </p>
+              <p style={{ color: "#4B5563" }}>
+                {selectedOrder?.deliveryAddress?.address}
+              </p>
+            </div>
+            <div>
+              <p
+                style={{
+                  color: "#6B7280",
+                  fontWeight: "600",
+                  marginBottom: "8px",
+                }}
+              >
+                SHIPPED TO
+              </p>
+              <p
+                style={{
+                  fontWeight: "600",
+                  color: "#374151",
+                  marginBottom: "0",
+                }}
+              >
+                {selectedOrder?.customer?.name}
+              </p>
+              <p style={{ color: "#4B5563" }}>
+                {selectedOrder?.deliveryAddress?.address}
+              </p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "#D1D5DB",
+              height: "1px",
+              marginTop: "12px",
+              marginBottom: "12px",
+            }}
+          ></div>
+
+          <div style={{ overflow: "auto", marginTop: "16px" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid #D1D5DB" }}>
+                  <th
+                    style={{
+                      textAlign: "left",
+                      padding: "8px",
+                      color: "#4B5563",
+                    }}
+                  >
+                    Item
+                  </th>
+                  <th
+                    style={{
+                      padding: "8px",
+                      color: "#4B5563",
+                      textAlign: "center",
+                    }}
+                  >
+                    Qty.
+                  </th>
+                  <th
+                    style={{
+                      padding: "8px",
+                      color: "#4B5563",
+                      textAlign: "center",
+                    }}
+                  >
+                    Price
+                  </th>
+                  <th
+                    style={{
+                      padding: "8px",
+                      color: "#4B5563",
+                      textAlign: "right",
+                    }}
+                  >
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedOrder?.order_items?.map((item, index) => (
+                  <tr key={index} style={{ borderBottom: "1px solid #D1D5DB" }}>
+                    <td style={{ padding: "8px" }}>
+                      <div style={{ fontWeight: "600" }}>
+                        {item?.product_name}
+                      </div>
+                      <p style={{ color: "#6B7280", marginBottom: "0" }}>
+                        Size:{" "}
+                        <span style={{ fontWeight: "600" }}>{item?.size}</span>
+                      </p>
+                      <p style={{ color: "#6B7280" }}>
+                        Metal:{" "}
+                        <span style={{ fontWeight: "600" }}>{item?.metal}</span>
+                      </p>
+                    </td>
+                    <td style={{ fontWeight: "600", textAlign: "center" }}>
+                      {item?.qty}
+                    </td>
+                    <td style={{ fontWeight: "600", textAlign: "center" }}>
+                      ₹{item?.price}
+                    </td>
+                    <td style={{ fontWeight: "600", textAlign: "right" }}>
+                      ₹{item?.price * item?.qty}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "#D1D5DB",
+              height: "1px",
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}
+          ></div>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+            }}
+          >
+            <div style={{ marginTop: "16px" }}>
+              <h6 style={{ color: "#6B7280", fontWeight: "600" }}>
+                Payment Method
+              </h6>
+              <p style={{ color: "#374151" }}>
+                Bank Name: Bank Central Asia (BCA)
+              </p>
+              <p style={{ color: "#374151" }}>Card No.: 1234 5678 9123 4567</p>
+              <p style={{ color: "#374151" }}>Name: Jhon Wick</p>
+            </div>
+            <div
+              style={{
+                marginTop: "16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              <div>
+                <p style={{ color: "#6B7280" }}>Sub Total</p>
+                <p style={{ color: "#6B7280" }}>Discount</p>
+                <p style={{ color: "#6B7280" }}>SGST</p>
+                <p style={{ color: "#6B7280" }}>CGST</p>
+                <h6 style={{ fontWeight: "700", color: "#374151" }}>
+                  Total Amount
+                </h6>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <p style={{ fontWeight: "600", color: "#374151" }}>
+                  ₹{selectedOrder?.total_amount}
+                </p>
+                <p style={{ fontWeight: "600", color: "#16A34A" }}>
+                  -₹{selectedOrder?.discount ? selectedOrder?.discount : 0}
+                </p>
+                <p style={{ fontWeight: "600", color: "#374151" }}>₹{sgst}</p>
+                <p style={{ fontWeight: "600", color: "#374151" }}>₹{cgst}</p>
+                <h6 style={{ fontWeight: "700", color: "#374151" }}>
+                  ₹{total}
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: "112px", textAlign: "center" }}>
+            <p style={{ color: "#374151", fontWeight: "600" }}>
+              Thank you for shopping with us!
+            </p>
+            <p style={{ color: "#374151" }}>Have a nice day 😊</p>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "#523C34",
+              padding: "20px",
+              textAlign: "center",
+              marginTop: "20px",
+            }}
+          >
+            <p
+              style={{
+                color: "white",
+                fontSize: "14px",
+                maxWidth: "320px",
+                margin: "0 auto",
+              }}
+            >
+              If you have any questions, feel free to call customer care at +1
+              565 5656 565 or use Contact Us section.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default InvoiceView;

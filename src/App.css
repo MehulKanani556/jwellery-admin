@@ -402,3 +402,18 @@ color: #727272;
   :focus-visible {
     outline: #4D1F08 auto 1px !important;   
   }
+/* 
+  @media print {
+    body * {
+      visibility: visible;
+    }
+    #print-content, #print-content * {
+      visibility: visible;
+    }
+    #print-content {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  } */
