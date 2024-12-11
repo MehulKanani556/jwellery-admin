@@ -19,17 +19,17 @@ export default function ForgotPass() {
     const handleSubmit = (values, { resetForm }) => {
         // Here you can make API call or perform any other logic
         console.log('Form submitted:', values);
-        dispatch(forgotPassword(values));
+        dispatch(forgotPassword(values)).then(() => navigate('/verify-otp'));
         resetForm();
         // navigate('/verify-otp');
     }
 
     // Use an effect to navigate after the data is updated
-    useEffect(() => {
-        if (data) {
-            navigate('/verify-otp');
-        }
-    }, [data, navigate]);
+    // useEffect(() => {
+    //     if (data) {
+    //         navigate('/verify-otp');
+    //     }
+    // }, [data, navigate]);
 
     return (
         <div>
