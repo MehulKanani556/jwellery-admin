@@ -108,8 +108,8 @@ export default function ReasonForCancel() {
         <table className="w-full bg-white">
           <thead>
             <tr className="text-brown font-bold">
-              <td className="py-2 px-5 w-1/4">ID</td>
-              <td className="py-2 px-5 w-1/4 ">Reason</td>
+              <td className="py-2 px-5 w-1/6">ID</td>
+              <td className="py-2 px-5 w-1/2 ">Reason</td>
               <td className="py-2 px-5 w-1/4 text-end">Status</td>
             </tr>
           </thead>
@@ -128,10 +128,10 @@ export default function ReasonForCancel() {
                       type="checkbox"
                       checked={category.status}
                       onChange={() => handleToggle(category)}
-                      className="sr-only peer"
+                      className="hidden peer"
                     />
                     <div
-                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${
+                      className={`relative w-[30px] h-[17px] rounded-full transition-colors  duration-200 ${
                         category.status == "active"
                           ? "bg-[#523C34]"
                           : "bg-gray-500"

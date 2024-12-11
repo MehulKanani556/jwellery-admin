@@ -162,9 +162,9 @@ export default function Stoke() {
 
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
-        <div className=" md:mx-[20px] p-10">
-            <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
-                <div>
+        <div className="p-10">
+            <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
+                <div className="text-center lg:text-left">
                     <h1 className="text-2xl font-bold text-brown">Stock </h1>
                     <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Stock</span>
                     </p>
@@ -172,7 +172,7 @@ export default function Stoke() {
                 </div>
                 <div>
 
-                    <div className="flex flex-col md:flex-row gap-4  mb-4">
+                    <div className="flex  gap-4  mb-4">
                         {/* <button className=" text-brown w-32 border-brown border px-3 py-2 rounded flex justify-center items-center gap-2" onClick={handleFilterOpen}>
                             <span><RiFilter2Fill /></span><span>Filter</span>
                         </button> */}

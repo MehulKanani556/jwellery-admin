@@ -101,8 +101,8 @@ export default function Faqs() {
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
             <div className=" md:mx-[20px] p-10">
-                <div className='flex flex-col sm:flex-row gap-3 justify-between items-center'>
-                    <div>
+                <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
+                    <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">FAQ's </h1>
                         <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>FAQ's</span>
                         </p>
@@ -122,10 +122,10 @@ export default function Faqs() {
                     <table className="w-full bg-white  ">
                         <thead>
                             <tr className="text-brown font-bold">
-                                <td className="py-2  px-4">ID</td>
-                                <td className="py-2  px-4">FAQ Type</td>
-                                <td className="py-2  px-4 flex-grow">FAQ</td>
-                                <td className="py-2  px-4 flex-grow">Answer</td>
+                                <td className="py-2  px-4 w-1/12">ID</td>
+                                <td className="py-2  px-4 w-1/12">FAQ Type</td>
+                                <td className="py-2  px-4 flex-grow w-1/6">FAQ</td>
+                                <td className="py-2  px-4 flex-grow w-1/2">Answer</td>
                                 <td className="py-2  px-4 text-center">Action</td>
                             </tr>
                         </thead>
@@ -133,10 +133,10 @@ export default function Faqs() {
                             {currentItems && currentItems.length > 0 ? (
                                 currentItems.map((ele, index) => (
                                     <tr key={index} className="hover:bg-gray-100 border-t">
-                                        <td className="py-2 px-4 ">{ele.id}</td>
-                                        <td className="py-2 px-4">{ele.faq_name}</td>
-                                        <td className="py-2 px-4 flex-grow">{ele.question}</td>
-                                        <td className="py-2 px-4 flex-grow">{ele.answer}</td>
+                                        <td className="py-2 px-4 w-1/12">{ele.id}</td>
+                                        <td className="py-2 px-4 w-1/12">{ele.faq_name}</td>
+                                        <td className="py-2 px-4 flex-grow w-1/6">{ele.question}</td>
+                                        <td className="py-2 px-4 flex-grow w-1/2">{ele.answer}</td>
                                         <td className="py-2 px-4 flex items-center justify-center gap-2">
                                             <div>
                                                 <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleAddOpen(ele)}><BiSolidEditAlt /></button>
@@ -185,7 +185,7 @@ export default function Faqs() {
                 >
                     <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
                         <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>{data.id ? "Edit FAQ's" : "Add FAQ's"}</p>
+                            <p className='text-center'>{data.id ? "Edit FAQ's" : "Add FAQ's"}</p>
                             <button onClick={handleAddClose} className=" font-bold"><RxCross2 /></button>
                         </p>
                         <div>

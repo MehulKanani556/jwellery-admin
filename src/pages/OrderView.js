@@ -24,8 +24,8 @@ export default function OrderView() {
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
         <div className=" md:mx-[20px] p-10">
-            <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-                <div>
+            <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+                <div className="text-center lg:text-left">
                     <h1 className="text-2xl font-bold text-brown">View Orders</h1>
                     <p className="text-brown-50">
                         Dashboard /{" "} Orders / {" "}
@@ -46,7 +46,7 @@ export default function OrderView() {
                             </span>
                         </button>
                     </div>
-                    <div className={`font-semibold  w-24 text-center text-sm px-3 capitalize py-2 rounded ${selectedOrder?.order_status === 'delivered' ? 'bg-green-200 text-green-800 ' :
+                    <div className={`font-semibold  w-24 text-center text-sm px-3 capitalize py-3 rounded ${selectedOrder?.order_status === 'delivered' ? 'bg-green-200 text-green-800 ' :
                         selectedOrder?.order_status === 'cancelled' ? 'bg-red-200 text-red-600' :
                             selectedOrder?.order_status === 'transit' ? 'bg-gray-200 text-brown ' :
                                 'bg-yellow-200 text-yellow-700'}`}>

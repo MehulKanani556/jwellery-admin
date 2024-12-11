@@ -52,17 +52,14 @@ export default function FAQsView() {
                                 </span>
                             </button>
                         </div>
-
                     </div>
-
-
                 </div>
 
                 <div className="mt-6 bg-white p-5 shadow rounded">
                     {faqs.map(faq => (
                         <div key={faq.id} className="mb-4">
-                            <h2 className="text-2xl font-semibold mb-4 text-brown">{faq.name}</h2>
-                            <div className="space-y-4">
+                            <h2 className="text-xl font-semibold mb-4 text-brown">{faq.name}</h2>
+                            <div className="space-y-1">
                                 {subFaqs && subFaqs
                                     .filter(subfaq => subfaq.faq_id == faq.id)
                                     .map(subfaq => (
@@ -76,22 +73,29 @@ export default function FAQsView() {
                                                 },
                                                 '& .MuiAccordionSummary-root': {
                                                     flexDirection: 'row-reverse',
+                                                    minHeight: "32px"
                                                 },
                                                 '& .MuiAccordionSummary-expandIconWrapper': {
                                                     marginRight: '8px',
                                                 },
+                                                padding: "0px"
                                             }}
                                         >
                                             <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}
                                                 aria-controls={`panel-${subfaq.id}-content`}
                                                 id={`panel-${subfaq.id}-header`}
-                                                sx={{marginY: '5px'}}
+                                                sx={{
+                                                    padding: 0,
+                                                    '& .MuiAccordionSummary-content':{
+                                                        margin: "0px !important"
+                                                    }
+                                                }}
                                             >
-                                                <span className="font-medium text-brown">{subfaq.question}</span>
+                                                <span className="font-medium text-base text-black ">{subfaq.question}</span>
                                             </AccordionSummary>
                                             <AccordionDetails sx={{padding:0}}>
-                                                <div className="text-gray-700 ms-[30px]">
+                                                <div className="text-base font-normal ms-8">
                                                     {subfaq.answer}
                                                 </div>
                                             </AccordionDetails>
