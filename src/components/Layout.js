@@ -275,20 +275,24 @@ function Layout({ children }) {
 
           <div className='flex justify-between w-full' >
             <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-              <SearchIcon sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'text.brown' }} />
-              <input
-                type="search"
-                placeholder="Search..."
-                onChange={handleSearchChange}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                  marginRight: '8px',
-                  paddingLeft: '40px',
-                  width: '100%'
-                }}
-              />
+              {['/dashboard', '/cancel-reason', '/tc', '/faqs', '/privacy', '/faqs/view', '/tc/view', '/faq-type'].every(path => location.pathname !== path) && (
+                <>
+                  <SearchIcon sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'text.brown' }} />
+                  <input
+                    type="search"
+                    placeholder="Search..."
+                    onChange={handleSearchChange}
+                    style={{
+                      padding: '8px',
+                      borderRadius: '4px',
+                      border: '1px solid #ccc',
+                      marginRight: '8px',
+                      paddingLeft: '40px',
+                      width: '100%'
+                    }}
+                  />
+                </>
+              )}
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }} className="gap-4 me-4">
 

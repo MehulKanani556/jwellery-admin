@@ -38,15 +38,26 @@ export default function Coupons() {
 
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState(new Date().toISOString().split('T')[0]);
+    const searchValue = useSelector((state) => state.search.value);
 
     useEffect(() => {
         dispatch(getAllCoupons());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setFilterCoupon(coupons)
     }, [coupons]);
 
+     // serch
+     const filteredData = coupons.filter(data =>
+        data.name && data?.name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.code && data?.code?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.price && data?.price.toString().toLowerCase().includes(searchValue.toLowerCase())
+     );
+     useEffect(() => {
+        setFilterCoupon(filteredData);
+     }, [searchValue]);
+ 
     // ======filter=====
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);

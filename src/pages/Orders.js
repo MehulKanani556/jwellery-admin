@@ -35,6 +35,7 @@ export default function Orders() {
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterOrder, setFilterOrder] = useState(orders);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const searchValue = useSelector((state) => state.search.value);
 
     useEffect(() => {
         dispatch(getAllOrders());
@@ -45,6 +46,14 @@ export default function Orders() {
 
     }, [orders]);
 
+    // serch
+    const filteredData = orders.filter(data =>
+       data.customer_name && data?.customer_name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.total_amount && data?.total_amount?.includes(searchValue.toLowerCase())
+    );
+    useEffect(() => {
+        setFilterOrder(filteredData);
+    }, [searchValue]);
 
     useEffect(() => {
         const filteredItems = selectedDate ? orders.filter(order => new Date(order.order_date).toISOString().split('T')[0] === selectedDate) : orders;

@@ -28,6 +28,7 @@ export default function Category() {
   const [error, setError] = useState("");
   const [isImageChanged, setIsImageChanged] = useState(false);
   const fileInputRef = useRef(null);
+  const searchValue = useSelector((state) => state.search.value);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Category name is required"),
@@ -81,6 +82,11 @@ export default function Category() {
     dispatch(getAllCategory());
   }, [dispatch]);
 
+
+  // serch 
+  const filteredData = category.filter(data =>
+    data.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Set items per page
@@ -91,7 +97,7 @@ export default function Category() {
   // Get current items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = category.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -202,18 +208,16 @@ export default function Category() {
                       className="sr-only peer"
                     />
                     <div
-                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${
-                        category.status == "active"
-                          ? "bg-[#523C34]"
-                          : "bg-gray-500"
-                      }`}
+                      className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${category.status == "active"
+                        ? "bg-[#523C34]"
+                        : "bg-gray-500"
+                        }`}
                     >
                       <div
-                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${
-                          category.status == "active"
-                            ? "translate-x-[13px] bg-white"
-                            : "bg-white"
-                        }`}
+                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${category.status == "active"
+                          ? "translate-x-[13px] bg-white"
+                          : "bg-white"
+                          }`}
                       ></div>
                     </div>
                   </label>

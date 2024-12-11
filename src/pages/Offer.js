@@ -30,6 +30,7 @@ export default function  Offer() {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterOffer, setFilterOffer] = useState(offers);
+    const searchValue = useSelector((state) => state.search.value);
 
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
@@ -44,11 +45,20 @@ export default function  Offer() {
     useEffect(() => {
         dispatch(getAllOffers());
 
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setFilterOffer(offers)
     }, [offers]);
+
+    // serch
+    const filteredData = offers.filter(data =>
+        data.name && data?.name?.toString().toLowerCase().includes(searchValue.toLowerCase()) 
+       
+    );
+    useEffect(() => {
+        setFilterOffer(filteredData);
+    }, [searchValue]);
 
     // ======filter=====
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -351,9 +361,9 @@ export default function  Offer() {
                         <tr className="text-brown font-bold">
                             <td className="py-2 px-5">ID</td>
                             <td className="py-2 px-5 text-nowrap">Offer Image</td>
+                            <td className="py-2 px-5 text-nowrap">Offer Name</td>
                             <td className="py-2 px-5 text-nowrap">Offer Type</td>
                             <td className="py-2 px-5 text-nowrap">Description</td>
-                            <td className="py-2 px-5 text-nowrap">Offer Name</td>
                             <td className="py-2 px-5 text-nowrap">Button Text</td>
                             <td className="py-2 px-5 text-nowrap">Discount</td>
                             <td className="py-2 px-5 text-nowrap">Start Date</td>
@@ -369,9 +379,9 @@ export default function  Offer() {
                                     <td className="py-2 px-5 ">{v.id}</td>
                                     <td className="py-2 px-5">
                                         <img src={v.image} alt="" className="w-[50px] rounded object-cover" /></td>
+                                    <td className="py-2 px-5">{v.name}</td>
                                     <td className="py-2 px-5 capitalize">{v.type}</td>
                                     <td className="py-2 px-5">{v.description}</td>
-                                    <td className="py-2 px-5">{v.name}</td>
                                     <td className="py-2 px-5">{v.button_text}</td>
                                     <td className="py-2 px-5">{v.type === 'fixed' ? `₹${v.discount}` : `${v.discount}%`}</td>
                                     <td className="py-2 px-5 text-nowrap">{v.start_date ? new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') : ''}</td>

@@ -15,10 +15,22 @@ export default function Review() {
 
     const dispatch = useDispatch();
     const { reviews, loading } = useSelector(state => state.reviews);
-    console.log(reviews)
+    const searchValue = useSelector((state) => state.search.value);
+    const [filterData, setFilterData] = useState(reviews);
     useEffect(() => {
         dispatch(getAllReviews())
-    }, []);
+    }, [dispatch]);
+
+    useEffect(() => {
+        setFilterData(reviews);
+    }, [reviews]);
+
+    // serch
+    const filteredData = reviews.filter(data =>
+        data.customer_name && data?.customer_name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.product_name && data?.product_name?.toString().toLowerCase().includes(searchValue.toLowerCase())
+    );
+
 
 
     // Pagination statecurrentItems
@@ -34,10 +46,17 @@ export default function Review() {
     // Calculate total pages after defining filteredReviews
     const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
 
+    useEffect(() => {
+        setFilterData(filteredReviews);
+    }, [selectedDate]);
+
+    useEffect(() => {
+        setFilterData(filteredData);
+    }, [searchValue]);
     // Get current items
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filterData.slice(indexOfFirstItem, indexOfLastItem);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {

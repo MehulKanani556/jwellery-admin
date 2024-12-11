@@ -29,7 +29,8 @@ export default function Stoke() {
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filteredSubCategories, setFilteredSubCategories] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    console.log(category,stocks,SubCategory);
+    const searchValue = useSelector((state) => state.search.value);
+
     useEffect(() => {
         const fetchData = async () => {
             await dispatch(getAllStocks()); 
@@ -40,9 +41,21 @@ export default function Stoke() {
         dispatch(getAllProducts());
     }, [dispatch]);
 
+
     useEffect(() => {
         setFilteredItems(stocks);
     }, [stocks]);
+
+    const filteredData = stocks.filter(data =>
+        data.category_name.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.sub_category_name.toLowerCase().includes(searchValue.toLowerCase())||
+        data?.qty.toString().toLowerCase().includes(searchValue.toLowerCase())||
+        data.product_name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      useEffect(() => {
+        setFilteredItems(filteredData);
+      }, [searchValue]);
+    
 
     const validationSchema = Yup.object({
         category_id: Yup.string().required('Category is required'),
@@ -70,18 +83,7 @@ export default function Stoke() {
         setCurrentPage(pageNumber);
     };
 
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
 
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
     const handleDeleteOpen = (data) => {
         if(data?.qty > 0){
             enqueueSnackbar('Stock is not empty', { variant: 'error' });

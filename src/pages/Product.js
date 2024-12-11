@@ -51,6 +51,7 @@ export default function Product() {
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
   const { products, loading } = useSelector((state) => state.products);
+  const searchValue = useSelector((state) => state.search.value);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -200,7 +201,17 @@ export default function Product() {
     setFilterProducts(resetProducts);
 
   };
-
+  // serch
+  const filteredData = products.filter(data =>
+    (data.category_name && data.category_name.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
+    (data.sub_category_name && data.sub_category_name.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
+    (data.price && data.price.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
+    (data.qty && data.qty.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
+    (data.product_name && data.product_name.toString().toLowerCase().includes(searchValue.toLowerCase()))
+  );
+  useEffect(() => {
+    setFilterProducts(filteredData);
+  }, [searchValue]);
 
   // Get current items based on filtered items
   const currentItems = Array.isArray(filterProducts)
@@ -212,18 +223,6 @@ export default function Product() {
     setCurrentPage(pageNumber);
   };
 
-  // Handle next and previous
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   // =====pagination end=====
 
@@ -421,8 +420,8 @@ export default function Product() {
               </tr>
             </thead>
             <tbody>
-              {currentItems &&
-                currentItems?.map((v, index) => (
+              {currentItems.length > 0 ? (
+                currentItems.map((v, index) => (
                   <tr key={index} className="hover:bg-gray-100 border-t">
                     <td className="py-2 px-5">{v.id}</td>
                     <td className="py-2 px-5 flex items-center">
@@ -494,7 +493,14 @@ export default function Product() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 border-t">
+                    No Data found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
