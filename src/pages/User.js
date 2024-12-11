@@ -14,7 +14,8 @@ export default function User() {
     const dispatch = useDispatch();
     const data = useSelector(state =>state.users.users).filter(user => user.role_id != 1);
     const loading = useSelector(state => state.users.loading);
-    console.log(data);
+    const searchValue = useSelector((state) => state.search.value);
+   
     
     useEffect(()=>{
         dispatch(getAllUsers())
@@ -25,13 +26,20 @@ export default function User() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Set items per page
 
-    // Calculate total pages
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+    // Filter users based on searchValue
+    const filteredData = data.filter(user => 
+        user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+        user.phone.includes(searchValue)
+    );
 
-    // Get current items
+    // Calculate total pages based on filtered data
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    // Get current items from filtered data
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
@@ -93,7 +101,7 @@ export default function User() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((user, index) => (
+                        {currentItems.length > 0 ? currentItems.map((user, index) => (
                             <tr key={index} className="hover:bg-gray-100 border-t">
                                 <td className="py-2 px-4 ">{user.id}</td>
                                 <td className="py-2 px-4 ">{user.name}</td>
@@ -111,7 +119,11 @@ export default function User() {
                                     </div>
                                 </td>
                             </tr>
-                        ))}
+                        )) : (
+                            <tr className='border-t'>
+                                <td colSpan="7" className="text-center py-3 ">No users found.</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

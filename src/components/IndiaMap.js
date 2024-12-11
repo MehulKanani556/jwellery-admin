@@ -159,7 +159,7 @@ export default function IndiaMap({ stateNames }) {
 
     // Find positions based on the state names
     const matchedPositions = positions.filter(pos =>
-        stateNames?.map(name => name.toLowerCase()).includes(pos.name.toLowerCase())
+        stateNames?.map(name => typeof name === 'string' ? name.toLowerCase() : '').includes(pos.name.toLowerCase())
     );
 
     return (

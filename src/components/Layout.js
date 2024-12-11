@@ -37,6 +37,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { logout } from '../reduxe/slice/auth.slice';
+import { setSearchValue } from '../reduxe/slice/search.slice';
 
 const drawerWidth = 275;
 
@@ -146,6 +147,7 @@ function Layout({ children }) {
     {
       title: 'FAQ’s',
       icon: <BiSolidOffer />,
+      path:'/faqs/view',
       subItems: [
         { title: 'FAQ Type', path: '/faq-type' },
         { title: 'FAQ’s', path: '/faqs' },
@@ -179,7 +181,7 @@ function Layout({ children }) {
               <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px'  }}>
                 <ListItemButton
                   onClick={() => {
-                    handleSubmenuToggle(v.title);
+                    handleSubmenuToggle(v.title, v.path);
                     if (!v.subItems) {
                       navigate(v.path);
                     }
@@ -243,6 +245,10 @@ function Layout({ children }) {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const handleSearchChange = (event) => {
+    dispatch(setSearchValue(event.target.value));
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -273,6 +279,7 @@ function Layout({ children }) {
               <input
                 type="search"
                 placeholder="Search..."
+                onChange={handleSearchChange}
                 style={{
                   padding: '8px',
                   borderRadius: '4px',

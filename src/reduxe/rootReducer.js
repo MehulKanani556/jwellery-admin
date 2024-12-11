@@ -20,6 +20,7 @@ import termsSlice from "./slice/terms.slice";
 import privacySlice from "./slice/privacy.slice";
 import faqsSlice from "./slice/faqs.slice";
 import subFaqsSlice from "./slice/subFaqs.slice";
+import searchSlice from "./slice/search.slice";
 
 export const rootReducer = combineReducers({
     auth:authSlice,
@@ -40,5 +41,6 @@ export const rootReducer = combineReducers({
     terms:termsSlice,
     privacy:privacySlice,
     faqs:faqsSlice,
-    subfaqs:subFaqsSlice
+    subfaqs:subFaqsSlice,
+    search:searchSlice
 });

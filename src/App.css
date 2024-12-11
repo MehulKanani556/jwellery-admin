@@ -2,7 +2,8 @@
 *{
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; 
+  /* font-family: "EB Garamond", serif; */
 }
 img{
   width: 100%;
@@ -402,3 +403,7 @@ color: #727272;
   :focus-visible {
     outline: #4D1F08 auto 1px !important;   
   }
+
+  input[type='search']:focus-visible {
+    outline: #a8a19d00 auto 1px !important;
+}
