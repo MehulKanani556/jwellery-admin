@@ -259,8 +259,8 @@ export default function SubCategory() {
               <span className="text-brown font-medium">SubCategory</span>
             </p>
           </div>
-          <div className="flex justify-center lg:justify-end">
-            <div className="flex gap-4  mb-4">
+          <div className="flex flex-wrap justify-center lg:justify-end">
+            <div className="flex gap-4 flex-wrap justify-center lg:justify-end mb-4">
               {filtersApplied ? (
                 <button
                   type="button"

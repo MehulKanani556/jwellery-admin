@@ -92,6 +92,9 @@ const InvoiceView = () => {
             .border-print{
               border-right:1px solid #D1D5DB;
             }
+            section{
+             padding: "20px",
+            }
           </style>
         </head>
         <body>
@@ -138,12 +141,12 @@ const InvoiceView = () => {
         style={{
           marginBottom: "20px",
           marginTop: "20px",
-          padding: "40px",
           backgroundColor: "white",
           borderRadius: "8px",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
           maxWidth: "1500px",
         }}
+        className="p-4 md:p-9"
         ref={printRef}
         id="print-content"
       >

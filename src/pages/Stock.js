@@ -172,9 +172,9 @@ export default function Stoke() {
                     </p>
 
                 </div>
-                <div>
+                <div className=''>
 
-                    <div className="flex  gap-4  mb-4">
+                    <div className="flex flex-wrap justify-center lg:justify-end gap-4  mb-4">
                         {/* <button className=" text-brown w-32 border-brown border px-3 py-2 rounded flex justify-center items-center gap-2" onClick={handleFilterOpen}>
                             <span><RiFilter2Fill /></span><span>Filter</span>
                         </button> */}

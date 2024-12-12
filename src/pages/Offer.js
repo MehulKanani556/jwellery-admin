@@ -196,7 +196,7 @@ export default function  Offer() {
                     </p>
                 </div>
                 <div>
-                    <div className="flex gap-4  mb-4">
+                    <div className="flex flex-wrap justify-center ld:justify-end gap-4  mb-4">
                         {filtersApplied ? (
                             <button
                                 type="button"
