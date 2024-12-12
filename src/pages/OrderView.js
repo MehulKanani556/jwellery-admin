@@ -65,7 +65,8 @@ export default function OrderView() {
                         <div className="border-b">
                             <h2 className="text-xl py-3 font-bold text-brown px-5">Product Details</h2>
                         </div>
-                        <table className="w-full ">
+                        <div className="overflow-auto">
+                        <table className="overflow-scroll">
                             <tr className="text-brown font-bold">
                                 <td className="px-5 py-3">Product Name</td>
                                 <td className="px-5 py-3">Price</td>
@@ -81,6 +82,7 @@ export default function OrderView() {
                                 </tr>
                             ))}
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>

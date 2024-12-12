@@ -62,7 +62,6 @@ function Layout({ children }) {
   // Memoize the user data
   const memoizedUser = useMemo(() => user, [user]);
 
-
   useEffect(() => {
     if (userId) {
       dispatch(getSingleUser(userId))
@@ -100,8 +99,6 @@ function Layout({ children }) {
   const handleSubmenuToggle = (title) => {
     setOpenSubmenu(openSubmenu === title ? null : title);
   };
-
-
 
   const handleLogout = () => {
     dispatch(logout());
@@ -171,7 +168,11 @@ function Layout({ children }) {
 
   const drawer = (
     <div>
-      <Toolbar></Toolbar>
+      <Toolbar>
+        <div className='w-full'>
+          <h1 className='text-center text-white font-semibold text-3xl'>LOGO</h1>
+        </div>
+      </Toolbar>
       <Divider />
       <List>
         {pages.map((v) => (
@@ -290,30 +291,24 @@ function Layout({ children }) {
             <MenuIcon />
           </IconButton>
 
-
           <div className='flex justify-between w-full' >
             <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-              {['/dashboard', '/cancel-reason', '/tc', '/faqs', '/privacy', '/faqs/view', '/tc/view', '/faq-type'].every(path => location.pathname !== path) && (
-                <>
-                  <SearchIcon sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'text.brown' }} />
-                  <input
-                    type="search"
-                    placeholder="Search..."
-                    onChange={handleSearchChange}
-                    style={{
-                      padding: '8px',
-                      borderRadius: '4px',
-                      border: '1px solid #ccc',
-                      marginRight: '8px',
-                      paddingLeft: '40px',
-                      width: '100%'
-                    }}
-                  />
-                </>
-              )}
+              <SearchIcon sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'text.brown' }} />
+              <input
+                type="search"
+                placeholder="Search..."
+                onChange={handleSearchChange}
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  marginRight: '8px',
+                  paddingLeft: '40px',
+                  width: '100%'
+                }}
+              />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }} className="gap-4 me-4">
-
               <div color="inherit" sx={{ ml: 2 }} className='relative'>
                 <div className='flex gap-2 items-center' onClick={() => setDropdownOpen(!dropdownOpen)} style={{ cursor: 'pointer' }}>
                   <div>
@@ -321,7 +316,7 @@ function Layout({ children }) {
                       {memoizedUser?.name.charAt(0).toUpperCase()}
                     </div>
                   </div>
-                  <div>
+                  <div className='hidden md:block'>
                     <div style={{ fontSize: '16px', fontWeight: 500 }} className='capitalize'>{memoizedUser?.name}</div>
                     <div style={{ fontSize: '14px' }} className='capitalize flex items-center gap-1 text-brown-50'>
                       <span>
@@ -644,7 +639,7 @@ function Layout({ children }) {
       </Box>
       <Box
         component="main"
-        sx={{ width: "100% "}}
+        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
         {children}

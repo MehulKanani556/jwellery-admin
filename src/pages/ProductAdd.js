@@ -790,8 +790,8 @@ const AddProduct = React.memo(() => {
 
                         {/* Diamond Properties Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            <div className="col-span-2 xl:col-span-1 flex items-center justify-between w-[100%] row">
-                                <div className="col-5 p-1">
+                            <div className="col-span-2 xl:col-span-1 flex items-center justify-center md:justify-between w-[100%] row">
+                                <div className="col-md-5 p-1">
                                     <label className="block text-brown text-base font-semibold mb-2">Diamond Color</label>
                                     <select
                                         name="diamond_color"
@@ -811,7 +811,7 @@ const AddProduct = React.memo(() => {
                                     </select>
                                     {(errors.diamond_color && touched.diamond_color) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.diamond_color}</p>}
                                 </div>
-                                <div className="col-5 p-1">
+                                <div className="col-md-5 p-1">
                                     <label className="block text-brown text-base font-semibold mb-2">Clarity</label>
                                     <select
                                         name="clarity"
@@ -870,7 +870,7 @@ const AddProduct = React.memo(() => {
                         </div>
 
                         {/* Size Details */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-4">
                             <div className="col-span-1">
                                 <label className="block text-brown text-base font-semibold mb-2">Size Category</label>
                                 <select

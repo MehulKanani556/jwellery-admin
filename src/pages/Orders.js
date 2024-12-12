@@ -158,7 +158,7 @@ export default function Orders() {
                         </p>
                     </div>
                     <div>
-                        <div className="flex gap-4  mb-4">
+                        <div className="flex gap-4 flex-wrap justify-center lg:justify-end mb-4">
                             <button className="text-brown border-brown border  px-4  rounded">
                                 <input type="date" value={selectedDate} onChange={handleDateChange} /> {/* Update input to use selected date */}
                             </button>
