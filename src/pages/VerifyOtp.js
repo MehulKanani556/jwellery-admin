@@ -1,17 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { verifyOtp } from '../reduxe/slice/auth.slice';
+import { verifyOtp, forgotPassword } from '../reduxe/slice/auth.slice';
 
 export default function VerifyOtp() {
     const dispatch = useDispatch();
     const data = useSelector(state => state.auth.user);
     const navigate = useNavigate();
     const email = sessionStorage.getItem('email');
+    const [resendMessage, setResendMessage] = useState('');
+    const [countdown, setCountdown] = useState(60);
+    const [isResendDisabled, setIsResendDisabled] = useState(true);
+
+    useEffect(() => {
+        let timer;
+        if (countdown > 0 && isResendDisabled) {
+            timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+        } else if (countdown === 0) {
+            setIsResendDisabled(false);
+        }
+        return () => clearInterval(timer);
+    }, [countdown, isResendDisabled]);
 
     const validationSchema = Yup.object({
         otp: Yup.array()
@@ -58,6 +73,35 @@ export default function VerifyOtp() {
         }
     }
 
+    const handleKeyDown = (index, event, setFieldValue) => {
+        if (event.key === 'Backspace') {
+            event.preventDefault();
+            setFieldValue(`otp[${index}]`, '');
+            // Move focus to the previous input
+            const prevInput = document.getElementById(`otp-input-${index - 1}`);
+            if (prevInput) {
+                prevInput.focus();
+            }
+        }
+    }
+
+    const handleResend = () => {
+        if (!isResendDisabled) {
+            dispatch(forgotPassword({ email }))
+                .then(response => {
+                    if (response.error) {
+                        console.error('Error resending OTP:', response.error);
+                        setResendMessage('Failed to resend OTP. Please try again.');
+                    } else {
+                        console.log('OTP resent successfully');
+                        setResendMessage('OTP has been resent successfully!');
+                    }
+                });
+            setCountdown(60);
+            setIsResendDisabled(true);
+        }
+    }
+
     return (
         <div>
             <div style={{ backgroundColor: '#fcf3ed' }}>
@@ -91,6 +135,7 @@ export default function VerifyOtp() {
                                                             className="border border-brown p-2 w-12 text-center rounded"
                                                             placeholder=""
                                                             onChange={(event) => handleChange(index, event, setFieldValue)}
+                                                            onKeyDown={(event) => handleKeyDown(index, event, setFieldValue)}
                                                         />
                                                     ))}
                                                 </div>
@@ -99,8 +144,25 @@ export default function VerifyOtp() {
                                                 )}
                                             </div>
 
-                                            <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">Verify</button>
-                                            <p className="text-center mt-4 text-brown-50">Didn't receive code? <span className="text-brown font-medium cursor-pointer">Resend</span></p>
+                                            {resendMessage && (
+                                                <div className={`text-center mb-2 ${resendMessage.includes('Failed') ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {resendMessage}
+                                                </div>
+                                            )}
+                                            <button type="submit" className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full">
+                                                Verify
+                                            </button>
+                                            <p className="text-center mt-4 text-brown-50">
+                                                Didn't receive code? 
+                                                <span 
+                                                    className={`text-brown font-medium ${
+                                                        isResendDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                                                    }`}
+                                                    onClick={handleResend}
+                                                >
+                                                    Resend {isResendDisabled && `(${countdown}s)`}
+                                                </span>
+                                            </p>
                                         </Form>
                                     )}
                                 </Formik>
