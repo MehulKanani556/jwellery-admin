@@ -19,7 +19,7 @@ export default function PrivacyView() {
     }, [dispatch]);
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
-            <div className=" md:mx-[20px] p-10">
+            <div className="container  p-5 md:p-10">
                 <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                     <div>
                         <h1 className="text-2xl font-bold text-brown">View Privacy Policy</h1>

@@ -626,7 +626,7 @@ function Layout({ children }) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{ width: "100% "}}
       >
         <Toolbar />
         {children}

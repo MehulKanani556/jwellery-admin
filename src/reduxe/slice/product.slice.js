@@ -68,6 +68,8 @@ export const addProduct = createAsyncThunk(
     formData.append("price", data.price);
     formData.append("discount", data.discount);
     formData.append("description", data.description);
+    formData.append("occasion", data.occasion);
+
     formData.append("status", data.status);
     if (Array.isArray(data.mediaFiles)) {
       data.mediaFiles.forEach((image, index) => {
@@ -131,6 +133,8 @@ export const editProduct = createAsyncThunk(
     formData.append("discount", data.discount);
     formData.append("description", data.description);
     formData.append("status", data.status);
+    formData.append("occasion", data.occasion);
+
     if (Array.isArray(data.mediaFiles)) {
       data.mediaFiles.forEach((media, index) => {
         if (typeof media === "string") {
@@ -292,15 +296,20 @@ const productsSlice = createSlice({
       .addCase(editProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        const index = state.products.findIndex(
-          (product) => product.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.products[index] = action.payload; // Update the product in the products array
-          state.message =
-            action.payload?.message || "Product updated successfully";
-          enqueueSnackbar(state.message, { variant: "success" });
+        
+        // Ensure state.products is an array
+        if (!Array.isArray(state.products)) {
+            state.products = [];
         }
+        
+        // Find and update the product
+        const index = state.products.findIndex(product => product.id === action.payload.id);
+        if (index !== -1) {
+            state.products[index] = action.payload;
+        }
+        
+        state.message = action.payload?.message || "Product updated successfully";
+        enqueueSnackbar(state.message, { variant: "success" });
       })
       .addCase(editProduct.rejected, (state, action) => {
         state.loading = false;

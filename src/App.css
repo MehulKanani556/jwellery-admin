@@ -407,3 +407,16 @@ color: #727272;
   input[type='search']:focus-visible {
     outline: #a8a19d00 auto 1px !important;
 }
+
+
+@media (max-width: 375px) {
+  .container {
+      max-width: 375px;
+  }
+}
+
+@media (max-width: 320px) {
+  .container {
+      max-width: 320px;
+  }
+}
