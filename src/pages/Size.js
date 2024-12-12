@@ -99,7 +99,7 @@ export default function Size() {
 
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
-        <div className="p-10">
+        <div className="container  p-5 md:p-10">
             <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
             <div className="text-center lg:text-left">
                     <h1 className="text-2xl font-bold text-brown">Size </h1>

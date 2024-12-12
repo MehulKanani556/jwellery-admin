@@ -114,7 +114,7 @@ const InvoiceView = () => {
       <Loader />
     </div>
   ) : (
-    <div className="p-10">
+    <div className="container  p-5 md:p-10">
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-center max-w-[1500px]">
         <div>
           <h1 className="text-2xl font-bold text-brown">View Invoice</h1>

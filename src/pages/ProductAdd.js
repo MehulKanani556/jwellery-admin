@@ -286,6 +286,7 @@ const AddProduct = React.memo(() => {
             setFieldValue('qty', products.qty);
             setFieldValue('price', products.price);
             setFieldValue('discount', products.discount || "");
+            setFieldValue('occasion', products.occasion || "");
             setFieldValue('description', products.description);
 
             // Set media files if they exist
@@ -334,6 +335,7 @@ const AddProduct = React.memo(() => {
         diamond_shape: Yup.string(),
         collection: Yup.string(),
         gender: Yup.string().required('Gender is required'),
+        occasion:Yup.string().required('Occasion is required'),
         qty: Yup.number().required('Quantity is required').moreThan(0, 'Quantity must be greater than 0'),
         price: Yup.number()
             .required('Price is required')
@@ -387,6 +389,7 @@ const AddProduct = React.memo(() => {
             price: '',
             discount: '',
             description: '',
+            occasion:'',
             mediaFiles: [],
         },
         validationSchema: productValidationSchema,
@@ -396,6 +399,7 @@ const AddProduct = React.memo(() => {
             console.log(values);
             const data = { ...values, status: "active" }
             if (id) {
+                // dispatch(getAllProducts());
                 dispatch(editProduct({ data, id: id }))
                 navigate('/products')
             } else {
@@ -520,7 +524,9 @@ const AddProduct = React.memo(() => {
                                     <option value="rose" className="text-black">Rose-Gold</option>
                                     <option value="gold" className="text-black">Gold</option>
                                     <option value="silver" className="text-black">Silver</option>
-                                    <option value="metallic" className="text-black">Metallic</option>
+                                    <option value="platinum" className="text-black">Platinum</option>
+                                    <option value="white_gold" className="text-black">White Gold</option>
+                                    <option value="yellow_gold" className="text-black">Yellow Gold</option>
                                 </select>
                                     {/* <label className="block text-brown text-base font-semibold mb-2">Metal Color </label>
                                     <div className="flex gap-4">
@@ -662,11 +668,17 @@ const AddProduct = React.memo(() => {
                                     value={values.metal}
                                 >
                                     <option value="" className="text-black">Select</option>
-                                    <option value="14k" className="text-black">14K Gold</option>
-                                    <option value="18k" className="text-black">18K Gold</option>
-                                    <option value="22k" className="text-black">22K Gold</option>
-                                    <option value="24k" className="text-black">24K Gold</option>
-                                    <option value="silver" className="text-black">Silver</option>
+                                    <option value="9k-gold" className="text-black">9K Gold</option>
+                                    <option value="10k-gold" className="text-black">10K Gold</option>
+                                    <option value="14k-gold" className="text-black">14K Gold</option>
+                                    <option value="18k-gold" className="text-black">18K Gold</option>
+                                    <option value="22k-gold" className="text-black">22K Gold</option>
+                                    <option value="24k-gold" className="text-black">24K Gold</option>
+                                    <option value="silver-900" className="text-black">Silver-900</option>
+                                    <option value="silver-925" className="text-black">Silver-925</option>
+                                    <option value="silver-999" className="text-black">Silver-999</option>
+                                    <option value="platinum-900" className="text-black">Platinum-900</option>
+                                    <option value="platinum-950" className="text-black">Platinum-950</option>
                                 </select>
                                     {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1 text-[11px] ">{errors.metal}</p>}
                                 </div>
@@ -1158,6 +1170,25 @@ const AddProduct = React.memo(() => {
                                 />
                                 {(errors.discount && touched.discount) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.discount}</p>}
                             </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Occasion </label>
+                                <select
+                                    name="occasion"
+                                    className={`w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown  ${values.occasion === '' ? 'text-gray-400' : 'text-black'}`}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.occasion}
+                                >
+                                    <option value="" className="text-black">Select occasion</option>
+                                    <option value="Bridal wear" className="text-black">Bridal Wear</option>
+                                    <option value="Engagement" className="text-black">Engagement</option>
+                                    <option value="Modern Wear" className="text-black">Modern Wear</option>
+                                    <option value="Office Wear" className="text-black">Office Wear</option>
+                                    <option value="Traditional" className="text-black">Traditional & Ethnic Wear</option>
+                                </select>
+                                {(errors.occasion && touched.occasion) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.occasion}</p>}
+                            </div>
+                            
                         </div>
 
                         {/* Form Actions */}

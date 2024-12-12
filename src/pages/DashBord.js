@@ -41,7 +41,7 @@ export default function DashBord() {
     transfer: 20
   };
   return (
-    <div className='flex flex-col p-4'>
+    <div className='container flex flex-col p-4'>
       <h1 className='text-2xl font-bold mb-4 text-brown'>Dashboard</h1>
       {/* sec 1 */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
