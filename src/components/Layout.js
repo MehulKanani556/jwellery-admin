@@ -42,7 +42,6 @@ import { setSearchValue } from '../reduxe/slice/search.slice';
 const drawerWidth = 275;
 
 function Layout({ children }) {
-  const { window } = children;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const navigate = useNavigate();
@@ -175,78 +174,97 @@ function Layout({ children }) {
       <Toolbar></Toolbar>
       <Divider />
       <List>
-        {
-          pages.map((v) => (
-            <div key={v.title}>
-              <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px'  }}>
-                <ListItemButton
-                  onClick={() => {
-                    handleSubmenuToggle(v.title, v.path);
-                    if (!v.subItems) {
-                      navigate(v.path);
+        {pages.map((v) => (
+          <div key={v.title}>
+            <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+              <ListItemButton
+                onClick={() => {
+                  if (v.subItems) {
+                    handleSubmenuToggle(v.title);
+                  } else {
+                    navigate(v.path);
+                    if (window && window.innerWidth < 900) {
+                      setMobileOpen(false);
                     }
-                  }}
+                  }
+                }}
+                sx={{
+                  gap: '4px',
+                  backgroundColor: location.pathname.includes(v.path) ? '#FFF9F6' : 'transparent',
+                  color: location.pathname.includes(v.path) ? '#523C34' : 'white',
+                  borderRadius: '10px',
+                  '&:hover': {
+                    backgroundColor: '#FFF9F6',
+                    color: '#523C34',
+                    '& .MuiSvgIcon-root': {
+                      color: '#523C34',
+                    },
+                    '& .icon': {
+                      color: '#523C34',
+                    }
+                  }
+                }}
+              >
+                <ListItemIcon className="icon" sx={{ color: location.pathname.includes(v.path) ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
+                  {v.icon}
+                </ListItemIcon>
+                <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 ,whiteSpace: 'nowrap'}} />
+                {v.dot && <span style={{ color: 'red', marginLeft: '5px' }}>•</span>}
+                {v.subItems && openSubmenu === v.title ? <FaAngleUp /> : v.dropdownIcon}
+              </ListItemButton>
+            </ListItem>
+            {v.subItems && openSubmenu === v.title && v.subItems.map(subItem => (
+              <ListItem key={subItem.title} disablePadding sx={{ paddingLeft: '40px' }}>
+                <ListItemButton
                   sx={{
-                    gap: '4px',
-                    backgroundColor: location.pathname.includes(v.path) ? '#FFF9F6' : 'transparent',
-                    color: location.pathname.includes(v.path) ? '#523C34' : 'white',
+                    backgroundColor: location.pathname.includes(subItem.path) ? '#FFF9F6' : 'transparent',
+                    color: location.pathname.includes(subItem.path) ? '#523C34' : 'white',
                     borderRadius: '10px',
+                    fontSize: '10px',
+                    paddingTop: '5px',
+                    paddingBottom: '5px',
+                    marginTop: '7px',
                     '&:hover': {
                       backgroundColor: '#FFF9F6',
                       color: '#523C34',
-                      '& .MuiSvgIcon-root': {
-                        color: '#523C34',
-                      },
-                      '& .icon': {
-                        color: '#523C34',
-                      }
+                    }
+                  }}
+                  onClick={() => {
+                    navigate(subItem.path);
+                    if (window && window.innerWidth < 900) {
+                      setMobileOpen(false);
                     }
                   }}
                 >
-                  <ListItemIcon className="icon" sx={{ color: location.pathname.includes(v.path) ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
-                    {v.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 ,whiteSpace: 'nowrap'}} />
-                  {v.dot && <span style={{ color: 'red', marginLeft: '5px' }}>•</span>}
-                  {v.subItems && openSubmenu === v.title ? <FaAngleUp /> : v.dropdownIcon}
+                  <span style={{ margin: '5px' }}>•</span>
+                  <ListItemText primary={subItem.title} sx={{ fontSize: '14px', fontWeight: 400 }} />
                 </ListItemButton>
               </ListItem>
-              {v.subItems && openSubmenu === v.title && v.subItems.map(subItem => (
-                <ListItem key={subItem.title} disablePadding sx={{ paddingLeft: '40px' }}>
-                  <ListItemButton
-                    sx={{
-                      backgroundColor: location.pathname.includes(subItem.path) ? '#FFF9F6' : 'transparent',
-                      color: location.pathname.includes(subItem.path) ? '#523C34' : 'white',
-                      borderRadius: '10px',
-                      fontSize: '10px',
-                      paddingTop: '5px',
-                      paddingBottom: '5px',
-                      marginTop: '7px',
-                      '&:hover': {
-                        backgroundColor: '#FFF9F6',
-                        color: '#523C34',
-                      }
-                    }}
-                    onClick={() => navigate(subItem.path)}
-                  >
-                    <span style={{ margin: '5px' }}>•</span>
-                    <ListItemText primary={subItem.title} sx={{ fontSize: '14px', fontWeight: 400 }} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </div>
-          ))}
+            ))}
+          </div>
+        ))}
       </List>
     </div>
   );
 
   // Remove this const when copying and pasting into your project.
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = typeof window !== 'undefined' ? () => window.document.body : undefined;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleSearchChange = (event) => {
     dispatch(setSearchValue(event.target.value));
+  };
+
+  const handleListItemClick = (item, path) => {
+    if (item?.subItems) {
+      handleSubmenuToggle(item.title, path);
+    } else {
+      navigate(path);
+      if (window && window.innerWidth < 900) {
+        setMobileOpen(false);
+      }
+    }
   };
 
   return (

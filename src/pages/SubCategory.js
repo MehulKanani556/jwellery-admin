@@ -450,18 +450,20 @@ export default function SubCategory() {
           variant="outlined"
           shape="rounded"
           className="flex justify-end m-4"
-          siblingCount={1} // Show one sibling page on each side
-          boundaryCount={1} // Show one boundary page at the start and end
+          siblingCount={0} // Show zero sibling pages
+          boundaryCount={1} // Show one boundary page
+          // showFirstButton // Show first page button
+          // showLastButton // Show last page button
           sx={{
             "& .MuiPaginationItem-root": {
-              color: "text.primary", // Default color for pagination items
+              color: "text.primary",
             },
             "& .MuiPaginationItem-root.Mui-selected": {
-              backgroundColor: "#523b33", // Active page background color
-              color: "white", // Active page text color
+              backgroundColor: "#523b33",
+              color: "white",
             },
             "& .MuiPaginationItem-root:hover": {
-              backgroundColor: "lightgray", // Hover effect
+              backgroundColor: "lightgray",
             },
           }}
         />
