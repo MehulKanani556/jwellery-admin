@@ -102,6 +102,23 @@ export default function VerifyOtp() {
         }
     }
 
+    const handlePaste = (event, setFieldValue) => {
+        event.preventDefault();
+        const pastedData = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+        
+        // Fill all inputs with pasted data
+        [...Array(4)].forEach((_, index) => {
+            setFieldValue(`otp[${index}]`, pastedData[index] || '');
+        });
+
+        // Focus the last filled input or the next empty input
+        const lastFilledIndex = Math.min(pastedData.length, 4);
+        const nextInput = document.getElementById(`otp-input-${lastFilledIndex}`);
+        if (nextInput) {
+            nextInput.focus();
+        }
+    };
+
     return (
         <div>
             <div style={{ backgroundColor: '#fcf3ed' }}>
@@ -136,6 +153,7 @@ export default function VerifyOtp() {
                                                             placeholder=""
                                                             onChange={(event) => handleChange(index, event, setFieldValue)}
                                                             onKeyDown={(event) => handleKeyDown(index, event, setFieldValue)}
+                                                            onPaste={(event) => handlePaste(event, setFieldValue)}
                                                         />
                                                     ))}
                                                 </div>
