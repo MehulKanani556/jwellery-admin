@@ -309,7 +309,7 @@ export default function SubCategory() {
                       <label className="text-brown font-bold mt-4">Category</label>
                       <select
                         name="category_id"
-                        className="border border-brown rounded w-full p-3 "
+                        className={`border border-brown rounded w-full p-3 mt-1 ${selectedCategory === '' ? 'text-gray-400' : 'text-black'}` }
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
                       >
@@ -325,7 +325,7 @@ export default function SubCategory() {
                       <label className="text-brown font-bold mt-4">Status</label>
                       <select
                         name="name"
-                        className="border border-brown rounded w-full p-3 mt-1"
+                        className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus === '' ? 'text-gray-400' : 'text-black'}`}
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value)}
                       >
@@ -404,7 +404,7 @@ export default function SubCategory() {
                         type="checkbox"
                         checked={v.status}
                         onChange={() => handleToggle(v)}
-                        className="sr-only peer"
+                        className="hidden peer"
                       />
                       <div
                         className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
@@ -560,7 +560,7 @@ export default function SubCategory() {
                                     className="w-8 h-8 rounded-full mr-2"
                                   />
                                 )}
-                                <span className="flex-1">
+                                <span className="flex-1 w-8 md:w-auto truncate ">
                                   {typeof values.image === "string"
                                     ? values.image.split("/").pop()
                                     : values.image.name}
