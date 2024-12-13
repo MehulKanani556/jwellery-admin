@@ -132,7 +132,11 @@ export default function TermsCondition() {
                                         <td className="py-2 px-4 ">{ele.id}</td>
 
                                         <td className="py-2 px-4 ">{ele.title}</td>
-                                        <td className="py-2 px-4 ">{ele.description}</td>
+                                        <td className="py-2 px-4 ">
+                                            <p className="textover ">
+                                                {ele.description}
+                                            </p>
+                                        </td>
 
                                         <td className="py-2 px-4 flex items-center justify-center gap-2">
                                             <div>

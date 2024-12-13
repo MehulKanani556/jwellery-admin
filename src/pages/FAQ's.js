@@ -135,7 +135,12 @@ export default function Faqs() {
                                         <td className="py-2 px-4 w-1/12">{ele.id}</td>
                                         <td className="py-2 px-4 w-1/12">{ele.faq_name}</td>
                                         <td className="py-2 px-4 flex-grow w-1/6">{ele.question}</td>
-                                        <td className="py-2 px-4 flex-grow w-1/2">{ele.answer}</td>
+                                        
+                                        <td className="py-2 px-4  flex-grow w-1/2">
+                                            <p className="textover ">
+                                                {ele.answer}
+                                            </p>
+                                        </td>
                                         <td className="py-2 px-4 flex items-center justify-center gap-2">
                                             <div>
                                                 <button className="text-green-400 text-xl p-1 border border-brown-50 rounded" onClick={() => handleAddOpen(ele)}><BiSolidEditAlt /></button>

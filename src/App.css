@@ -448,3 +448,8 @@ select option {
   
 }
 
+.textover{
+  max-height: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

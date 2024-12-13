@@ -124,7 +124,7 @@ export default function Review() {
                         <div className="flex gap-4  mb-4">
 
                             <button className="text-brown border-brown border  px-4 py-1 rounded">
-                                <input type="date" value={selectedDate} onChange={handleDateChange}   className={`outline-none ${selectedDate == '' ? 'text-gray-400' : 'text-black' }`} /> {/* Update input to use selected date */}
+                                <input type="date" value={selectedDate} onChange={handleDateChange} className={`outline-none ${selectedDate == '' ? 'text-gray-400' : 'text-black'}`} /> {/* Update input to use selected date */}
                             </button>
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                         </div>
@@ -153,7 +153,11 @@ export default function Review() {
                                         <td className="py-2 px-4 ">{ele.product_name}</td>
                                         <td className="py-2 px-4 text-nowrap">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
                                         <td className="py-2 px-4 flex ">{renderStars(ele.rating)}</td>
-                                        <td className="py-2 px-4 ">{ele.description}</td>
+                                        <td className="py-2 px-4 ">
+                                            <p className="textover ">
+                                                {ele.description}
+                                            </p>
+                                        </td>
                                         <td className="py-2 px-4 flex items-center gap-2">
                                             <div>
                                                 <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(ele)}><BsFillEyeFill /></button>
