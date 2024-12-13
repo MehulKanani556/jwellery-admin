@@ -202,13 +202,13 @@ export default function Product() {
 
   };
   // serch
-  const filteredData = products.filter(data =>
+  const filteredData = Array.isArray(products) ? products.filter(data =>
     (data.category_name && data.category_name.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
     (data.sub_category_name && data.sub_category_name.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
     (data.price && data.price.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
     (data.qty && data.qty.toString().toLowerCase().includes(searchValue.toLowerCase())) ||
     (data.product_name && data.product_name.toString().toLowerCase().includes(searchValue.toLowerCase()))
-  );
+  ) : [];
   useEffect(() => {
     setFilterProducts(filteredData);
   }, [searchValue]);
@@ -606,7 +606,7 @@ export default function Product() {
                 <label className="text-brown font-bold">Category</label>
                 <select
                   name="category_id"
-                  className="border border-brown rounded w-full p-3 mt-1"
+                  className={`border border-brown rounded w-full p-3 mt-1 ${selectedCategory === '' ? 'text-gray-400' : 'text-black'}` }
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
@@ -622,10 +622,9 @@ export default function Product() {
                 <label className="text-brown font-bold">SubCategory</label>
                 <select
                   name="subcategory_id"
-                  className="border border-brown rounded w-full p-3 mt-1"
+                  className={`border border-brown rounded w-full p-3 mt-1 ${selectedSubCategory === '' ? 'text-gray-400' : 'text-black'}` }
                   value={selectedSubCategory}
                   onChange={(e) => setSelectedSubCategory(e.target.value)}
-                  disabled={!selectedCategory}
                 >
                   <option value="">Select SubCategory</option>
                   {filteredSubcategories.map((cat) => (
@@ -640,8 +639,9 @@ export default function Product() {
                 <label className="text-brown font-bold">Status</label>
                 <select
                   name="name"
-                  className="border border-brown rounded w-full p-3 mt-1"
+                  className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus === '' ? 'text-gray-400' : 'text-black'}` }
                   value={selectedStatus}
+
                   onChange={(e) => setSelectedStatus(e.target.value)}
                 >
                   <option value="">Select status</option>

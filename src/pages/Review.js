@@ -124,7 +124,7 @@ export default function Review() {
                         <div className="flex gap-4  mb-4">
 
                             <button className="text-brown border-brown border  px-4 py-1 rounded">
-                                <input type="date" value={selectedDate} onChange={handleDateChange} className='outline-none ' /> {/* Update input to use selected date */}
+                                <input type="date" value={selectedDate} onChange={handleDateChange}   className={`outline-none ${selectedDate == '' ? 'text-gray-400' : 'text-black' }`} /> {/* Update input to use selected date */}
                             </button>
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                         </div>

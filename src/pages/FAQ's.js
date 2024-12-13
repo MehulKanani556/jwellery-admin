@@ -206,7 +206,7 @@ export default function Faqs() {
                                     handleAddClose();
                                 }}
                             >
-                                {({ handleSubmit, isSubmitting }) => (
+                                {({ handleSubmit, isSubmitting,values }) => (
                                     <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
                                         <div className="mb-4">
                                             <label htmlFor="faq_id" className="block text-sm font-bold text-brown">FAQ Type</label>
@@ -214,7 +214,8 @@ export default function Faqs() {
                                                 as="select"
                                                 name="faq_id"
                                                 id="faq_id"
-                                                className="mt-1 w-full border border-brown p-2 rounded"
+                                                className={`mt-1 w-full border border-brown p-2 rounded ${values.faq_id == '' ? 'text-gray-400' : 'text-black'}`}
+
                                             >
                                                 <option value="">Select FAQ Type</option>
                                                 {faqs.map((ele) => (

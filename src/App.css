@@ -367,6 +367,9 @@ color: #727272;
     .product-thumbs-carousel .owl-nav {
       top: 25% !important;
     }
+    .container {
+      max-width: 100% !important;
+  }
   }
 
   @media (max-width: 1024px) {
@@ -388,10 +391,16 @@ color: #727272;
     .product-thumbs-carousel .owl-nav {
       top: 60% !important;
     }
+    .MuiModal-root .MuiBox-root{
+      width: 90% !important;
+    }
   }
   @media (max-width: 375px) {
     .product-thumbs-carousel .owl-nav {
       top: 45% !important;
+    }
+    .container {
+      max-width: 375px;
     }
   }
   @media (max-width: 375px) {
@@ -399,6 +408,12 @@ color: #727272;
       top: 30% !important;
     }
   }
+  
+@media (max-width: 320px) {
+  .container {
+      max-width: 320px;
+  }
+}
 
   :focus-visible {
     outline: #4D1F08 auto 1px !important;   
@@ -406,38 +421,12 @@ color: #727272;
 
   input[type='search']:focus-visible {
     outline: #a8a19d00 auto 1px !important;
-}
-
-
-@media (max-width: 375px) {
-  .container {
-      max-width: 375px;
   }
-  
-}
-
-@media (max-width: 320px) {
-  .container {
-      max-width: 320px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container {
-      max-width: 100% !important;
-  }
-}
-
-@media (max-width: 425px) {
-  .MuiModal-root .MuiBox-root{
-      width: 90% !important;
-  }
-  
-}
-
 
 /* Style the first option */
 select option {
   color: rgb(0, 0, 0) !important; /* Adjust styling as needed */
 }
+
+
 

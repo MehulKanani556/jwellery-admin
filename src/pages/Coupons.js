@@ -239,7 +239,7 @@ export default function Coupons() {
                                         <label className="text-brown font-bold">Start Date</label>
                                         <input
                                             type="date"
-                                            className="border border-brown rounded w-full p-3 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedStartDate == '' ? 'text-gray-400' : 'text-black' }`}
                                             value={selectedStartDate}
                                             onChange={(e) => setSelectedStartDate(e.target.value)}
                                         />
@@ -249,7 +249,7 @@ export default function Coupons() {
                                         <label className="text-brown font-bold mt-4">End Date</label>
                                         <input
                                             type="date"
-                                            className="border border-brown rounded w-full p-3 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedEndDate == '' ? 'text-gray-400' : 'text-black' }`}
                                             value={selectedEndDate}
                                             min={selectedStartDate}
                                             onChange={(e) => setSelectedEndDate(e.target.value)}
@@ -260,7 +260,7 @@ export default function Coupons() {
                                         <label className="text-brown font-bold mt-4">Status</label>
                                         <select
                                             name="status"
-                                            className="border border-brown rounded w-full p-3 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus == '' ? 'text-gray-400' : 'text-black' }`}
                                             value={selectedStatus}
                                             onChange={(e) => setSelectedStatus(e.target.value)}
                                         >
@@ -480,7 +480,7 @@ export default function Coupons() {
                                         <Field
                                             as="select"
                                             name="type"
-                                            className="border border-brown rounded w-full p-3 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.type == '' ? 'text-gray-400' : 'text-black' }`}
                                         >
                                             <option value="">Select</option>
                                             <option value="percentage">Percentage</option>
@@ -503,7 +503,8 @@ export default function Coupons() {
                                         <Field
                                             type="date"
                                             name="start_date"
-                                            className="border border-brown rounded w-full p-2 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.start_date == '' ? 'text-gray-400' : 'text-black' }`}
+
                                         />
                                         <ErrorMessage name="start_date" component="div" className="text-red-500" />
                                     </div>
@@ -513,7 +514,9 @@ export default function Coupons() {
                                             type="date"
                                             name="end_date"
                                             min={values.start_date || ''}
-                                            className="border border-brown rounded w-full p-2 mt-1"
+                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.end_date == '' ? 'text-gray-400' : 'text-black' }`}
+
+                                   
                                         />
                                         <ErrorMessage name="end_date" component="div" className="text-red-500" />
                                     </div>

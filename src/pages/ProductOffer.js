@@ -241,7 +241,7 @@ export default function ProductOffer() {
                                             <label className="text-brown font-bold mt-4">Category</label>
                                             <select
                                                 name="category"
-                                                className="border border-brown rounded w-full p-3 mt-1"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedCategory == '' ? 'text-gray-400' : 'text-black'}`}
                                                 value={selectedCategory}
                                                 onChange={(e) => setSelectedCategory(e.target.value)}
                                             >
@@ -258,7 +258,7 @@ export default function ProductOffer() {
                                             <label className="text-brown font-bold">Start Date</label>
                                             <input
                                                 type="date"
-                                                className="border border-brown rounded w-full p-3 mt-1"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedStartDate == '' ? 'text-gray-400' : 'text-black'}`}
                                                 value={selectedStartDate}
                                                 onChange={(e) => setSelectedStartDate(e.target.value)}
                                             />
@@ -268,7 +268,7 @@ export default function ProductOffer() {
                                             <label className="text-brown font-bold mt-4">End Date</label>
                                             <input
                                                 type="date"
-                                                className="border border-brown rounded w-full p-3 mt-1"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedEndDate == '' ? 'text-gray-400' : 'text-black'}`}
                                                 value={selectedEndDate}
                                                 min={selectedStartDate}
                                                 onChange={(e) => setSelectedEndDate(e.target.value)}
@@ -279,7 +279,7 @@ export default function ProductOffer() {
                                             <label className="text-brown font-bold mt-4">Status</label>
                                             <select
                                                 name="status"
-                                                className="border border-brown rounded w-full p-3 mt-1"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus == '' ? 'text-gray-400' : 'text-black'}`}
                                                 value={selectedStatus}
                                                 onChange={(e) => setSelectedStatus(e.target.value)}
                                             >

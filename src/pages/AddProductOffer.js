@@ -176,7 +176,8 @@ export default function AddProductOffer() {
                         as="select"
                         name="category_id"
                         id="category_id"
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.category_id == '' ? 'text-gray-400' : 'text-black' }`}
+
                         onChange={(event) => {
                           handleChange(event);
                           handleCategoryChange(event); // Update selected category
@@ -197,7 +198,7 @@ export default function AddProductOffer() {
                         as="select"
                         name="subcategory_id"
                         id="subcategory_id"
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.subcategory_id == '' ? 'text-gray-400' : 'text-black' }`}
                         onChange={(event) => {
                           handleChange(event);
                           handleSubCategoryChange(event); // Update filtered products
@@ -218,7 +219,7 @@ export default function AddProductOffer() {
                         as="select"
                         name="product_id"
                         id="product_id"
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.product_id == '' ? 'text-gray-400' : 'text-black' }`}
                       >
                         <option value="">Enter Product</option>
                         {filteredProducts?.map((ele) => (
@@ -282,7 +283,7 @@ export default function AddProductOffer() {
                       <Field
                         type="date"
                         name="start_date"
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.start_date == '' ? 'text-gray-400' : 'text-black' }`}
                       />
                       <ErrorMessage name="start_date" component="div" className="text-red-500" />
                     </div>
@@ -292,7 +293,7 @@ export default function AddProductOffer() {
                         type="date"
                         name="end_date"
                         min={values.start_date || ''}
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.end_date == '' ? 'text-gray-400' : 'text-black' }`}
                       />
                       <ErrorMessage name="end_date" component="div" className="text-red-500" />
                     </div>
@@ -326,7 +327,7 @@ export default function AddProductOffer() {
                       <Field
                         as="select"
                         name="type"
-                        className="mt-1 block w-full border border-brown p-2 rounded"
+                        className={`mt-1 block w-full border border-brown p-2 rounded ${values?.type == '' ? 'text-gray-400' : 'text-black' }`}
                       >
                         <option value="">Select</option>
                         <option value="percentage">Percentage</option>
