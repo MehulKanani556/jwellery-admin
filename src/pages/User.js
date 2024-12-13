@@ -183,50 +183,46 @@ export default function User() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box className="bg-gray-50 absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 rounded">
+        <Box className="bg-gray-50 w-[95%] sm:w-[420px] absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 rounded">
           <p className="text-brown font-bold text-xl  flex justify-between border-b border-gray-500 p-4">
             <p>View User</p>
             <button onClick={handleClose} className=" font-bold">
               <RxCross2 />
             </button>
           </p>
-          <div className="p-4">
-            <table className="table-auto">
-              <tbody>
-                <tr className="">
-                  <td className="px-4 py-2 text-brown font-bold">Name:</td>
-                  <td className="px-4 py-2">{userData?.name}</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="px-4 py-2 text-brown font-bold">
-                    Mobile No.:
-                  </td>
-                  <td className="px-4 py-2">{userData?.phone}</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="px-4 py-2 text-brown font-bold">D.O.B:</td>
-                  <td className="px-4 py-2">
-                    {userData?.dob
-                      ? new Date(userData.dob)
-                          .toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })
-                          .replace(/\//g, "-")
-                      : ""}
-                  </td>
-                </tr>
-                <tr className="border-t">
-                  <td className="px-4 py-2 text-brown font-bold">Gender:</td>
-                  <td className="px-4 py-2">{userData?.gender}</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="px-4 py-2 text-brown font-bold">Email:</td>
-                  <td className="px-4 py-2">{userData?.email}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="p-4 ">
+            <div className="space-y-4 overflow-hidden">
+              <div className="flex border-b pb-2">
+                <div className="w-1/3 text-brown font-bold">Name:</div>
+                <div className="w-2/3">{userData?.name}</div>
+              </div>
+              <div className="flex border-b pb-2">
+                <div className="w-1/3 text-brown font-bold">Mobile No.:</div>
+                <div className="w-2/3">{userData?.phone}</div>
+              </div>
+              <div className="flex border-b pb-2">
+                <div className="w-1/3 text-brown font-bold">D.O.B:</div>
+                <div className="w-2/3">
+                  {userData?.dob
+                    ? new Date(userData.dob)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")
+                    : ""}
+                </div>
+              </div>
+              <div className="flex border-b pb-2">
+                <div className="w-1/3 text-brown font-bold">Gender:</div>
+                <div className="w-2/3">{userData?.gender}</div>
+              </div>
+              <div className="flex border-b pb-2">
+                <div className="w-1/3 text-brown font-bold">Email:</div>
+                <div className="w-2/3 break-words">{userData?.email}</div>
+              </div>
+            </div>
           </div>
         </Box>
       </Modal>
