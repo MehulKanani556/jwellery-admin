@@ -310,7 +310,7 @@ export default function Category() {
                         alt="Preview"
                         className="w-8 h-8 rounded-full mr-2"
                       />
-                      <span className="flex-1">
+                     <span className="flex-1 w-8 md:w-auto truncate ">
                         {typeof formik.values.image === "string"
                           ? formik.values.image.split("/").pop()
                           : formik.values.image.name}

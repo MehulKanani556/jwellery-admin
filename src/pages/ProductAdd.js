@@ -935,7 +935,7 @@ const AddProduct = React.memo(() => {
                                         horizontal: 'left',
                                     }}
                                 >
-                                    <div className="grid grid-cols-6 gap-2 p-2 w-full flex flex-wrap">
+                                    <div className="grid grid-cols-6 gap-2 p-2 w-full flex-wrap">
                                         {filteredSize?.map((size) => (
                                             <MenuItem
                                                 key={size}

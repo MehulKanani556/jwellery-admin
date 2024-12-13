@@ -413,6 +413,7 @@ color: #727272;
   .container {
       max-width: 375px;
   }
+  
 }
 
 @media (max-width: 320px) {
@@ -426,3 +427,17 @@ color: #727272;
       max-width: 100% !important;
   }
 }
+
+@media (max-width: 425px) {
+  .MuiModal-root .MuiBox-root{
+      width: 90% !important;
+  }
+  
+}
+
+
+/* Style the first option */
+select option {
+  color: rgb(0, 0, 0) !important; /* Adjust styling as needed */
+}
+
