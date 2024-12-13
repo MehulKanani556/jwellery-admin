@@ -238,7 +238,7 @@ export default function User() {
                 Are you sure you want to delete User?
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 mt-4">
+            <div className="flex flex-wrap justify-center items-center gap-3 mt-4">
               <button
                 onClick={handleDeleteClose}
                 className="text-brown w-32 border-brown border px-4 py-2 rounded"
