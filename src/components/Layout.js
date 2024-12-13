@@ -143,7 +143,7 @@ function Layout({ children }) {
     {
       title: 'FAQ’s',
       icon: <BiSolidOffer />,
-      path:'/faqs/view',
+      path: '/faqs/view',
       subItems: [
         { title: 'FAQ Type', path: '/faq-type' },
         { title: 'FAQ’s', path: '/faqs' },
@@ -165,7 +165,11 @@ function Layout({ children }) {
     gender: Yup.string().required('Gender is required'),
     dob: Yup.date().required('D.O.B is required').max(new Date().toISOString().split('T')[0], 'D.O.B cannot be in the future'),
   });
-
+  const styles = {
+    '@media (max-width: 425px)': {
+      padding: '2px 10px', // Adjust the padding as needed
+    },
+  };
   const drawer = (
     <div>
       <Toolbar>
@@ -177,7 +181,7 @@ function Layout({ children }) {
       <List>
         {pages.map((v) => (
           <div key={v.title}>
-            <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+            <ListItem disablePadding sx={{ paddingLeft: '20px', paddingRight: '20px' }} >
               <ListItemButton
                 onClick={() => {
                   if (v.subItems) {
@@ -191,6 +195,7 @@ function Layout({ children }) {
                 }}
                 sx={{
                   gap: '4px',
+                  ...styles,
                   backgroundColor: location.pathname.includes(v.path) ? '#FFF9F6' : 'transparent',
                   color: location.pathname.includes(v.path) ? '#523C34' : 'white',
                   borderRadius: '10px',
@@ -209,7 +214,7 @@ function Layout({ children }) {
                 <ListItemIcon className="icon" sx={{ color: location.pathname.includes(v.path) ? '#523C34' : 'white', fontSize: '20px', minWidth: '35px' }}>
                   {v.icon}
                 </ListItemIcon>
-                <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500 ,whiteSpace: 'nowrap'}} />
+                <ListItemText primary={v.title} sx={{ fontSize: '18px', fontWeight: 500, whiteSpace: 'nowrap' }} />
                 {v.dot && <span style={{ color: 'red', marginLeft: '5px' }}>•</span>}
                 {v.subItems && openSubmenu === v.title ? <FaAngleUp /> : v.dropdownIcon}
               </ListItemButton>
@@ -267,6 +272,8 @@ function Layout({ children }) {
       }
     }
   };
+
+
 
   return (
     <Box sx={{ display: 'flex' }}>
