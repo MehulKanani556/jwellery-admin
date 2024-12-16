@@ -1198,11 +1198,11 @@ const AddProduct = React.memo(() => {
                                 {(errors.occasion && touched.occasion) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.occasion}</p>}
                             </div>
                             <div>
-                                <label className="block text-brown text-base font-semibold mb-2">Gram</label>
+                                <label className="block text-brown text-base font-semibold mb-2">Stone Weight (grams)</label>
                                 <input
                                     name="gram"
                                     type="number"
-                                    placeholder="Enter gram"
+                                    placeholder="Enter stone weight"
                                     className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
