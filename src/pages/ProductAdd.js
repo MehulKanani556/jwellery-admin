@@ -288,6 +288,10 @@ const AddProduct = React.memo(() => {
             setFieldValue('discount', products.discount || "");
             setFieldValue('occasion', products.occasion || "");
             setFieldValue('description', products.description);
+            setFieldValue('gram', products.gram || "");
+            setFieldValue('stone', products.stone || "");
+            setFieldValue('stone_price', products.stone_price || "");
+            setFieldValue('making_charge', products.making_charge || "");
 
             // Set media files if they exist
             if (products.images) {
@@ -331,6 +335,7 @@ const AddProduct = React.memo(() => {
         size_id: Yup.string(),
         size_name: Yup.array(),
         weight: Yup.number().required('Weight is required'),
+        making_charge: Yup.number().required('Making charge is required'),
         diamond_setting: Yup.string(),
         diamond_shape: Yup.string(),
         collection: Yup.string(),
@@ -391,6 +396,10 @@ const AddProduct = React.memo(() => {
             description: '',
             occasion:'',
             mediaFiles: [],
+            gram:'',
+            stone:'',
+            stone_price:'',
+            making_charge:'',
         },
         validationSchema: productValidationSchema,
         validateOnChange: false,
@@ -1145,7 +1154,7 @@ const AddProduct = React.memo(() => {
                                 {(errors.qty && touched.qty) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.qty}</p>}
                             </div>
                             <div>
-                                <label className="block text-brown text-base font-semibold mb-2">Price (₹) </label>
+                                <label className="block text-brown text-base font-semibold mb-2">Price Per Gram (₹) </label>
                                 <input
                                     name="price"
                                     type="number"
@@ -1187,6 +1196,61 @@ const AddProduct = React.memo(() => {
                                     <option value="Traditional" className="text-black">Traditional & Ethnic Wear</option>
                                 </select>
                                 {(errors.occasion && touched.occasion) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.occasion}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Gram</label>
+                                <input
+                                    name="gram"
+                                    type="number"
+                                    placeholder="Enter gram"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.gram}
+                                />
+                                {(errors.gram && touched.gram) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.gram}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Stone</label>
+                                <select
+                                    name="stone"
+                                    className={`w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown  ${values.stone === '' ? 'text-gray-400' : 'text-black'}`}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.stone}
+                                >
+                                    <option value="" className="text-black">Select stone</option>
+                                    <option value="real" className="text-black">Real</option>
+                                    <option value="fake" className="text-black">Fake</option>
+                                   
+                                </select>
+                                {(errors.stone && touched.stone) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.stone}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Stone Price</label>
+                                <input
+                                    name="stone_price"
+                                    type="number"
+                                    placeholder="Enter stone price"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.stone_price}
+                                />
+                                {(errors.stone_price && touched.stone_price) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.stone_price}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Making Charges</label>
+                                <input
+                                    name="making_charge"
+                                    type="number"
+                                    placeholder="Enter stone price"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.making_charge}
+                                />
+                                {(errors.making_charge && touched.making_charge) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.making_charge}</p>}
                             </div>
                             
                         </div>

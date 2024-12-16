@@ -45,8 +45,8 @@ export default function DashBord() {
       <h1 className='text-2xl font-bold mb-4 text-brown'>Dashboard</h1>
       {/* sec 1 */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#527cbf] '>
-          <div className=' p-2 rounded-full mr-4'>
+        <div className='bg-white p-4 rounded shadow flex justify-between items-center border-s-4 border-[#527cbf] hover:shadow-lg transition-shadow duration-300'>
+          <div className='p-2 rounded-full mr-4'>
             <img src={require('../Images/1.png')} className='min-w-10' alt="" />
           </div>
           <div>
@@ -54,7 +54,7 @@ export default function DashBord() {
             <p className='text-2xl'>₹{dashboardData?.total_revenue}</p>
           </div>
         </div>
-        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#66948f] '>
+        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#66948f]  hover:shadow-lg transition-shadow duration-300 '>
           <div className=' p-2 rounded-full mr-4'>
             <img src={require('../Images/2.png')} className='min-w-10' alt="" />
           </div>
@@ -63,7 +63,7 @@ export default function DashBord() {
             <p className='text-2xl'>{dashboardData?.total_orders}</p>
           </div>
         </div>
-        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#6a6bba] '>
+        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#6a6bba]  hover:shadow-lg transition-shadow duration-300'>
           <div className=' p-2 rounded-full mr-4'>
             <img src={require('../Images/3.png')} className='min-w-10' alt="" />
           </div>
@@ -72,7 +72,7 @@ export default function DashBord() {
             <p className='text-2xl'>{dashboardData?.total_customers}</p>
           </div>
         </div>
-        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#a16482] '>
+        <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#a16482]  hover:shadow-lg transition-shadow duration-300'>
           <div className=' p-2 rounded-full mr-4'>
             <img src={require('../Images/4.png')} className='min-w-10' alt="" />
           </div>

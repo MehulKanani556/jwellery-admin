@@ -69,6 +69,10 @@ export const addProduct = createAsyncThunk(
     formData.append("discount", data.discount);
     formData.append("description", data.description);
     formData.append("occasion", data.occasion);
+    formData.append("gram", data.gram);
+    formData.append("stone", data.stone);
+    formData.append("stone_price", data.stone_price);
+    formData.append("making_charge", data.making_charge);
 
     formData.append("status", data.status);
     if (Array.isArray(data.mediaFiles)) {
@@ -79,7 +83,6 @@ export const addProduct = createAsyncThunk(
     } else {
       formData.append("image", data.mediaFiles);
     }
-
     try {
       const response = await axiosInstance.post(`/products/create`, formData, {
         headers: {
@@ -134,6 +137,10 @@ export const editProduct = createAsyncThunk(
     formData.append("description", data.description);
     formData.append("status", data.status);
     formData.append("occasion", data.occasion);
+    formData.append("gram", data.gram);
+    formData.append("stone", data.stone);
+    formData.append("stone_price", data.stone_price);
+    formData.append("making_charge", data.making_charge);
 
     if (Array.isArray(data.mediaFiles)) {
       data.mediaFiles.forEach((media, index) => {
