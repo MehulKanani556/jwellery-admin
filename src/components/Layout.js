@@ -353,14 +353,14 @@ function Layout({ children }) {
                   onClose={() => setOpenProfile(false)}
 
                 >
-                  <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+                  <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded ">
                     <div className='text-end'>
                       <button onClick={() => setOpenProfile(false)} className=" font-bold "><RxCross2 /></button>
                     </div>
                     <p className='text-brown font-bold text-xl  '>
                       <p className='text-center'>My Profile</p>
                     </p>
-                    <div className=' p-5'>
+                    <div className=' p-5 overflow-hidden'>
                       <div className='flex gap-6 items-center'>
                         <div>
 
@@ -376,7 +376,7 @@ function Layout({ children }) {
                               </tr>
                               <tr>
                                 <td className='p-1'>Mobile No.:</td>
-                                <td className=' font-semibold ps-3'>{memoizedUser?.phone}</td>
+                                <td className=' font-semibold ps-3 break-words'>{memoizedUser?.phone}</td>
                               </tr>
                               <tr>
                                 <td className='p-1'>D.O.B:</td>
@@ -587,7 +587,7 @@ function Layout({ children }) {
                               <ErrorMessage name="confirm_password" component="div" className="text-red-500" />
                             </div>
 
-                            <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 justify-center'>
+                            <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 justify-center items-center'>
                               <button className='text-brown hover:bg-brown-50 border-brown border p-2 w-32 rounded ' onClick={() => setOpenPassword(false)}>Cancel</button>
                               <button className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Change </button>
                             </div>

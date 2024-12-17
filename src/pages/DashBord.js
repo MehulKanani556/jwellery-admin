@@ -143,9 +143,9 @@ export default function DashBord() {
           </div>
           <div className='p-4'>
             <div className='overflow-y-auto'>
-              {dashboardData?.reviews.slice(0,5).map((review) => (
+              {dashboardData?.reviews.slice(0,5).map((review,index) => (
                 <>
-                  <div className='p-3 px-4 border-b'>
+                  <div className={`p-3 px-4 ${index !== 4 ? 'border-b' : ''}`}>
                     <div className='flex justify-between items-center '>
                       <div className='flex gap-2 items-center'>
                         <div>
