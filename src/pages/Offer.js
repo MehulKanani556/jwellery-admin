@@ -2,6 +2,7 @@ import {
     Box,
     Modal,
     Slider,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
@@ -31,6 +32,7 @@ export default function Offer() {
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterOffer, setFilterOffer] = useState(offers);
     const searchValue = useSelector((state) => state.search.value);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
@@ -438,7 +440,7 @@ export default function Offer() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         "& .MuiPaginationItem-root": {
                             color: "text.primary", // Default color for pagination items

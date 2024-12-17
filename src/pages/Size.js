@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Pagination, Typography } from '@mui/material'
+import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
@@ -24,6 +24,7 @@ export default function Size() {
     const size = useSelector(state => state.sizes.sizes);
     const loading = useSelector(state => state.sizes.loading);
     const searchValue = useSelector((state) => state.search.value);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     useEffect(() => {
         dispatch(getAllSizes())
@@ -168,7 +169,7 @@ export default function Size() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items
@@ -326,7 +327,7 @@ export default function Size() {
                                 <p className='text-brown-50'>Are you sure you want to delete
                                     size?</p>
                             </div>
-                            <div className='flex flex-wrap gap-3 mt-4'>
+                            <div className='flex flex-wrap justify-center gap-3 mt-4'>
                                 <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                                 <button onClick={handleDeleteSize} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                             </div>
@@ -350,7 +351,7 @@ export default function Size() {
                                 <p className='text-brown-50'>Are you sure you want to delete all
                                     size?</p>
                             </div>
-                            <div className='flex flex-wrap gap-3 mt-4'>
+                            <div className='flex flex-wrap justify-center gap-3 mt-4'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                                 <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                             </div>

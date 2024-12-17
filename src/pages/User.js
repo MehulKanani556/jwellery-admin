@@ -1,4 +1,4 @@
-import { Box, Modal, Pagination } from "@mui/material";
+import { Box, Modal, Pagination, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -12,6 +12,8 @@ export default function User() {
   const [open, setOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
   const dispatch = useDispatch();
+  const isSmallScreen = useMediaQuery("(max-width:425px)");
+
   const data = useSelector((state) => state.users.users).filter(
     (user) => user.role_id != 1
   );
@@ -108,7 +110,7 @@ export default function User() {
                   <td className="py-2 px-4 ">{user.id}</td>
                   <td className="py-2 px-4 ">{user.name}</td>
                   <td className="py-2 px-4 ">{user.phone}</td>
-                  <td className="py-2 px-4">
+                  <td className="py-2 px-4 text-nowrap">
                     {user.dob
                       ? new Date(user.dob)
                           .toLocaleDateString("en-GB", {
@@ -161,7 +163,7 @@ export default function User() {
           shape="rounded"
           className="flex justify-end m-4"
           siblingCount={0} // Show zero sibling pages
-          boundaryCount={1} // Show one boundary page
+           boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page
           // showFirstButton // Show first page button
           // showLastButton // Show last page button
           sx={{

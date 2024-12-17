@@ -1,4 +1,4 @@
-import { Box, Modal, Pagination } from '@mui/material'
+import { Box, Modal, Pagination, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BsFillEyeFill } from 'react-icons/bs'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
@@ -12,6 +12,7 @@ export default function Review() {
     const [open, setOpen] = useState(false);
     const [delOpen, setDelOpen] = useState(false);
     const [delAllOpen, setDelAllOpen] = useState(false);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     const dispatch = useDispatch();
     const { reviews, loading } = useSelector(state => state.reviews);
@@ -122,9 +123,8 @@ export default function Review() {
                     <div>
 
                         <div className="flex gap-4  mb-4">
-
-                            <button className="text-brown border-brown border  px-4 py-1 rounded">
-                                <input type="date" value={selectedDate} onChange={handleDateChange} className={`outline-none ${selectedDate == '' ? 'text-gray-400' : 'text-black'}`} /> {/* Update input to use selected date */}
+                            <button className="text-brown ">
+                                <input type="date" value={selectedDate} onChange={handleDateChange} className={`outline-none px-4 border-brown border   rounded py-1 ${selectedDate == '' ? 'text-gray-400' : 'text-black'}`} /> {/* Update input to use selected date */}
                             </button>
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
                         </div>
@@ -184,7 +184,7 @@ export default function Review() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items
@@ -235,7 +235,7 @@ export default function Review() {
                                     </div>
                                 </div>
                                 <p className="mt-2 border-t pt-4">{Data.description}</p> {/* Assuming Data.description is available */}
-                                <div className="mt-4 flex gap-2">
+                                <div className="mt-4 flex gap-2 flex-wrap">
                                     {Array.isArray(Data.product_images) && Data.product_images.map((ele) => (
                                         <img src={ele} alt="Product Image" className="w-16 h-16 object-cover rounded" />
                                     ))}
@@ -283,7 +283,7 @@ export default function Review() {
                                 <p className='text-brown-50'>Are you sure you want to delete all
                                     review?</p>
                             </div>
-                            <div className='flex flex-wrap gap-3 mt-4'>
+                            <div className='flex flex-wrap justify-center gap-3 mt-4'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                                 <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                             </div>

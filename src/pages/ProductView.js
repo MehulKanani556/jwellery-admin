@@ -246,6 +246,35 @@ const ProductView = React.memo(() => {
                                     <span className="ak-product-key">Collection :</span>
                                     <span className="ak-product-value">{products?.collection}</span>
                                 </div>
+                                {
+                                    products?.gram &&
+                                    (
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <span className="ak-product-key">Stone Weight :</span>
+                                            <span className="ak-product-value">{parseFloat(products?.gram).toFixed(0)} Gm</span>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    products?.stone_price &&
+                                    (
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <span className="ak-product-key">Stone Price :</span>
+                                            <span className="ak-product-value">{parseFloat(products?.stone_price).toFixed(0)}₹ </span>
+                                        </div>
+                                    )
+                                }
+                             
+                                {
+                                    products?.making_charge &&
+                                    (
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <span className="ak-product-key">Making charge :</span>
+                                            <span className="ak-product-value">{parseFloat(products?.making_charge).toFixed(0)}%</span>
+                                        </div>
+                                    )
+                                }
+                             
                             </div>
                         </div>
                     </div>

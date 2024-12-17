@@ -1,4 +1,4 @@
-import { Box, Modal, Pagination } from "@mui/material";
+import { Box, Modal, Pagination, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -25,6 +25,8 @@ export default function Category() {
   const { category, loading, success } = useSelector(
     (state) => state.categorys
   );
+  const isSmallScreen = useMediaQuery("(max-width:425px)");
+
   const [error, setError] = useState("");
   const [isImageChanged, setIsImageChanged] = useState(false);
   const fileInputRef = useRef(null);
@@ -254,7 +256,7 @@ export default function Category() {
           shape="rounded"
           className="flex justify-end m-4"
           siblingCount={0} // Show zero sibling pages
-          boundaryCount={1} // Show one boundary page
+           boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page
           // showFirstButton // Show first page button
           // showLastButton // Show last page button
           sx={{

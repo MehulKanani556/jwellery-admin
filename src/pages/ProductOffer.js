@@ -2,6 +2,7 @@ import {
     Box,
     Modal,
     Slider,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
@@ -27,6 +28,7 @@ export default function ProductOffer() {
     const [delAllOpen, setDelAllOpen] = useState(false);
     // console.log("productOffers",productOffers)
     const searchValue = useSelector((state) => state.search.value);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -436,7 +438,7 @@ export default function ProductOffer() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         "& .MuiPaginationItem-root": {
                             color: "text.primary", // Default color for pagination items

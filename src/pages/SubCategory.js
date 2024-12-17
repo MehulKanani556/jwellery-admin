@@ -6,6 +6,7 @@ import {
   Select,
   MenuItem,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import { BiSolidEditAlt } from "react-icons/bi";
@@ -54,7 +55,7 @@ export default function SubCategory() {
   const searchValue = useSelector((state) => state.search.value);
 
   const fileInputRef = useRef(null);
-
+  const isSmallScreen = useMediaQuery("(max-width:425px)");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filtersApplied, setFiltersApplied] = useState(false);
@@ -451,9 +452,8 @@ export default function SubCategory() {
           shape="rounded"
           className="flex justify-end m-4"
           siblingCount={0} // Show zero sibling pages
-          boundaryCount={1} // Show one boundary page
-          // showFirstButton // Show first page button
-          // showLastButton // Show last page button
+          boundaryCount={isSmallScreen ? 0 : 1} // Show zero boundary pages on small screens
+         
           sx={{
             "& .MuiPaginationItem-root": {
               color: "text.primary",

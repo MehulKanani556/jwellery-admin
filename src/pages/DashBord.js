@@ -51,7 +51,7 @@ export default function DashBord() {
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Revenue</h2>
-            <p className='text-2xl'>₹{dashboardData?.total_revenue}</p>
+            <p className='text-2xl text-end'>₹{dashboardData?.total_revenue}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#66948f]  hover:shadow-lg transition-shadow duration-300 '>
@@ -60,7 +60,7 @@ export default function DashBord() {
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Orders</h2>
-            <p className='text-2xl'>{dashboardData?.total_orders}</p>
+            <p className='text-2xl text-end'>{dashboardData?.total_orders}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#6a6bba]  hover:shadow-lg transition-shadow duration-300'>
@@ -69,7 +69,7 @@ export default function DashBord() {
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Customers</h2>
-            <p className='text-2xl'>{dashboardData?.total_customers}</p>
+            <p className='text-2xl text-end'>{dashboardData?.total_customers}</p>
           </div>
         </div>
         <div className='bg-white p-4 rounded shadow flex justify-between items-center  border-s-4 border-[#a16482]  hover:shadow-lg transition-shadow duration-300'>
@@ -78,7 +78,7 @@ export default function DashBord() {
           </div>
           <div>
             <h2 className='text-lg text-gray-400'>Total Products</h2>
-            <p className='text-2xl'>{dashboardData?.total_products?.total_products}</p>
+            <p className='text-2xl text-end'>{dashboardData?.total_products?.total_products}</p>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function DashBord() {
             <div className='pt-3'>
               <div className='flex flex-wrap justify-between  gap-4'>
                 {dashboardData?.top_category.map((ele, index) => (
-                  <div className='text-center border p-3 w-[30%] rounded-md' key={index}>
+                  <div className='text-center border p-3 w-[45%] sm:w-[28%]  xl:w-[30%] rounded-md' key={index}>
                     <div className='font-semibold text-3xl' style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>{ele.product_count}</div>
                     <div className='flex items-center justify-center gap-1'>
                       <span style={{ color: ["#639993", "#364F77", "#5558AF", "#AF5280", "#F0BA48"][index % 5] }}>
@@ -143,7 +143,7 @@ export default function DashBord() {
           </div>
           <div className='p-4'>
             <div className='overflow-y-auto'>
-              {dashboardData?.reviews.map((review) => (
+              {dashboardData?.reviews.slice(0,5).map((review) => (
                 <>
                   <div className='p-3 px-4 border-b'>
                     <div className='flex justify-between items-center '>

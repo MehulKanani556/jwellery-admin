@@ -1,6 +1,7 @@
 import {
     Box,
     Modal,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -30,6 +31,7 @@ export default function Coupons() {
     const [createopen, setCreateopen] = useState(false);
     const { coupons,loading } = useSelector((state) => state.coupons);
     const [delAllOpen, setDelAllOpen] = useState(false);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -397,7 +399,7 @@ export default function Coupons() {
                 shape="rounded"
                 className="flex justify-end m-4"
                 siblingCount={1} // Show one sibling page on each side
-                boundaryCount={1} // Show one boundary page at the start and end
+                 boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                 sx={{
                     "& .MuiPaginationItem-root": {
                         color: "text.primary", // Default color for pagination items

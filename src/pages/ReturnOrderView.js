@@ -2,6 +2,7 @@ import {
     Box,
     Menu,
     Modal,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -25,6 +26,7 @@ export default function ReturnOrderView() {
     const [selectName, setSelectName] = useState('');
     const [selectDate, setSelectDate] = useState('');
     const [selectStatus, setSelectStatus] = useState('');
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
 
     useEffect(() => {
@@ -284,7 +286,7 @@ export default function ReturnOrderView() {
                 shape="rounded"
                 className="flex justify-end m-4"
                 siblingCount={1} // Show one sibling page on each side
-                boundaryCount={1} // Show one boundary page at the start and end
+                 boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                 sx={{
                     "& .MuiPaginationItem-root": {
                         color: "text.primary", // Default color for pagination items

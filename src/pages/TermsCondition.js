@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Pagination, Typography } from '@mui/material'
+import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { BsFillEyeFill } from 'react-icons/bs'
@@ -24,6 +24,8 @@ export default function TermsCondition() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { terms, loading } = useSelector(state => state.terms);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
+
     console.log(terms)
     useEffect(() => {
         dispatch(getAllTerms())
@@ -32,6 +34,7 @@ export default function TermsCondition() {
         title: Yup.string().required('Title is required'),
         description: Yup.string().required('Description is required'),
     });
+
 
     // Pagination statecurrentItems
     const [currentPage, setCurrentPage] = useState(1);
@@ -164,7 +167,7 @@ export default function TermsCondition() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items

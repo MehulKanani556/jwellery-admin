@@ -1,4 +1,4 @@
-import { Box, Button, Menu, Modal, Pagination, Typography } from '@mui/material'
+import { Box, Button, Menu, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
 import { RiDeleteBin6Fill, RiFilter2Fill } from 'react-icons/ri'
@@ -30,6 +30,7 @@ export default function Stoke() {
     const [filteredSubCategories, setFilteredSubCategories] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const searchValue = useSelector((state) => state.search.value);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -314,7 +315,7 @@ export default function Stoke() {
                                         <td className="py-2  px-4">{ele?.category_name || ''}</td>
                                         <td className="py-2  px-4">{ele?.sub_category_name || ''}</td>
                                         <td className="py-2  px-4">{ele?.product_name || ''}</td>
-                                        <td className="py-2  px-4">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
+                                        <td className="py-2  px-4 text-nowrap">{new Date(ele.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
                                         <td className="py-2 px-4">
                                             <div className={`font-bold  text-center p-1 px-2 text-sm rounded text-nowrap w-28 ${ele?.status === 'out-stock' ? 'text-red-600 bg-red-100' : ele?.status === 'in-stock' ? 'text-green-600 bg-green-100' : ele?.status === 'low-stock' ? 'text-yellow-600 bg-yellow-100' : ''}`}>
                                                 {ele?.status === 'out-stock' ? 'Out Of Stock' : ele?.status === 'in-stock' ? 'In Stock' : ele?.status === 'low-stock' ? 'Low Stock' : ''}
@@ -351,7 +352,7 @@ export default function Stoke() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                    boundaryCount={1} // Show one boundary page at the start and end
+                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items
@@ -525,7 +526,7 @@ export default function Stoke() {
                                 <p className='text-brown-50'>Are you sure you want to delete
                                     stock?</p>
                             </div>
-                            <div className='flex flex-wrap gap-3 mt-4'>
+                            <div className='flex flex-wrap justify-center gap-3 mt-4'>
                                 <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                                 <button onClick={handleDeleteItem} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                             </div>
@@ -549,7 +550,7 @@ export default function Stoke() {
                                 <p className='text-brown-50'>Are you sure you want to delete all
                                     stock?</p>
                             </div>
-                            <div className='flex flex-wrap gap-3 mt-4'>
+                            <div className='flex flex-wrap gap-3 mt-4 justify-center'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
                                 <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
                             </div>

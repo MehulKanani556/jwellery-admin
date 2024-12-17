@@ -1,4 +1,4 @@
-import { Box, Modal, Pagination } from "@mui/material";
+import { Box, Modal, Pagination, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ export default function ReasonForCancel() {
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
   const {reasons,loading} = useSelector((state) => state.reasons)
+  const isSmallScreen = useMediaQuery("(max-width:425px)");
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Reason is required"),
@@ -162,7 +163,7 @@ export default function ReasonForCancel() {
         shape="rounded"
         className="flex justify-end m-4"
         siblingCount={1} // Show one sibling page on each side
-        boundaryCount={1} // Show one boundary page at the start and end
+         boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
         sx={{
           "& .MuiPaginationItem-root": {
             color: "text.primary", // Default color for pagination items
