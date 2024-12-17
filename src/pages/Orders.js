@@ -296,8 +296,8 @@ export default function Orders() {
                                         </td>
 
                                         <td className="py-2 px-5 flex items-center gap-2">
-                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => navigate(`/order/view/${v.id}`)}><BsFillEyeFill /></button>
-                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => navigate(`/order/InvoiceView/${v.id}`)}><RiPrinterFill /></button>
+                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50" onClick={() => navigate(`/order/view/${v.id}`)}><BsFillEyeFill /></button>
+                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50" onClick={() => navigate(`/order/InvoiceView/${v.id}`)}><RiPrinterFill /></button>
                                         </td>
                                     </tr>
                                 ))

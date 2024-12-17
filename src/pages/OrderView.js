@@ -66,7 +66,7 @@ export default function OrderView() {
                             <h2 className="text-xl py-3 font-bold text-brown px-5">Product Details</h2>
                         </div>
                         <div className="overflow-auto">
-                        <table className="overflow-scroll">
+                        <table className="overflow-scroll w-full">
                             <tr className="text-brown font-bold">
                                 <td className="px-5 py-3">Product Name</td>
                                 <td className="px-5 py-3">Price</td>

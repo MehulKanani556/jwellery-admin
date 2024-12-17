@@ -267,7 +267,7 @@ export default function Coupons() {
                                             onChange={(e) => setSelectedStatus(e.target.value)}
                                         >
                                             <option value="">Select Status</option>
-                                            <option value="inactive">InActive</option>
+                                            <option value="inactive">In Active</option>
                                             <option value="active">Active</option>
                                         </select>
                                     </div>
@@ -304,7 +304,7 @@ export default function Coupons() {
                             <span>Delete All</span>
                         </button>
                         <button
-                            className="bg-brown w-32 text-white px-4 py-2 rounded"
+                            className="bg-brown w-32 text-white px-4 py-2 rounded hover:bg-brown-50 "
                             onClick={() => setCreateopen(true)}
                         >
                             + Add
@@ -373,7 +373,7 @@ export default function Coupons() {
                                         </div>
                                         <div>
                                             <button
-                                                className="text-red-500 text-xl p-1 border border-brown-50 rounded"
+                                                className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
                                                 onClick={() => handleDeleteOpen(v)}
                                             >
                                                 <RiDeleteBin6Fill />

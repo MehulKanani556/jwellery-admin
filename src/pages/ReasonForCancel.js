@@ -97,7 +97,7 @@ export default function ReasonForCancel() {
               <span>Delete All</span>
             </button>
             <button
-              className="bg-brown w-32 text-white px-4 py-2 rounded"
+              className="bg-brown w-32 text-white px-4 py-2 hover:bg-brown-50  rounded"
               onClick={() => setCreateopen(true)}
             >
               + Add

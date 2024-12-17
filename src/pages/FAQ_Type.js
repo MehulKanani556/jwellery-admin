@@ -111,7 +111,7 @@ export default function FaqType() {
                     <div>
                         <div className="flex gap-4  mb-4">
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
-                            <button className="bg-brown w-32 text-white px-4 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
+                            <button className="bg-brown w-32 text-white   hover:bg-brown-50  px-4 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
                         </div>
                     </div>
                 </div>

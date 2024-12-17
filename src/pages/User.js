@@ -127,7 +127,7 @@ export default function User() {
                   <td className="py-2 px-4 flex items-center gap-2">
                     <div>
                       <button
-                        className="text-brown text-xl p-1 border border-brown-50 rounded"
+                        className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50"
                         onClick={() => handleOpen(user)}
                       >
                         <BsFillEyeFill />
@@ -135,7 +135,7 @@ export default function User() {
                     </div>
                     <div>
                       <button
-                        className="text-red-500 text-xl  p-1 border border-brown-50 rounded"
+                        className="text-red-500 text-xl  p-1 border border-brown-50 rounded hover:text-red-400"
                         onClick={() => handleDeleteOpen(user)}
                       >
                         <RiDeleteBin6Fill />
@@ -222,7 +222,7 @@ export default function User() {
                 <div className="w-1/3 text-brown font-bold">Gender:</div>
                 <div className="w-2/3">{userData?.gender}</div>
               </div>
-              <div className="flex border-b pb-2">
+              <div className="flex pb-2">
                 <div className="w-1/3 text-brown font-bold">Email:</div>
                 <div className="w-2/3 break-words">{userData?.email}</div>
               </div>

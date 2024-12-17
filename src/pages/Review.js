@@ -160,7 +160,7 @@ export default function Review() {
                                         </td>
                                         <td className="py-2 px-4 flex items-center gap-2">
                                             <div>
-                                                <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(ele)}><BsFillEyeFill /></button>
+                                                <button className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50" onClick={() => handleOpen(ele)}><BsFillEyeFill /></button>
                                             </div>
                                             <div>
                                                 <button className="text-red-500 text-xl  p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(ele)}><RiDeleteBin6Fill /></button>
@@ -237,7 +237,7 @@ export default function Review() {
                                 <p className="mt-2 border-t pt-4">{Data.description}</p> {/* Assuming Data.description is available */}
                                 <div className="mt-4 flex gap-2 flex-wrap">
                                     {Array.isArray(Data.product_images) && Data.product_images.map((ele) => (
-                                        <img src={ele} alt="Product Image" className="w-16 h-16 object-cover rounded" />
+                                        <img src={ele} alt="Product Image" className="w-16 h-16 object-cover rounded" loading="lazy" />
                                     ))}
                                 </div>
                             </div>

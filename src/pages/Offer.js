@@ -350,7 +350,7 @@ export default function Offer() {
                                 <span>Delete All</span>
                             </button>
                             <button
-                                className="bg-brown w-32 text-white px-4 py-2 rounded"
+                                className="bg-brown w-32 text-white px-4 py-2 rounded hover:bg-brown-50 "
                                 onClick={handleOpen}
                             >
                                 + Add
@@ -411,12 +411,12 @@ export default function Offer() {
                                             </label>
                                         </td>
                                         <td className="py-2 px-5 flex items-center gap-2">
-                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpenView(v)}><BsFillEyeFill /></button>
+                                            <button className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50" onClick={() => handleOpenView(v)}><BsFillEyeFill /></button>
 
                                             <button className="text-green-700 text-xl p-1 border border-brown-50 rounded" onClick={() => handleOpen(v)}>
                                                 <RiEdit2Fill />
                                             </button>
-                                            <button className="text-red-500 text-xl p-1 border border-brown-50 rounded" onClick={() => handleDeleteOpen(v)}>
+                                            <button className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300" onClick={() => handleDeleteOpen(v)}>
                                                 <RiDeleteBin6Fill />
                                             </button>
 

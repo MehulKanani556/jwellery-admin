@@ -256,7 +256,7 @@ export default function Coupons() {
                                         </div>
                                         <div>
                                             <button
-                                                className="text-red-500 text-xl p-1 border border-brown-50 rounded"
+                                                className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
                                                 onClick={() => handleDeleteOpen(v)}
                                             >
                                                 <RiDeleteBin6Fill />

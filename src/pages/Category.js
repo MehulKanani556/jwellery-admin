@@ -170,7 +170,7 @@ export default function Category() {
               <span>Delete All</span>
             </button>
             <button
-              className="bg-brown w-32 text-white px-4 py-2 rounded"
+              className="bg-brown w-32 text-white px-4 py-2 rounded hover:bg-brown-50 "
               onClick={() => setCreateopen(true)}
             >
               + Add
@@ -235,7 +235,7 @@ export default function Category() {
                   </div>
                   <div>
                     <button
-                      className="text-red-500 text-xl p-1 border border-brown-50 rounded"
+                      className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
                       onClick={() => handleDeleteOpen(category)}
                     >
                       <RiDeleteBin6Fill />

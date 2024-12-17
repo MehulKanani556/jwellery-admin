@@ -113,7 +113,7 @@ export default function TermsCondition() {
                         <div className="flex flex-wrap justify-center lg:justify-end gap-4  mb-4">
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { navigate('/tc/view') }}><span>View</span></button>
                             <button className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
-                            <button className="bg-brown w-32 text-white px-4 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
+                            <button className="bg-brown w-32 text-white px-4 py-2 hover:bg-brown-50  rounded" onClick={handleAddOpen}>+ Add</button>
                         </div>
                     </div>
                 </div>

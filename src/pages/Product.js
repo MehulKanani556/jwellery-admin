@@ -399,7 +399,7 @@ export default function Product() {
                 <span>Delete All</span>
               </button>
               <button
-                className="bg-brown w-[130px] text-white px-4 py-2 rounded"
+                className="bg-brown hover:bg-brown-50 w-[130px] text-white px-4 py-2 rounded"
                 onClick={() => handleproductadd()}
               >
                 + Add
@@ -471,7 +471,7 @@ export default function Product() {
                     <td className="py-2 px-5 flex items-center gap-2">
                       <div>
                         <button
-                          className="text-brown text-xl p-1 border border-brown-50 rounded"
+                          className="text-brown text-xl p-1 border border-brown-50 rounded hover:text-brown-50"
                           onClick={() => handleproductview(v.id)}
                         >
                           <BsFillEyeFill />
@@ -487,7 +487,7 @@ export default function Product() {
                       </div>
                       <div>
                         <button
-                          className="text-red-500 text-xl p-1 border border-brown-50 rounded"
+                          className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
                           onClick={() => handleDeleteOpen(v)}
                         >
                           <RiDeleteBin6Fill />
@@ -647,7 +647,7 @@ export default function Product() {
                   onChange={(e) => setSelectedStatus(e.target.value)}
                 >
                   <option value="">Select status</option>
-                  <option value="inactive">InActive</option>
+                  <option value="inactive">In Active</option>
                   <option value="active">Active</option>
                 </select>
               </div>

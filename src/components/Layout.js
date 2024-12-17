@@ -112,7 +112,7 @@ function Layout({ children }) {
     { title: 'Subcategory', icon: <FaList />, path: '/subcategory' },
     { title: 'Product', icon: <BsFillBoxSeamFill />, path: '/products' },
     { title: 'Size', icon: <CgArrowsShrinkH />, path: '/size' },
-    { title: 'Stock', icon: <BsBoxFill />, path: '/stoke' },
+    { title: 'Stock', icon: <BsBoxFill />, path: '/stock' },
     // { title: 'Cart', icon: <IoBagCheck />, path: '/' },
     { title: 'Orders', icon: <LuBoxes />, path: '/order' },
     { title: 'Review', icon: <TbMessageStar />, path: '/review' },
@@ -284,7 +284,8 @@ function Layout({ children }) {
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
           backgroundColor: 'white',
-          color: '#523C34'
+          color: '#523C34',
+          
         }}
       >
         <Toolbar>

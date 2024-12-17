@@ -46,7 +46,7 @@ export default function AuthRoutes() {
                         <Route path="/products" element={<Product />} />
                         <Route path="/products/productAdd" element={<AddProduct />} />
                         <Route path="/products/productView" element={<ProductView />} />
-                        <Route path="/stoke" element={<Stock />} />
+                        <Route path="/stock" element={<Stock />} />
                         <Route path="/order" element={<Orders />} />
                         <Route path="/order/view/:id" element={<OrderView />} />
                         <Route path="/review" element={<Review />} />

@@ -288,7 +288,7 @@ export default function Stoke() {
                                 </Formik>
                             </Menu>
                             <button className=" text-brown w-32 border-brown border px-3 py-2 rounded flex justify-center items-center gap-2" onClick={() => { setDelAllOpen(true) }}><span><RiDeleteBin6Fill /></span><span>Delete All</span></button>
-                            <button className="bg-brown w-32 text-white px-3 py-2 rounded" onClick={handleAddOpen}>+ Add</button>
+                            <button className="bg-brown w-32 text-white px-3 py-2 rounded hover:bg-brown-50 " onClick={handleAddOpen}>+ Add</button>
                         </div>
                     </div>
                 </div>
