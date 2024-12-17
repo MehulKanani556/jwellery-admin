@@ -2,7 +2,7 @@ import { Modal } from "@mui/material";
 import ReactOwlCarousel from "react-owl-carousel";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleProducts } from "../reduxe/slice/product.slice";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,10 +34,15 @@ const ProductView = React.memo(() => {
     const [mainImage, setMainImage] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [isMagnifying, setIsMagnifying] = useState(false);
+    const magnifierRef = useRef(null);
+    const [magnifyStyle, setMagnifyStyle] = useState({});
+    const imageRefs = useRef([]);
 
     const thumbnailOptions = {
         items: 6,
         loop: true,
+        // loop: products?.images?.length > 1, // Update this line
         margin: 25,
         nav: true,
         dots: false,
@@ -76,6 +81,34 @@ const ProductView = React.memo(() => {
         setMainImage(prev => [thumb, ...prev]);
     }
 
+    const handleMouseMove = (index, e) => {
+        const img = imageRefs.current[index];
+        if (!img) return;
+
+        const { left, top, width, height } = img.getBoundingClientRect();
+        const x = (e.clientX - left) / width * 100;
+        const y = (e.clientY - top) / height * 100;
+
+        setMagnifyStyle(prev => ({
+            ...prev,
+            [index]: {
+                transformOrigin: `${x}% ${y}%`,
+                transform: 'scale(2)',
+                zIndex: 10
+            }
+        }));
+    };
+
+    const handleMouseLeave = (index) => {
+        setMagnifyStyle(prev => ({
+            ...prev,
+            [index]: {
+                transform: 'scale(1)',
+                zIndex: 1
+            }
+        }));
+    };
+
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
             <div className="container p-5 md:p-10">
@@ -94,30 +127,44 @@ const ProductView = React.memo(() => {
                         {/* Left side - Images */}
                         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
                             {[0, 1, 2, 3].map((index) => (
-                                <div key={index} className="relative aspect-square w-full h-full overflow-hidden">
+                                <div 
+                                    key={index} 
+                                    className="relative aspect-square w-full h-auto overflow-hidden group"
+                                >
                                     {mainImage?.[index] ? (
                                         isVideoFile(mainImage[index]) ? (
                                             <div className="relative group cursor-pointer w-full h-full">
-                                                <video
-                                                    src={mainImage[index]}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <div
-                                                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"
-                                                    onClick={(event) => handleMediaClick(event, mainImage[index])}
-                                                >
-                                                    <BsPlayCircle
-                                                        size={48}
-                                                        className="text-white hover:scale-110 transition-transform duration-200"
-                                                    />
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <img
+                                            <video
                                                 src={mainImage[index]}
-                                                alt={`Product ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
+                                            <div
+                                                className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"
+                                                onClick={(event) => handleMediaClick(event, mainImage[index])}
+                                            >
+                                                <BsPlayCircle
+                                                    size={48}
+                                                    className="text-white hover:scale-110 transition-transform duration-200"
+                                                />
+                                            </div>
+                                        </div>
+                                        ) : (
+                                            <div 
+                                                className="relative w-full h-full"
+                                                onMouseMove={(e) => handleMouseMove(index, e)}
+                                                onMouseLeave={() => handleMouseLeave(index)}
+                                            >
+                                                <img
+                                                    ref={el => imageRefs.current[index] = el}
+                                                    src={mainImage[index]}
+                                                    alt={`Product ${index + 1}`}
+                                                    className="w-full h-full object-cover transition-transform duration-300"
+                                                    style={magnifyStyle[index] || {}}
+                                                />
+                                                <div 
+                                                    className="absolute inset-0 group-hover:bg-black group-hover:bg-opacity-10 transition-all duration-300"
+                                                />
+                                            </div>
                                         )
                                     ) : (
                                         <div className="w-full h-full bg-gray-100"></div>
@@ -127,34 +174,96 @@ const ProductView = React.memo(() => {
 
                             <div className="col-span-2 h-[100px] w-full relative">
                                 <ReactOwlCarousel className="product-thumbs-carousel w-full h-full" {...thumbnailOptions}>
-                                    {products?.images?.map((thumb, index) => (
-                                        <div
-                                            key={index}
-                                            className={`aspect-square cursor-pointer h-full w-full relative`}
-                                            onClick={() => handleClick(thumb)}
-                                        >
-                                            {isVideoFile(thumb) ? (
-                                                <div className="relative w-full h-full">
-                                                    <video
-                                                        src={thumb}
+                                    {products?.images?.length === 1 ? (
+                                        <>
+                                            {products.images.map((thumb, index) => (
+                                                <div
+                                                    key={index}
+                                                    className={`aspect-square cursor-pointer h-full w-full relative`}
+                                                    onClick={() => handleClick(thumb)}
+                                                >
+                                                    {isVideoFile(thumb) ? (
+                                                        <div className="relative w-full h-full">
+                                                            <video
+                                                                src={thumb}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                <BsPlayCircle
+                                                                    size={24}
+                                                                    className="text-white hover:scale-110 transition-transform duration-200"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <img
+                                                            src={thumb || '/placeholder-image.jpg'}
+                                                            alt={`Thumbnail ${index + 1}`}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
+                                            {/* Duplicate the second image */}
+                                            {products.images.map((thumb, index) => (
+                                                <div
+                                                    key={index + products.images.length} // Ensure unique key
+                                                    className={`aspect-square cursor-pointer h-full w-full relative`}
+                                                    onClick={() => handleClick(thumb)}
+                                                >
+                                                    {isVideoFile(thumb) ? (
+                                                        <div className="relative w-full h-full">
+                                                            <video
+                                                                src={thumb}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                <BsPlayCircle
+                                                                    size={24}
+                                                                    className="text-white hover:scale-110 transition-transform duration-200"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <img
+                                                            src={thumb || '/placeholder-image.jpg'}
+                                                            alt={`Thumbnail ${index + 1}`}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        products?.images?.map((thumb, index) => (
+                                            <div
+                                                key={index}
+                                                className={`aspect-square cursor-pointer h-full w-full relative`}
+                                                onClick={() => handleClick(thumb)}
+                                            >
+                                                {isVideoFile(thumb) ? (
+                                                    <div className="relative w-full h-full">
+                                                        <video
+                                                            src={thumb}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                            <BsPlayCircle
+                                                                size={24}
+                                                                className="text-white hover:scale-110 transition-transform duration-200"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <img
+                                                        src={thumb || '/placeholder-image.jpg'}
+                                                        alt={`Thumbnail ${index + 1}`}
                                                         className="w-full h-full object-cover"
                                                     />
-                                                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                                                        <BsPlayCircle
-                                                            size={24}
-                                                            className="text-white hover:scale-110 transition-transform duration-200"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <img
-                                                    src={thumb || '/placeholder-image.jpg'}
-                                                    alt={`Thumbnail ${index + 1}`}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            )}
-                                        </div>
-                                    ))}
+                                                )}
+                                            </div>
+                                        ))
+                                    )}
                                 </ReactOwlCarousel>
                             </div>
                         </div>

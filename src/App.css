@@ -453,3 +453,19 @@ select option {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.magnifier-container {
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+.magnifier-glass {
+  position: absolute;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
