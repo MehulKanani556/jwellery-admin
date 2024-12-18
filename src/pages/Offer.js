@@ -34,7 +34,6 @@ export default function Offer() {
     const [filterOffer, setFilterOffer] = useState(offers);
     const searchValue = useSelector((state) => state.search.value);
     const isSmallScreen = useMediaQuery("(max-width:425px)");
-
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
 

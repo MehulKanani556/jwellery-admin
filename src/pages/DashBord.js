@@ -26,9 +26,7 @@ const isVideo = (filename) => {
 export default function DashBord() {
   const dispatch = useDispatch();
   const { dashboardData } = useSelector((state) => state.dashboard)
-  const color =
-
-    console.log(dashboardData)
+  
 
   useEffect(() => {
     dispatch(getDashboard());

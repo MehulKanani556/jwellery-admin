@@ -5,7 +5,6 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,9 +17,7 @@ export default function ReturnOrderView() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { returnOrders,loading } = useSelector((state) => state.returnorders);
-
     const [delAllOpen, setDelAllOpen] = useState(false);
-
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterReturn, setFilterReturn] = useState(returnOrders);
     const [selectName, setSelectName] = useState('');
@@ -105,9 +102,7 @@ export default function ReturnOrderView() {
         });
     }
 
-    const handleToggle = (data) => {
-        dispatch(updateStatusReturnOrder({ id: data.id, return_status: data.status }));
-    };
+
 
     return (
         loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 

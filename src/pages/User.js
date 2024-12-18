@@ -14,7 +14,6 @@ export default function User() {
   const [delOpen, setDelOpen] = useState(false);
   const dispatch = useDispatch();
   const isSmallScreen = useMediaQuery("(max-width:425px)");
-
   const data = useSelector((state) => state.users.users).filter(
     (user) => user.role_id != 1
   );

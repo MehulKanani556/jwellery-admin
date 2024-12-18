@@ -33,8 +33,6 @@ export default function Review() {
         data.product_name && data?.product_name?.toString().toLowerCase().includes(searchValue.toLowerCase())
     );
 
-
-
     // Pagination statecurrentItems
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Set items per page

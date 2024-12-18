@@ -2,9 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
-
-import { FiArrowLeft } from "react-icons/fi";
-
 import Loader from "../components/Loader";
 import { RiPrinterFill } from "react-icons/ri";
 import { getAllProducts } from "../reduxe/slice/product.slice";

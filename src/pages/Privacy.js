@@ -53,25 +53,7 @@ export default function TermsCondition() {
         setCurrentPage(pageNumber);
     };
 
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-    const handleOpen = (data) => {
-        setOpen(true);
-        setData(data)
-    }
-    const handleClose = () => {
-        setOpen(false);
-    }
+ 
     const handleDeleteOpen = (data) => {
         setDelOpen(true);
         setData(data)

@@ -4,12 +4,10 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Pagination from "@mui/material/Pagination";
@@ -30,7 +28,7 @@ export default function Coupons() {
     const [delOpen, setDelOpen] = useState(false);
     const dispatch = useDispatch();
     const [createopen, setCreateopen] = useState(false);
-    const { coupons,loading } = useSelector((state) => state.coupons);
+    const { coupons, loading } = useSelector((state) => state.coupons);
     const [delAllOpen, setDelAllOpen] = useState(false);
     const isSmallScreen = useMediaQuery("(max-width:425px)");
 
@@ -51,16 +49,16 @@ export default function Coupons() {
         setFilterCoupon(coupons)
     }, [coupons]);
 
-     // serch
-     const filteredData = coupons.filter(data =>
+    // serch
+    const filteredData = coupons.filter(data =>
         data.name && data?.name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         data.code && data?.code?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         data.price && data?.price.toString().toLowerCase().includes(searchValue.toLowerCase())
-     );
-     useEffect(() => {
+    );
+    useEffect(() => {
         setFilterCoupon(filteredData);
-     }, [searchValue]);
- 
+    }, [searchValue]);
+
     // ======filter=====
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -173,7 +171,7 @@ export default function Coupons() {
         code: Yup.string().required("Code is required"),
         description: Yup.string().required("Description is required"),
         type: Yup.string().required("Coupon type is required"),
-        price: Yup.number().required("Price is required").moreThan(0,"Price must be greater than 0"),
+        price: Yup.number().required("Price is required").moreThan(0, "Price must be greater than 0"),
         start_date: Yup.date().required("Start date is required"),
         end_date: Yup.date()
             .required("End date is required")
@@ -184,415 +182,415 @@ export default function Coupons() {
     });
 
     return (
-        loading  ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader/></div> : 
-        <div className="container   p-5 md:p-10">
-            <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-2xl font-bold text-brown">Coupons </h1>
-                    <p className="text-brown-50">
-                        <Link to="/dashboard">Dashboard</Link>  /{" "}
-                        <span className="text-brown font-medium">Coupons</span>
-                    </p>
-                </div>
-                <div>
-                    <div className="flex flex-wrap justify-center lg:justify-end gap-4  mb-4">
-                        {filtersApplied ? (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            >
-                                Cancel
-                            </button>
-                        ) : (
-                            <button
-                                className="text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                                id="basic-button"
-                                aria-controls={open ? "basic-menu" : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? "true" : undefined}
-                                onClick={handleClick}
-                            >
-                                <span>
-                                    <FaFilter />
-                                </span>
-                                <span>Filter</span>
-                            </button>
-                        )}
-                        {/* ====== */}
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                            }}
-                            PaperProps={{
-                                style: { width: "300px" },
-                            }}
-                        >
-                            <div className="">
-                                <div className="border-b-2">
-                                    <p className="text-brown font-bold text-xl p-3">Filter</p>
-                                </div>
-                                <div className=" p-3">.
-                                    <div className="">
-
-                                        <label className="text-brown font-bold">Start Date</label>
-                                        <input
-                                            type="date"
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedStartDate == '' ? 'text-gray-400' : 'text-black' }`}
-                                            value={selectedStartDate}
-                                            onChange={(e) => setSelectedStartDate(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="mt-4">
-
-                                        <label className="text-brown font-bold mt-4">End Date</label>
-                                        <input
-                                            type="date"
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedEndDate == '' ? 'text-gray-400' : 'text-black' }`}
-                                            value={selectedEndDate}
-                                            min={selectedStartDate}
-                                            onChange={(e) => setSelectedEndDate(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="mt-4">
-
-                                        <label className="text-brown font-bold mt-4">Status</label>
-                                        <select
-                                            name="status"
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus == '' ? 'text-gray-400' : 'text-black' }`}
-                                            value={selectedStatus}
-                                            onChange={(e) => setSelectedStatus(e.target.value)}
-                                        >
-                                            <option value="">Select Status</option>
-                                            <option value="inactive">In Active</option>
-                                            <option value="active">Active</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div className="flex justify-center gap-8 mt-2 p-3">
-                                    <button
-                                        type="button"
-                                        onClick={handleResetFilters}
-                                        className="text-brown w-36 border-brown border px-5 py-2 rounded"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={handleApplyFilter}
-                                        className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
-                        </Menu>
-
-                        {/* ===== */}
-
-                        <button
-                            className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
-                            onClick={() => { setDelAllOpen(true) }}
-                        >
-                            <span>
-                                <RiDeleteBin6Fill />
-                            </span>
-                            <span>Delete All</span>
-                        </button>
-                        <button
-                            className="bg-brown w-32 text-white px-4 py-2 rounded hover:bg-brown-50 "
-                            onClick={() => setCreateopen(true)}
-                        >
-                            + Add
-                        </button>
+        loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :
+            <div className="container   p-5 md:p-10">
+                <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+                    <div className="text-center lg:text-left">
+                        <h1 className="text-2xl font-bold text-brown">Coupons </h1>
+                        <p className="text-brown-50">
+                            <Link to="/dashboard">Dashboard</Link>  /{" "}
+                            <span className="text-brown font-medium">Coupons</span>
+                        </p>
                     </div>
-                </div>
-            </div>
-            <div className="overflow-auto shadow mt-5 rounded">
-                <table className="w-full bg-white">
-                    <thead>
-                        <tr className="text-brown font-bold">
-                            <td className="py-2 px-5 ">ID</td>
-                            <td className="py-2 px-5 ">Code</td>
-                            <td className="py-2 px-5 ">Coupon Name</td>
-                            <td className="py-2 px-5 ">Description</td>
-                            <td className="py-2 px-5 ">Coupon type</td>
-                            <td className="py-2 px-5 ">Price</td>
-                            <td className="py-2 px-5 ">Start Date</td>
-                            <td className="py-2 px-5 ">End Date</td>
-                            <td className="py-2 px-5 ">Status</td>
-                            <td className="py-2 px-5 ">Action</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentItems && currentItems.length > 0 ? (
-                            currentItems.map((v, index) => (
-                                <tr key={index} className="hover:bg-gray-100 border-t">
-                                    <td className="py-2 px-5">{v.id}</td>
-                                    <td className="py-2 px-5">{v.code}</td>
-                                    <td className="py-2 px-5">{v.name}</td>
-                                    <td className="py-2 px-5">{v.description}</td>
-                                    <td className="py-2 px-5 capitalize ">{v.type}</td>
-                                    <td className="py-2 px-5">₹ {v.price}</td>
-                                    <td className="py-2 px-5 text-nowrap">{new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
-                                    <td className="py-2 px-5 text-nowrap">{new Date(v.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
-
-                                    <td className="py-2 px-5">
-                                        <label className="inline-flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={v.status}
-                                                onChange={() => handleToggle(v)}
-                                                className="hidden peer"
-                                            />
-                                            <div
-                                                className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
-                                                    }`}
-                                            >
-                                                <div
-                                                    className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${v.status == "active"
-                                                        ? "translate-x-[13px] bg-white"
-                                                        : "bg-white"
-                                                        }`}
-                                                ></div>
-                                            </div>
-                                        </label>
-                                    </td>
-                                    <td className="py-2 px-5 flex items-center gap-2">
-                                        <div>
-                                            <button
-                                                className="text-green-700 text-xl p-1 border border-brown-50 rounded"
-                                                onClick={() => handleOpen(v)}
-                                            >
-                                                <RiEdit2Fill />
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <button
-                                                className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
-                                                onClick={() => handleDeleteOpen(v)}
-                                            >
-                                                <RiDeleteBin6Fill />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="10" className="py-2 px-4 text-center text-gray-500 border-t">No records found</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-
-            <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={(event, page) => handlePageChange(page)}
-                variant="outlined"
-                shape="rounded"
-                className="flex justify-end m-4"
-                siblingCount={1} // Show one sibling page on each side
-                 boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
-                sx={{
-                    "& .MuiPaginationItem-root": {
-                        color: "text.primary", // Default color for pagination items
-                    },
-                    "& .MuiPaginationItem-root.Mui-selected": {
-                        backgroundColor: "#523b33", // Active page background color
-                        color: "white", // Active page text color
-                    },
-                    "& .MuiPaginationItem-root:hover": {
-                        backgroundColor: "lightgray", // Hover effect
-                    },
-                }}
-            />
-
-            {/* create & update  Coupon*/}
-            <Modal open={createopen} onClose={handleCreateClose}>
-                <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px] transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                    <p className='text-brown font-bold text-xl flex justify-between'>
-                        <p>{couponData ? 'Edit Coupon' : 'Add Coupon'}</p>
-                        <button onClick={handleCreateClose} className="font-bold"><RxCross2 /></button>
-                    </p>
                     <div>
-                        <Formik
-                            initialValues={{
-                                name: couponData ? couponData.name : "",
-                                code: couponData ? couponData.code : "",
-                                description: couponData ? couponData.description : "",
-                                type: couponData ? couponData.type : "",
-                                price: couponData ? couponData.price : "",
-                                start_date: couponData ? couponData.start_date : "",
-                                end_date: couponData ? couponData.end_date : "",
-                                id: couponData ? couponData.id : "",
-                                status: couponData ? couponData.status : "active",
-                            }}
-                            validationSchema={validationSchema}
-                            onSubmit={(values, { resetForm }) => {
-                                if (couponData) {
-                                    dispatch(editCoupon(values));
-                                } else {
-                                    dispatch(addCoupon(values));
-                                }
-                                resetForm();
-                                handleCreateClose();
-                            }}
-                        >
-                            {({ handleSubmit, isSubmitting, values }) => (
-                                <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Code</label>
-                                        <Field
-                                            type="text"
-                                            name="code"
-                                            placeholder="Enter Code"
-                                            className="border border-brown rounded w-full p-2 mt-1"
-                                        />
-                                        <ErrorMessage name="code" component="div" className="text-red-500" />
+                        <div className="flex flex-wrap justify-center lg:justify-end gap-4  mb-4">
+                            {filtersApplied ? (
+                                <button
+                                    type="button"
+                                    onClick={handleResetFilters}
+                                    className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                                >
+                                    Cancel
+                                </button>
+                            ) : (
+                                <button
+                                    className="text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                                    id="basic-button"
+                                    aria-controls={open ? "basic-menu" : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? "true" : undefined}
+                                    onClick={handleClick}
+                                >
+                                    <span>
+                                        <FaFilter />
+                                    </span>
+                                    <span>Filter</span>
+                                </button>
+                            )}
+                            {/* ====== */}
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    "aria-labelledby": "basic-button",
+                                }}
+                                PaperProps={{
+                                    style: { width: "300px" },
+                                }}
+                            >
+                                <div className="">
+                                    <div className="border-b-2">
+                                        <p className="text-brown font-bold text-xl p-3">Filter</p>
                                     </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Coupon Name</label>
-                                        <Field
-                                            type="text"
-                                            name="name"
-                                            placeholder="Enter Coupon Name"
-                                            className="border border-brown rounded w-full p-2 mt-1"
-                                        />
-                                        <ErrorMessage name="name" component="div" className="text-red-500" />
+                                    <div className=" p-3">.
+                                        <div className="">
+
+                                            <label className="text-brown font-bold">Start Date</label>
+                                            <input
+                                                type="date"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedStartDate == '' ? 'text-gray-400' : 'text-black'}`}
+                                                value={selectedStartDate}
+                                                onChange={(e) => setSelectedStartDate(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="mt-4">
+
+                                            <label className="text-brown font-bold mt-4">End Date</label>
+                                            <input
+                                                type="date"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedEndDate == '' ? 'text-gray-400' : 'text-black'}`}
+                                                value={selectedEndDate}
+                                                min={selectedStartDate}
+                                                onChange={(e) => setSelectedEndDate(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="mt-4">
+
+                                            <label className="text-brown font-bold mt-4">Status</label>
+                                            <select
+                                                name="status"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${selectedStatus == '' ? 'text-gray-400' : 'text-black'}`}
+                                                value={selectedStatus}
+                                                onChange={(e) => setSelectedStatus(e.target.value)}
+                                            >
+                                                <option value="">Select Status</option>
+                                                <option value="inactive">In Active</option>
+                                                <option value="active">Active</option>
+                                            </select>
+                                        </div>
+
                                     </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Description</label>
-                                        <Field
-                                            type="text"
-                                            name="description"
-                                            placeholder="Enter Description"
-                                            className="border border-brown rounded w-full p-2 mt-1"
-                                        />
-                                        <ErrorMessage name="description" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Coupon type</label>
-                                        <Field
-                                            as="select"
-                                            name="type"
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.type == '' ? 'text-gray-400' : 'text-black' }`}
+                                    <div className="flex justify-center gap-8 mt-2 p-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleResetFilters}
+                                            className="text-brown w-36 border-brown border px-5 py-2 rounded"
                                         >
-                                            <option value="">Select</option>
-                                            <option value="percentage">Percentage</option>
-                                            <option value="fixed">Fixed Amount</option>
-                                        </Field>
-                                        <ErrorMessage name="type" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Price</label>
-                                        <Field
-                                            type="text"
-                                            name="price"
-                                            placeholder="Enter Price"
-                                            className="border border-brown rounded w-full p-2 mt-1"
-                                        />
-                                        <ErrorMessage name="price" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">Start Date</label>
-                                        <Field
-                                            type="date"
-                                            name="start_date"
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.start_date == '' ? 'text-gray-400' : 'text-black' }`}
-
-                                        />
-                                        <ErrorMessage name="start_date" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="text-brown font-bold mt-4">End Date</label>
-                                        <Field
-                                            type="date"
-                                            name="end_date"
-                                            min={values.start_date || ''}
-                                            className={`border border-brown rounded w-full p-3 mt-1 ${values?.end_date == '' ? 'text-gray-400' : 'text-black' }`}
-
-                                   
-                                        />
-                                        <ErrorMessage name="end_date" component="div" className="text-red-500" />
-                                    </div>
-                                    <div className='flex flex-col md:flex-row gap-2 p-5 pb-2'>
-                                        <button className='text-brown hover:bg-brown-50 border-brown border p-2 rounded w-full' onClick={handleCreateClose}>
                                             Cancel
                                         </button>
                                         <button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
+                                            type="button"
+                                            onClick={handleApplyFilter}
+                                            className="bg-brown text-white w-36 border-brown border px-5 py-2 rounded"
                                         >
-                                            {isSubmitting ? 'Submitting...' : (couponData ? 'Edit' : 'Add')}
+                                            Apply
                                         </button>
                                     </div>
-                                </form>
+                                </div>
+                            </Menu>
+
+                            {/* ===== */}
+
+                            <button
+                                className=" text-brown w-32 border-brown border px-4 py-2 rounded flex justify-center items-center gap-2"
+                                onClick={() => { setDelAllOpen(true) }}
+                            >
+                                <span>
+                                    <RiDeleteBin6Fill />
+                                </span>
+                                <span>Delete All</span>
+                            </button>
+                            <button
+                                className="bg-brown w-32 text-white px-4 py-2 rounded hover:bg-brown-50 "
+                                onClick={() => setCreateopen(true)}
+                            >
+                                + Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="overflow-auto shadow mt-5 rounded">
+                    <table className="w-full bg-white">
+                        <thead>
+                            <tr className="text-brown font-bold">
+                                <td className="py-2 px-5 ">ID</td>
+                                <td className="py-2 px-5 ">Code</td>
+                                <td className="py-2 px-5 ">Coupon Name</td>
+                                <td className="py-2 px-5 ">Description</td>
+                                <td className="py-2 px-5 ">Coupon type</td>
+                                <td className="py-2 px-5 ">Price</td>
+                                <td className="py-2 px-5 ">Start Date</td>
+                                <td className="py-2 px-5 ">End Date</td>
+                                <td className="py-2 px-5 ">Status</td>
+                                <td className="py-2 px-5 ">Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.length > 0 ? (
+                                currentItems.map((v, index) => (
+                                    <tr key={index} className="hover:bg-gray-100 border-t">
+                                        <td className="py-2 px-5">{v.id}</td>
+                                        <td className="py-2 px-5">{v.code}</td>
+                                        <td className="py-2 px-5">{v.name}</td>
+                                        <td className="py-2 px-5">{v.description}</td>
+                                        <td className="py-2 px-5 capitalize ">{v.type}</td>
+                                        <td className="py-2 px-5">₹ {v.price}</td>
+                                        <td className="py-2 px-5 text-nowrap">{new Date(v.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
+                                        <td className="py-2 px-5 text-nowrap">{new Date(v.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-') || ''}</td>
+
+                                        <td className="py-2 px-5">
+                                            <label className="inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={v.status}
+                                                    onChange={() => handleToggle(v)}
+                                                    className="hidden peer"
+                                                />
+                                                <div
+                                                    className={`relative w-[30px] h-[17px] rounded-full transition-colors duration-200 ${v.status == "active" ? "bg-[#523C34]" : "bg-gray-500"
+                                                        }`}
+                                                >
+                                                    <div
+                                                        className={`absolute top-0.5 left-0.5 w-[13px] h-[13px] rounded-full transition-transform duration-200 ${v.status == "active"
+                                                            ? "translate-x-[13px] bg-white"
+                                                            : "bg-white"
+                                                            }`}
+                                                    ></div>
+                                                </div>
+                                            </label>
+                                        </td>
+                                        <td className="py-2 px-5 flex items-center gap-2">
+                                            <div>
+                                                <button
+                                                    className="text-green-700 text-xl p-1 border border-brown-50 rounded"
+                                                    onClick={() => handleOpen(v)}
+                                                >
+                                                    <RiEdit2Fill />
+                                                </button>
+                                            </div>
+                                            <div>
+                                                <button
+                                                    className="text-red-500 text-xl p-1 border border-brown-50 rounded hover:text-red-300"
+                                                    onClick={() => handleDeleteOpen(v)}
+                                                >
+                                                    <RiDeleteBin6Fill />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="10" className="py-2 px-4 text-center text-gray-500 border-t">No records found</td>
+                                </tr>
                             )}
-                        </Formik>
-                    </div>
-                </Box>
-            </Modal>
+                        </tbody>
+                    </table>
+                </div>
 
-            {/* Delete Coupon */}
-            <Modal open={delOpen} onClose={handleDeleteClose}>
-                <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                    <div className="p-5">
-                        <div className="text-center">
-                            <p className="text-brown font-bold text-xl">Delete Coupon</p>
-                            <p className="text-brown-50">
-                                Are you sure you want to delete coupon?
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap gap-3 mt-4 justify-center">
-                            <button
-                                onClick={handleDeleteClose}
-                                className="text-brown w-32 border-brown border px-4 py-2 rounded"
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={(event, page) => handlePageChange(page)}
+                    variant="outlined"
+                    shape="rounded"
+                    className="flex justify-end m-4"
+                    siblingCount={1} // Show one sibling page on each side
+                    boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
+                    sx={{
+                        "& .MuiPaginationItem-root": {
+                            color: "text.primary", // Default color for pagination items
+                        },
+                        "& .MuiPaginationItem-root.Mui-selected": {
+                            backgroundColor: "#523b33", // Active page background color
+                            color: "white", // Active page text color
+                        },
+                        "& .MuiPaginationItem-root:hover": {
+                            backgroundColor: "lightgray", // Hover effect
+                        },
+                    }}
+                />
+
+                {/* create & update  Coupon*/}
+                <Modal open={createopen} onClose={handleCreateClose}>
+                    <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px] transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+                        <p className='text-brown font-bold text-xl flex justify-between'>
+                            <p>{couponData ? 'Edit Coupon' : 'Add Coupon'}</p>
+                            <button onClick={handleCreateClose} className="font-bold"><RxCross2 /></button>
+                        </p>
+                        <div>
+                            <Formik
+                                initialValues={{
+                                    name: couponData ? couponData.name : "",
+                                    code: couponData ? couponData.code : "",
+                                    description: couponData ? couponData.description : "",
+                                    type: couponData ? couponData.type : "",
+                                    price: couponData ? couponData.price : "",
+                                    start_date: couponData ? couponData.start_date : "",
+                                    end_date: couponData ? couponData.end_date : "",
+                                    id: couponData ? couponData.id : "",
+                                    status: couponData ? couponData.status : "active",
+                                }}
+                                validationSchema={validationSchema}
+                                onSubmit={(values, { resetForm }) => {
+                                    if (couponData) {
+                                        dispatch(editCoupon(values));
+                                    } else {
+                                        dispatch(addCoupon(values));
+                                    }
+                                    resetForm();
+                                    handleCreateClose();
+                                }}
                             >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded"
-                            >
-                                Delete
-                            </button>
+                                {({ handleSubmit, isSubmitting, values }) => (
+                                    <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Code</label>
+                                            <Field
+                                                type="text"
+                                                name="code"
+                                                placeholder="Enter Code"
+                                                className="border border-brown rounded w-full p-2 mt-1"
+                                            />
+                                            <ErrorMessage name="code" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Coupon Name</label>
+                                            <Field
+                                                type="text"
+                                                name="name"
+                                                placeholder="Enter Coupon Name"
+                                                className="border border-brown rounded w-full p-2 mt-1"
+                                            />
+                                            <ErrorMessage name="name" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Description</label>
+                                            <Field
+                                                type="text"
+                                                name="description"
+                                                placeholder="Enter Description"
+                                                className="border border-brown rounded w-full p-2 mt-1"
+                                            />
+                                            <ErrorMessage name="description" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Coupon type</label>
+                                            <Field
+                                                as="select"
+                                                name="type"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${values?.type == '' ? 'text-gray-400' : 'text-black'}`}
+                                            >
+                                                <option value="">Select</option>
+                                                <option value="percentage">Percentage</option>
+                                                <option value="fixed">Fixed Amount</option>
+                                            </Field>
+                                            <ErrorMessage name="type" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Price</label>
+                                            <Field
+                                                type="text"
+                                                name="price"
+                                                placeholder="Enter Price"
+                                                className="border border-brown rounded w-full p-2 mt-1"
+                                            />
+                                            <ErrorMessage name="price" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">Start Date</label>
+                                            <Field
+                                                type="date"
+                                                name="start_date"
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${values?.start_date == '' ? 'text-gray-400' : 'text-black'}`}
+
+                                            />
+                                            <ErrorMessage name="start_date" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="text-brown font-bold mt-4">End Date</label>
+                                            <Field
+                                                type="date"
+                                                name="end_date"
+                                                min={values.start_date || ''}
+                                                className={`border border-brown rounded w-full p-3 mt-1 ${values?.end_date == '' ? 'text-gray-400' : 'text-black'}`}
+
+
+                                            />
+                                            <ErrorMessage name="end_date" component="div" className="text-red-500" />
+                                        </div>
+                                        <div className='flex flex-col md:flex-row gap-2 p-5 pb-2'>
+                                            <button className='text-brown hover:bg-brown-50 border-brown border p-2 rounded w-full' onClick={handleCreateClose}>
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
+                                            >
+                                                {isSubmitting ? 'Submitting...' : (couponData ? 'Edit' : 'Add')}
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
+                            </Formik>
                         </div>
-                    </div>
-                </Box>
-            </Modal>
-            {/* Delete All coupon */}
-            <Modal
-                open={delAllOpen}
-                onClose={() => setDelAllOpen(false)}
+                    </Box>
+                </Modal>
 
-            >
-                <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-
-                    <div className='  p-5'>
-                        <div className='text-center'>
-
-                            <p className='text-brown font-bold text-xl'>Delete All Coupon</p>
-                            <p className='text-brown-50'>Are you sure you want to delete all
-                                coupon?</p>
+                {/* Delete Coupon */}
+                <Modal open={delOpen} onClose={handleDeleteClose}>
+                    <Box className="bg-gray-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+                        <div className="p-5">
+                            <div className="text-center">
+                                <p className="text-brown font-bold text-xl">Delete Coupon</p>
+                                <p className="text-brown-50">
+                                    Are you sure you want to delete coupon?
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap gap-3 mt-4 justify-center">
+                                <button
+                                    onClick={handleDeleteClose}
+                                    className="text-brown w-32 border-brown border px-4 py-2 rounded"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleDelete}
+                                    className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
-                        <div className='flex flex-wrap justify-center gap-3 mt-4'>
-                            <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
-                            <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
+                    </Box>
+                </Modal>
+                {/* Delete All coupon */}
+                <Modal
+                    open={delAllOpen}
+                    onClose={() => setDelAllOpen(false)}
+
+                >
+                    <Box className="bg-gray-50  absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
+
+                        <div className='  p-5'>
+                            <div className='text-center'>
+
+                                <p className='text-brown font-bold text-xl'>Delete All Coupon</p>
+                                <p className='text-brown-50'>Are you sure you want to delete all
+                                    coupon?</p>
+                            </div>
+                            <div className='flex flex-wrap justify-center gap-3 mt-4'>
+                                <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
+                                <button onClick={handleDeleteAll} className="bg-brown text-white w-32 border-brown border px-4 py-2 rounded">Delete</button>
+                            </div>
+
                         </div>
 
-                    </div>
-
-                </Box>
-            </Modal>
-        </div>
+                    </Box>
+                </Modal>
+            </div>
     );
 }

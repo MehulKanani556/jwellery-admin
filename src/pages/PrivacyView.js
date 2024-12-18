@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
 import { FiArrowLeft } from "react-icons/fi";
-
-
 import Loader from "../components/Loader";
 import { getAllPrivacyPolicies } from "../reduxe/slice/privacy.slice";
 
@@ -13,7 +10,7 @@ export default function PrivacyView() {
     const navigate = useNavigate();
 
     const { policies, loading } = useSelector((state) => state.privacy)
-    console.log(policies)
+   
     useEffect(() => {
         dispatch(getAllPrivacyPolicies());
     }, [dispatch]);

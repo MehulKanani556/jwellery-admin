@@ -142,7 +142,7 @@ export default function Product() {
   const handleSort = (e) => {
     const sortValue = e.target.value;
     setSortBy(sortValue);
-    console.log(sortValue);
+
 
     if (sortValue) {
 

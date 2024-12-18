@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
 import { FiArrowLeft } from "react-icons/fi";
-
-
 import Loader from "../components/Loader";
 import { getAllTerms } from "../reduxe/slice/terms.slice";
 
 export default function TermsConditionView() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const { terms, loading } = useSelector(state => state.terms);
-
-
     useEffect(() => {
         dispatch(getAllTerms())
     }, [dispatch]);

@@ -1,16 +1,12 @@
-import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
+import { Box,  Modal, Pagination,  useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
-import { BsFillEyeFill } from 'react-icons/bs'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
-import { Form, Link, useNavigate } from 'react-router-dom'
+import {  Link, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
 import { addTerm, deleteAllTerms, deleteTerm, editTerm, getAllTerms } from '../reduxe/slice/terms.slice'
 
@@ -26,7 +22,7 @@ export default function TermsCondition() {
     const { terms, loading } = useSelector(state => state.terms);
     const isSmallScreen = useMediaQuery("(max-width:425px)");
 
-    console.log(terms)
+ 
     useEffect(() => {
         dispatch(getAllTerms())
     }, []);
@@ -53,22 +49,7 @@ export default function TermsCondition() {
         setCurrentPage(pageNumber);
     };
 
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-    const handleOpen = (data) => {
-        setOpen(true);
-        setData(data)
-    }
+   
     const handleClose = () => {
         setOpen(false);
     }
@@ -182,7 +163,7 @@ export default function TermsCondition() {
                     }}
                 />
 
-                {/* Add Size */}
+                {/* Add terms */}
                 <Modal
                     open={addOpen}
                     onClose={handleAddClose}
@@ -249,72 +230,8 @@ export default function TermsCondition() {
                         </div>
                     </Box>
                 </Modal>
-                {/* Edit Size */}
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                        <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>Edit Size</p>
-                            <button onClick={handleClose} className=" font-bold"><RxCross2 /></button>
-                        </p>
-                        <div>
-                            <Formik
-                                initialValues={{ id: data.id || '', name: data.name || '', size: data.size || '' }}
-                                validationSchema={validationSchema}
-                                onSubmit={(values, { resetForm }) => {
-                                    dispatch(editSize(values));
-                                    resetForm();
-                                    handleClose(); // Close the modal after successful submission
-                                }}
-                            >
-                                {({ handleSubmit, isSubmitting }) => (
-                                    <form onSubmit={handleSubmit} className=" p-4 md:p-8 rounded-lg  ">
-                                        <div className="mb-4">
-                                            <label htmlFor="name" className="block text-sm font-bold text-brown">Name</label>
-                                            <Field
-                                                type="text"
-                                                name="name"
-                                                id="name"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Name"
-                                            />
-                                            <ErrorMessage name="name" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="size" className="block text-sm font-bold text-brown">Size</label>
-                                            <Field
-                                                type="text"
-                                                name="size"
-                                                id="size"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Size"
-                                            />
-                                            <ErrorMessage name="size" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 '>
-                                            <button className='text-brown hover:bg-brown-50  border-brown border p-2 rounded w-full' onClick={handleAddClose}>
-                                                Cancel
-                                            </button>
-
-                                            <button
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                                className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
-                                            >
-                                                {isSubmitting ? 'Submitting...' : 'Edit Size'}
-                                            </button>
-                                        </div>
-                                    </form>
-                                )}
-                            </Formik>
-                        </div>
-                    </Box>
-                </Modal>
-                {/* Delete Size */}
+               
+                {/* Delete terms */}
                 <Modal
                     open={delOpen}
                     onClose={handleDeleteClose}
@@ -339,7 +256,7 @@ export default function TermsCondition() {
 
                     </Box>
                 </Modal>
-                {/* Delete All Size */}
+                {/* Delete All terms */}
                 <Modal
                     open={delAllOpen}
                     onClose={() => setDelAllOpen(false)}

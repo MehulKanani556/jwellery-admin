@@ -48,7 +48,6 @@ export default function ProductOffer() {
     useEffect(() => {
         dispatch(getAllProductOffers());
         dispatch(getAllCategory());
-
     }, [dispatch]);
 
     useEffect(() => {

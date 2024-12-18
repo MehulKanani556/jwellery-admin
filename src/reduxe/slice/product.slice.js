@@ -88,7 +88,6 @@ export const addProduct = createAsyncThunk(
       data.mediaFiles.forEach((image, index) => {
         formData.append(`image[${index}]`, image);
       });
-      console.log(formData);
     } else {
       formData.append("image", data.mediaFiles);
     }
@@ -109,7 +108,7 @@ export const editProduct = createAsyncThunk(
   "product/editProduct",
   async ({ data, id }, { rejectWithValue }) => {
     // Format the data object
-    console.log(data);
+    
 
     const formData = new FormData();
 
@@ -191,7 +190,7 @@ export const editProduct = createAsyncThunk(
           },
         }
       );
-      console.log(response.data);
+   
       return response.data.data; // Assuming the API returns the updated product
     } catch (error) {
       return handleErrors(error, null, rejectWithValue);

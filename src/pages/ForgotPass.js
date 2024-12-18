@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
+import React from 'react'
 import { MdEmail } from 'react-icons/md'
-import { Link, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { forgotPassword } from '../reduxe/slice/auth.slice';
 
 export default function ForgotPass() {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.auth.message);
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
@@ -17,19 +15,13 @@ export default function ForgotPass() {
 
     });
     const handleSubmit = (values, { resetForm }) => {
-        // Here you can make API call or perform any other logic
-        console.log('Form submitted:', values);
+       
         dispatch(forgotPassword(values)).then(() => navigate('/verify-otp'));
         resetForm();
         // navigate('/verify-otp');
     }
 
-    // Use an effect to navigate after the data is updated
-    // useEffect(() => {
-    //     if (data) {
-    //         navigate('/verify-otp');
-    //     }
-    // }, [data, navigate]);
+ 
 
     return (
         <div>

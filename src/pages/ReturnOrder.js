@@ -12,14 +12,11 @@ import { getAllReturnOrders, deleteAllReturnOrders, updateStatusReturnOrder } fr
 import { useSnackbar } from "notistack";
 import Loader from "../components/Loader";
 export default function ReturnOrder() {
-    const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { returnOrders, message, success, loading } = useSelector((state) => state.returnorders);
     const isSmallScreen = useMediaQuery("(max-width:425px)");
-
     const [delAllOpen, setDelAllOpen] = useState(false);
-
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [filterReturn, setFilterReturn] = useState(returnOrders);
 
@@ -28,10 +25,8 @@ export default function ReturnOrder() {
 
     useEffect(() => {
         dispatch(getAllReturnOrders());
-        if (message) {
-            const variant = success == 'false' ? 'error' : 'success';
-        }
-    }, [dispatch, message]); // Added message to the dependency array
+       
+    }, [dispatch]); // Added message to the dependency array
 
     useEffect(() => {
         setFilterReturn(returnOrders)

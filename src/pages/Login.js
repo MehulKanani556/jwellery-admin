@@ -6,7 +6,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../reduxe/slice/auth.slice';
-import session from 'redux-persist/es/storage/session';
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +29,7 @@ export default function Login() {
             if (data.role === 'admin') {
                 navigate('/dashboard');
             } else {
-                dispatch(logout({ message: 'Access denied. Admin access required.'}));
+                dispatch(logout({ message: 'Access denied. Admin access required.' }));
             }
         }
     }, [data, navigate, dispatch]);

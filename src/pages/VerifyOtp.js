@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
-import { MdEmail } from 'react-icons/md'
-import { Link, useNavigate } from 'react-router-dom'
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import {  useNavigate } from 'react-router-dom'
+import { Formik, Form, Field,  } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyOtp, forgotPassword } from '../reduxe/slice/auth.slice';
 
 export default function VerifyOtp() {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.auth.user);
     const navigate = useNavigate();
     const email = sessionStorage.getItem('email');
     const [resendMessage, setResendMessage] = useState('');

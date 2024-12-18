@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { resetPassword } from '../reduxe/slice/auth.slice';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -31,7 +31,6 @@ export default function RestPass() {
             navigate('/'); // Redirect to '/'
         });
         resetForm();
-        console.log('Form submitted:', payload); // Log the payload
     }
 
     return (

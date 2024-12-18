@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
-
 import { FiArrowLeft } from "react-icons/fi";
-
-
 import Loader from "../components/Loader";
 
 export default function OrderView() {
@@ -15,7 +12,7 @@ export default function OrderView() {
     const { id } = useParams();
 
     const { selectedOrder,loading } = useSelector((state) => state.orders);
-    console.log(selectedOrder)
+
 
     useEffect(() => {
         dispatch(getOrderById(id));

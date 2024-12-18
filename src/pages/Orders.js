@@ -50,7 +50,7 @@ export default function Orders() {
 
     // serch
     const filteredData = orders.filter(data =>
-       data.customer_name && data?.customer_name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        data.customer_name && data?.customer_name?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         data.total_amount && data?.total_amount?.includes(searchValue.toLowerCase())
     );
     useEffect(() => {
@@ -105,14 +105,9 @@ export default function Orders() {
                 const matchesStatus = status ? item.order_status === status : true;
                 return matchesStatus;
             }
-
-
-
-
         });
         handleClose();
         setFilterOrder(filteredItems);
-        console.log(filteredItems);
     };
 
     // Handle reset filters
@@ -318,7 +313,7 @@ export default function Orders() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
+                    boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         "& .MuiPaginationItem-root": {
                             color: "text.primary", // Default color for pagination items

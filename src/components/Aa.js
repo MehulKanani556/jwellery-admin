@@ -6,7 +6,7 @@ export default function Aa({ data }) {
   const chartRef = useRef(null); // Create a ref to store the chart instance
 
   const seriesData = Array.isArray(data) ? data.map(item => item.product_count) : [];
-  console.log('Series Data:', seriesData);
+ 
   const getChartOptions = () => {
     return {
       series: seriesData,

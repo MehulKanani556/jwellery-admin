@@ -1,16 +1,13 @@
-import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
+import { Box,  Modal, Pagination,  useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
-import { BsFillEyeFill } from 'react-icons/bs'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
-import { Form, Link } from 'react-router-dom'
+import {  Link } from 'react-router-dom'
 import Loader from '../components/Loader'
 
 
@@ -28,7 +25,7 @@ export default function Size() {
 
     useEffect(() => {
         dispatch(getAllSizes())
-    }, []);
+    }, [dispatch]);
 
     // serch
     const filteredData = size.filter(data =>
@@ -59,18 +56,7 @@ export default function Size() {
         setCurrentPage(pageNumber);
     };
 
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+ 
     const handleOpen = (data) => {
         setOpen(true);
         setSizeData(data)
@@ -97,15 +83,10 @@ export default function Size() {
         setDelOpen(false);
     }
     const handleDeleteAll = () => {
-        console.log('Delete All User ',)
         dispatch(deleteAllSizes());
 
     }
-    // const handleSubmitForm = (values, { resetForm }) => {
-    //     dispatch(addSize(values));
-    //     resetForm();
-    //     console.log('Form submitted:', values);
-    // }
+    
 
     return (
         loading ? <div className="flex justify-center items-center h-[calc(100vh-64px)]" ><Loader /></div> :

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
 import { FiArrowLeft } from "react-icons/fi";
 
 import Accordion from '@mui/material/Accordion';
@@ -20,7 +19,6 @@ export default function FAQsView() {
     const { faqs } = useSelector(state => state.faqs);
     const { subFaqs, loading } = useSelector(state => state.subfaqs);
 
-    console.log(faqs,subFaqs)
 
     useEffect(() => {
         dispatch(getAllFaqs())

@@ -8,19 +8,11 @@ import { getSingleProducts } from "../reduxe/slice/product.slice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsPlayCircle } from "react-icons/bs";
 import Loader from "../components/Loader";
-
-
-
 const ProductView = React.memo(() => {
 
     const dispatch = useDispatch();
     const { id } = useLocation().state;
-    console.log(id);
-
     const { products, loading } = useSelector((state) => state.products);
-
-
-
     useEffect(() => {
         if (id) {
             dispatch(getSingleProducts(id));

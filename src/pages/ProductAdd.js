@@ -27,7 +27,7 @@ const AddProduct = React.memo(() => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useLocation().state;
-    console.log(id);
+
 
     const category = useSelector((state) => state.categorys.category);
     const subcategory = useSelector((state) => state.subcategorys.SubCategory);
@@ -128,7 +128,7 @@ const AddProduct = React.memo(() => {
     };
 
     const handleSizeSelect = (size) => {
-        console.log(size);
+       
         let sizes;
         if (selectedSizes.includes(size)) {
             sizes = selectedSizes.filter((s) => s !== size);
@@ -265,7 +265,7 @@ const AddProduct = React.memo(() => {
     // =================updateData=================
     useEffect(() => {
         if (id) {
-            console.log(products);
+       
             setValues(products);
             setFieldValue('product_name', products.product_name);
             setFieldValue('category_id', products.category_id);
@@ -332,8 +332,8 @@ const AddProduct = React.memo(() => {
         product_name: Yup.string().required('Product name is required'),
         category_id: Yup.number().required('Category is required'),
         sub_category_id: Yup.number().required('Sub category is required'),
-        metal_color: Yup.string(),
-        metal: Yup.string(),
+        metal_color: Yup.string().required('Metal color is required'),
+        metal: Yup.string().required('Metal is required'),
         diamond_color: Yup.string(),
         diamond_quality: Yup.array(),
         no_of_diamonds: Yup.number(),
@@ -417,7 +417,7 @@ const AddProduct = React.memo(() => {
         validateOnChange: false,
         // validateOnBlur: true,
         onSubmit: (values, { resetForm }) => {
-            console.log(values);
+         
             const data = { ...values, status: "active" }
             if (id) {
                 dispatch(editProduct({ data, id: id }))
@@ -448,7 +448,7 @@ const AddProduct = React.memo(() => {
 
     const handleCategory = useCallback((event) => {
         let id = event.target.value;
-        console.log(id);
+    
         setFieldValue('category_id', id);
         setFieldValue('subcategory_id', '');
         setFilteredSubcategorys(subcategory.filter((subcat) => subcat.category_id == id));
@@ -459,8 +459,7 @@ const AddProduct = React.memo(() => {
         setFieldValue('size_id', id);
         setFilteredSize(size.find((size) => size.id == id)?.size?.split(','));
     }
-    console.log(values);
-
+ 
     const pageTitle = id ? "Edit Product" : "Add Product";
     const buttonText = id ? "Update" : "Add";
 
@@ -1319,6 +1318,24 @@ const AddProduct = React.memo(() => {
                                 {(errors.movement && touched.movement) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.movement}</p>}
                             </div>
                             <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Warranty</label>
+                                <select
+                                    name="warranty"
+                                    className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.warranty === '' ? 'text-gray-400' : 'text-black'}`}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.warranty}
+                                >
+                                    <option value="" className="text-black">Select warranty</option>
+                                    <option value="1_month" className="text-black">1 Month</option>
+                                    <option value="6_month" className="text-black">6 Month</option>
+                                    <option value="1_year" className="text-black">1 Year</option>
+                                    <option value="2_year" className="text-black">2 Year</option>
+                                    <option value="lifetime" className="text-black">Lifetime</option>
+                                </select>
+                                {(errors.warranty && touched.warranty) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.warranty}</p>}
+                            </div>
+                            <div>
                                 <label className="block text-brown text-base font-semibold mb-2">Clasp Type</label>
                                 <input
                                     name="clasp_type"
@@ -1344,24 +1361,7 @@ const AddProduct = React.memo(() => {
                                 />
                                 {(errors.reference_number && touched.reference_number) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.reference_number}</p>}
                             </div>
-                            <div>
-                                <label className="block text-brown text-base font-semibold mb-2">Warranty</label>
-                                <select
-                                    name="warranty"
-                                    className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.warranty === '' ? 'text-gray-400' : 'text-black'}`}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.warranty}
-                                >
-                                    <option value="" className="text-black">Select warranty</option>
-                                    <option value="1_month" className="text-black">1 Month</option>
-                                    <option value="6_month" className="text-black">6 Month</option>
-                                    <option value="1_year" className="text-black">1 Year</option>
-                                    <option value="2_year" className="text-black">2 Year</option>
-                                    <option value="lifetime" className="text-black">Lifetime</option>
-                                </select>
-                                {(errors.warranty && touched.warranty) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.warranty}</p>}
-                            </div>
+                           
                         </div>
 
                         {/* Form Actions */}

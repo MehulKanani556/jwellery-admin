@@ -1,5 +1,5 @@
 import { Box, Modal, Pagination, useMediaQuery } from "@mui/material";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
@@ -15,7 +15,6 @@ export default function ReasonForCancel() {
   const [createopen, setCreateopen] = useState(false);
   const {reasons,loading} = useSelector((state) => state.reasons)
   const isSmallScreen = useMediaQuery("(max-width:425px)");
-
   const validationSchema = Yup.object({
     name: Yup.string().required("Reason is required"),
    

@@ -32,7 +32,6 @@ export default function Stoke() {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const searchValue = useSelector((state) => state.search.value);
     const isSmallScreen = useMediaQuery("(max-width:425px)");
-
     useEffect(() => {
         const fetchData = async () => {
             await dispatch(getAllStocks());

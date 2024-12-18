@@ -1,30 +1,13 @@
 import {
   Box,
-  Button,
   Modal,
-  Typography,
-  Select,
-  MenuItem,
-  Divider,
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
-import { BiSolidEditAlt } from "react-icons/bi";
-import { BsFillEyeFill } from "react-icons/bs";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import img from "../Images/user.png";
-import { RxCross2 } from "react-icons/rx";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllUsers, deleteUser } from "../reduxe/slice/users.slice";
-import {
-  addCategory,
-  deleteCategory,
-  editCategory,
-  getAllCategory,
-  updateStatusCategory,
-} from "../reduxe/slice/catagorys.slice";
+import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import {
   addSubCategory,
   deleteAllSubCategory,
@@ -48,8 +31,7 @@ export default function SubCategory() {
   const [delAllOpen, setDelAllOpen] = useState(false);
   const dispatch = useDispatch();
   const [createopen, setCreateopen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [image, setImage] = useState();
+
   const category = useSelector((state) => state.categorys.category);
   const subcategory = useSelector((state) => state.subcategorys.SubCategory);
   const loading = useSelector(state => state.subcategorys.loading);
@@ -311,7 +293,7 @@ export default function SubCategory() {
                       <label className="text-brown font-bold mt-4">Category</label>
                       <select
                         name="category_id"
-                        className={`border border-brown rounded w-full p-3 mt-1 ${selectedCategory === '' ? 'text-gray-400' : 'text-black'}` }
+                        className={`border border-brown rounded w-full p-3 mt-1 ${selectedCategory === '' ? 'text-gray-400' : 'text-black'}`}
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
                       >
@@ -454,7 +436,7 @@ export default function SubCategory() {
           className="flex justify-end m-4"
           siblingCount={0} // Show zero sibling pages
           boundaryCount={isSmallScreen ? 0 : 1} // Show zero boundary pages on small screens
-         
+
           sx={{
             "& .MuiPaginationItem-root": {
               color: "text.primary",

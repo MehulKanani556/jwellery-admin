@@ -1,19 +1,14 @@
-import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
+import { Box, Modal, Pagination, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
-import { BsFillEyeFill } from 'react-icons/bs'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
-import { Form, Link, useNavigate } from 'react-router-dom'
+import { Link, } from 'react-router-dom'
 import Loader from '../components/Loader'
-import { addTerm, deleteAllTerms, deleteTerm, editTerm, getAllTerms } from '../reduxe/slice/terms.slice'
-import {addSubFaqs, editSubFaqs, getAllSubFaqs } from '../reduxe/slice/subFaqs.slice'
+import { getAllSubFaqs } from '../reduxe/slice/subFaqs.slice'
 import { addFaqs, deleteAllFaqs, deleteFaqs, editFaqs, getAllFaqs } from '../reduxe/slice/faqs.slice'
 
 
@@ -25,12 +20,11 @@ export default function FaqType() {
     const [delAllOpen, setDelAllOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { subFaqs } = useSelector((state) => state.subfaqs);
-    const { faqs,loading} = useSelector((state) => state.faqs);
-  const isSmallScreen = useMediaQuery("(max-width:425px)");
-    
-    console.log(faqs)
+
+    const { faqs, loading } = useSelector((state) => state.faqs);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
+
+
     useEffect(() => {
         dispatch(getAllSubFaqs())
         dispatch(getAllFaqs())
@@ -54,20 +48,9 @@ export default function FaqType() {
     // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };      
-
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
     };
 
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+
     const handleOpen = (data) => {
         setOpen(true);
         setData(data)
@@ -157,7 +140,7 @@ export default function FaqType() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
+                    boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items
@@ -184,8 +167,8 @@ export default function FaqType() {
                         </p>
                         <div>
                             <Formik
-                                initialValues={{ 
-                                    name: data.name || '', 
+                                initialValues={{
+                                    name: data.name || '',
                                     id: data.id || ''
                                 }}
                                 validationSchema={validationSchema}
@@ -230,7 +213,7 @@ export default function FaqType() {
                         </div>
                     </Box>
                 </Modal>
-              
+
                 {/* Delete Size */}
                 <Modal
                     open={delOpen}
@@ -244,7 +227,7 @@ export default function FaqType() {
 
                                 <p className='text-brown font-bold text-xl'>Delete Terms & Condition</p>
                                 <p className='text-brown-50'>Are you sure you want to delete
-                                Terms & Condition?</p>
+                                    Terms & Condition?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
@@ -269,7 +252,7 @@ export default function FaqType() {
 
                                 <p className='text-brown font-bold text-xl'>Delete All Terms & Condition</p>
                                 <p className='text-brown-50'>Are you sure you want to delete all
-                                Terms & Condition?</p>
+                                    Terms & Condition?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>

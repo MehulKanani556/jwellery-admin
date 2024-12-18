@@ -250,29 +250,29 @@ export default function Category() {
       </div>
 
       <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={(event, page) => handlePageChange(page)}
-          variant="outlined"
-          shape="rounded"
-          className="flex justify-end m-4"
-          siblingCount={0} // Show zero sibling pages
-           boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page
-          // showFirstButton // Show first page button
-          // showLastButton // Show last page button
-          sx={{
-            "& .MuiPaginationItem-root": {
-              color: "text.primary",
-            },
-            "& .MuiPaginationItem-root.Mui-selected": {
-              backgroundColor: "#523b33",
-              color: "white",
-            },
-            "& .MuiPaginationItem-root:hover": {
-              backgroundColor: "lightgray",
-            },
-          }}
-        />
+        count={totalPages}
+        page={currentPage}
+        onChange={(event, page) => handlePageChange(page)}
+        variant="outlined"
+        shape="rounded"
+        className="flex justify-end m-4"
+        siblingCount={0} // Show zero sibling pages
+        boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page
+        // showFirstButton // Show first page button
+        // showLastButton // Show last page button
+        sx={{
+          "& .MuiPaginationItem-root": {
+            color: "text.primary",
+          },
+          "& .MuiPaginationItem-root.Mui-selected": {
+            backgroundColor: "#523b33",
+            color: "white",
+          },
+          "& .MuiPaginationItem-root:hover": {
+            backgroundColor: "lightgray",
+          },
+        }}
+      />
 
       {/* create & update category */}
       <Modal open={createopen} onClose={handleCreateClose}>
@@ -315,7 +315,7 @@ export default function Category() {
                         alt="Preview"
                         className="w-8 h-8 rounded-full mr-2"
                       />
-                     <span className="flex-1 w-8 md:w-auto truncate ">
+                      <span className="flex-1 w-8 md:w-auto truncate ">
                         {typeof formik.values.image === "string"
                           ? formik.values.image.split("/").pop()
                           : formik.values.image.name}

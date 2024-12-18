@@ -1,19 +1,14 @@
-import { Box, Button, Modal, Pagination, Typography, useMediaQuery } from '@mui/material'
+import { Box,  Modal, Pagination,  useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { BiSolidEditAlt } from 'react-icons/bi'
-import { BsFillEyeFill } from 'react-icons/bs'
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import img from '../Images/user.png'
 import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
-import { Form, Link, useNavigate } from 'react-router-dom'
+import {  Link, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
-import { addTerm, deleteAllTerms, deleteTerm, editTerm, getAllTerms } from '../reduxe/slice/terms.slice'
-import {addSubFaqs, deleteAllSubFaqs, deleteSubFaqs, editSubFaqs, getAllSubFaqs } from '../reduxe/slice/subFaqs.slice'
+import { addSubFaqs, deleteAllSubFaqs, deleteSubFaqs, editSubFaqs, getAllSubFaqs } from '../reduxe/slice/subFaqs.slice'
 import { getAllFaqs } from '../reduxe/slice/faqs.slice'
 
 export default function Faqs() {
@@ -25,9 +20,9 @@ export default function Faqs() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { subFaqs, loading } = useSelector((state) => state.subfaqs);
-    const { faqs} = useSelector((state) => state.faqs);
-  const isSmallScreen = useMediaQuery("(max-width:425px)");
-    
+    const { faqs } = useSelector((state) => state.faqs);
+    const isSmallScreen = useMediaQuery("(max-width:425px)");
+
     console.log(faqs)
     useEffect(() => {
         dispatch(getAllSubFaqs())
@@ -54,27 +49,9 @@ export default function Faqs() {
     // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };      
-
-    // Handle next and previous
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
     };
 
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-    const handleOpen = (data) => {
-        setOpen(true);
-        setData(data)
-    }
-    const handleClose = () => {
-        setOpen(false);
-    }
+ 
     const handleDeleteOpen = (data) => {
         setDelOpen(true);
         setData(data)
@@ -136,7 +113,7 @@ export default function Faqs() {
                                         <td className="py-2 px-4 w-1/12">{ele.id}</td>
                                         <td className="py-2 px-4 w-1/12">{ele.faq_name}</td>
                                         <td className="py-2 px-4 flex-grow w-1/6">{ele.question}</td>
-                                        
+
                                         <td className="py-2 px-4  flex-grow w-1/2">
                                             <p className="textover ">
                                                 {ele.answer}
@@ -168,7 +145,7 @@ export default function Faqs() {
                     shape="rounded"
                     className="flex justify-end m-4"
                     siblingCount={1} // Show one sibling page on each side
-                     boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
+                    boundaryCount={isSmallScreen ? 0 : 1} // Show one boundary page at the start and end
                     sx={{
                         '& .MuiPaginationItem-root': {
                             color: 'text.primary', // Default color for pagination items
@@ -183,7 +160,7 @@ export default function Faqs() {
                     }}
                 />
 
-                {/* Add Size */}
+                {/* Add faq */}
                 <Modal
                     open={addOpen}
                     onClose={handleAddClose}
@@ -195,9 +172,9 @@ export default function Faqs() {
                         </p>
                         <div>
                             <Formik
-                                initialValues={{ 
-                                    faq_id: data.faq_id || '', 
-                                    question: data.question || '', 
+                                initialValues={{
+                                    faq_id: data.faq_id || '',
+                                    question: data.question || '',
                                     answer: data.answer || '',
                                     id: data.id || ''
                                 }}
@@ -212,7 +189,7 @@ export default function Faqs() {
                                     handleAddClose();
                                 }}
                             >
-                                {({ handleSubmit, isSubmitting,values }) => (
+                                {({ handleSubmit, isSubmitting, values }) => (
                                     <form onSubmit={handleSubmit} className="p-4 md:p-8 rounded-lg">
                                         <div className="mb-4">
                                             <label htmlFor="faq_id" className="block text-sm font-bold text-brown">FAQ Type</label>
@@ -271,72 +248,8 @@ export default function Faqs() {
                         </div>
                     </Box>
                 </Modal>
-                {/* Edit Size */}
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box className="bg-gray-50 absolute top-1/2 left-1/2 md:min-w-[500px]  transform -translate-x-1/2 -translate-y-1/2 p-4 rounded">
-                        <p className='text-brown font-bold text-xl  flex justify-between'>
-                            <p>Edit Size</p>
-                            <button onClick={handleClose} className=" font-bold"><RxCross2 /></button>
-                        </p>
-                        <div>
-                            <Formik
-                                initialValues={{ id: data.id || '', name: data.name || '', size: data.size || '' }}
-                                validationSchema={validationSchema}
-                                onSubmit={(values, { resetForm }) => {
-                                    dispatch(editSize(values));
-                                    resetForm();
-                                    handleClose(); // Close the modal after successful submission
-                                }}
-                            >
-                                {({ handleSubmit, isSubmitting }) => (
-                                    <form onSubmit={handleSubmit} className=" p-4 md:p-8 rounded-lg  ">
-                                        <div className="mb-4">
-                                            <label htmlFor="name" className="block text-sm font-bold text-brown">Name</label>
-                                            <Field
-                                                type="text"
-                                                name="name"
-                                                id="name"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Name"
-                                            />
-                                            <ErrorMessage name="name" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="size" className="block text-sm font-bold text-brown">Size</label>
-                                            <Field
-                                                type="text"
-                                                name="size"
-                                                id="size"
-                                                className="mt-1 block w-full border border-brown p-2 rounded"
-                                                placeholder="Enter Size"
-                                            />
-                                            <ErrorMessage name="size" component="div" className="text-red-500" />
-                                        </div>
-                                        <div className='flex flex-col md:flex-row gap-2 p-5 pb-2 '>
-                                            <button className='text-brown hover:bg-brown-50  border-brown border p-2 rounded w-full' onClick={handleAddClose}>
-                                                Cancel
-                                            </button>
-
-                                            <button
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                                className="bg-brown hover:bg-brown-50 text-white p-2 rounded w-full"
-                                            >
-                                                {isSubmitting ? 'Submitting...' : 'Edit Size'}
-                                            </button>
-                                        </div>
-                                    </form>
-                                )}
-                            </Formik>
-                        </div>
-                    </Box>
-                </Modal>
-                {/* Delete Size */}
+            
+                {/* Delete faq */}
                 <Modal
                     open={delOpen}
                     onClose={handleDeleteClose}
@@ -347,9 +260,9 @@ export default function Faqs() {
                         <div className='  p-5'>
                             <div className='text-center'>
 
-                                <p className='text-brown font-bold text-xl'>Delete Terms & Condition</p>
+                                <p className='text-brown font-bold text-xl'>Delete FAQ's</p>
                                 <p className='text-brown-50'>Are you sure you want to delete
-                                Terms & Condition?</p>
+                                    FAQ's?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={handleDeleteClose} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
@@ -361,7 +274,7 @@ export default function Faqs() {
 
                     </Box>
                 </Modal>
-                {/* Delete All Size */}
+                {/* Delete All faq */}
                 <Modal
                     open={delAllOpen}
                     onClose={() => setDelAllOpen(false)}
@@ -372,9 +285,9 @@ export default function Faqs() {
                         <div className='  p-5'>
                             <div className='text-center'>
 
-                                <p className='text-brown font-bold text-xl'>Delete All Terms & Condition</p>
+                                <p className='text-brown font-bold text-xl'>Delete All FAQ's</p>
                                 <p className='text-brown-50'>Are you sure you want to delete all
-                                Terms & Condition?</p>
+                                    FAQ's?</p>
                             </div>
                             <div className='flex flex-wrap gap-3 justify-center mt-4'>
                                 <button onClick={() => setDelAllOpen(false)} className="text-brown w-32 border-brown border px-4 py-2 rounded">Cancel</button>
