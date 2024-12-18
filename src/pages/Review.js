@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteAllReviews, deleteReview, getAllReviews } from '../reduxe/slice/review.slice'
 import { FaStar } from 'react-icons/fa'
 import Loader from '../components/Loader'
+import { Link } from 'react-router-dom'
 export default function Review() {
     const [Data, setData] = useState([]);
     const [open, setOpen] = useState(false);
@@ -116,7 +117,7 @@ export default function Review() {
                 <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Review </h1>
-                        <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Review</span>
+                        <p className='text-brown-50'><Link to="/dashboard">Dashboard</Link>  / <span className='text-brown font-medium'>Review</span>
                         </p>
 
                     </div>

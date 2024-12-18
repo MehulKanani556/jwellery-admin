@@ -19,7 +19,7 @@ import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
 import { deleteAllProducts, deleteProduct, getAllProducts, updateStatusProduct } from "../reduxe/slice/product.slice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from '@mui/material/Slider';
 import { FiChevronDown } from "react-icons/fi";
 import Loader from "../components/Loader";
@@ -276,7 +276,7 @@ export default function Product() {
           <div className="text-center lg:text-left">
             <h1 className="text-2xl font-bold text-brown">Product </h1>
             <p className="text-brown-50">
-              Dashboard /{" "}
+              <Link to="/dashboard">Dashboard</Link>  /{" "}
               <span className="text-brown font-medium">Product</span>
             </p>
           </div>
@@ -445,7 +445,7 @@ export default function Product() {
                     </td>
                     <td className="py-2 px-5">{v.category_name || ""}</td>
                     <td className="py-2 px-5">{v.sub_category_name || ''}</td>
-                    <td className="py-2 px-5">{v.price}</td>
+                    <td className="py-2 px-5">{v.total_price || v.price}</td>
                     <td className="py-2 px-5">{v.qty}</td>
                     <td className="py-2 px-5">
                       <label className="items-center cursor-pointer">

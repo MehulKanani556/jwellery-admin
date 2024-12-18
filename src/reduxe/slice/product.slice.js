@@ -73,8 +73,17 @@ export const addProduct = createAsyncThunk(
     formData.append("stone", data.stone);
     formData.append("stone_price", data.stone_price);
     formData.append("making_charge", data.making_charge);
-
     formData.append("status", data.status);
+    formData.append('water_resistant', data.water_resistant);
+    formData.append('cash_material', data.cash_material);
+    formData.append('movement', data.movement);
+    formData.append('clasp_type', data.clasp_type);
+    formData.append('reference_number', data.reference_number);
+    formData.append('warranty', data.warranty);
+
+
+
+
     if (Array.isArray(data.mediaFiles)) {
       data.mediaFiles.forEach((image, index) => {
         formData.append(`image[${index}]`, image);
@@ -141,6 +150,12 @@ export const editProduct = createAsyncThunk(
     formData.append("stone", data.stone);
     formData.append("stone_price", data.stone_price);
     formData.append("making_charge", data.making_charge);
+    formData.append('water_resistant', data.water_resistant);
+    formData.append('cash_material', data.cash_material);
+    formData.append('movement', data.movement);
+    formData.append('clasp_type', data.clasp_type);
+    formData.append('reference_number', data.reference_number);
+    formData.append('warranty', data.warranty);
 
     if (Array.isArray(data.mediaFiles)) {
       data.mediaFiles.forEach((media, index) => {
@@ -268,7 +283,7 @@ const productsSlice = createSlice({
         state.products = action.payload;
         // console.log(state.products)
       })
-      
+
       .addCase(getSingleProducts.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
@@ -303,18 +318,18 @@ const productsSlice = createSlice({
       .addCase(editProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        
+
         // Ensure state.products is an array
         if (!Array.isArray(state.products)) {
-            state.products = [];
+          state.products = [];
         }
-        
+
         // Find and update the product
         const index = state.products.findIndex(product => product.id === action.payload.id);
         if (index !== -1) {
-            state.products[index] = action.payload;
+          state.products[index] = action.payload;
         }
-        
+
         state.message = action.payload?.message || "Product updated successfully";
         enqueueSnackbar(state.message, { variant: "success" });
       })

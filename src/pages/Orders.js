@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaChevronDown, FaFilter } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import { addOffer, deleteAllorders, deleteOffer, editOffer, updateStatusOffer } from "../reduxe/slice/offer.slice";
 import { Field, Formik } from "formik";
@@ -155,7 +155,7 @@ export default function Orders() {
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Orders</h1>
                         <p className="text-brown-50">
-                            Dashboard /{" "}
+                            <Link to="/dashboard">Dashboard</Link>  /{" "}
                             <span className="text-brown font-medium">Orders</span>
                         </p>
                     </div>

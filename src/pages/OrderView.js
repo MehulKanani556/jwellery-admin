@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
 
 import { FiArrowLeft } from "react-icons/fi";
@@ -28,7 +28,7 @@ export default function OrderView() {
                 <div className="text-center lg:text-left">
                     <h1 className="text-2xl font-bold text-brown">View Orders</h1>
                     <p className="text-brown-50">
-                        Dashboard /{" "} Orders / {" "}
+                        <Link to="/dashboard">Dashboard</Link>  /{" "} <Link to="/order">Orders</Link>  / {" "}
                         <span className="text-brown font-medium">View Orders</span>
                     </p>
                 </div>

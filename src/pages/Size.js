@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addSize, deleteAllSizes, deleteSize, editSize, getAllSizes } from '../reduxe/slice/size.slice'
 import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup';
-import { Form } from 'react-router-dom'
+import { Form, Link } from 'react-router-dom'
 import Loader from '../components/Loader'
 
 
@@ -113,7 +113,7 @@ export default function Size() {
                 <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Size </h1>
-                        <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Size</span>
+                        <p className='text-brown-50'><Link to="/dashboard">Dashboard</Link>  / <span className='text-brown font-medium'>Size</span>
                         </p>
                     </div>
                     <div>

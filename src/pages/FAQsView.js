@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -34,7 +34,7 @@ export default function FAQsView() {
                     <div>
                         <h1 className="text-2xl font-bold text-brown">View FAQs</h1>
                         <p className="text-brown-50">
-                            Dashboard /{" "} FAQs / {" "}
+                            <Link to="/dashboard">Dashboard</Link>  /{" "} <Link to="/faqs">FAQs</Link>  / {" "}
                             <span className="text-brown font-medium">View FAQs</span>
                         </p>
                     </div>

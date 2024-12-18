@@ -14,7 +14,7 @@ import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
 import { deleteAllProductOffers, deleteProductOffer, getAllProductOffers, updateStatusProductOffer } from "../reduxe/slice/productoffer.slice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import Loader from "../components/Loader";
 export default function ProductOffer() {
@@ -191,7 +191,7 @@ export default function ProductOffer() {
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Product Offers</h1>
                         <p className="text-brown-50">
-                            Dashboard /{" "}
+                            <Link to="/dashboard">Dashboard</Link>  /{" "}
                             <span className="text-brown font-medium">Product Offers</span>
                         </p>
                     </div>

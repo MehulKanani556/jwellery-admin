@@ -13,6 +13,7 @@ import { getAllProducts } from '../reduxe/slice/product.slice'
 import { FaFilter } from 'react-icons/fa'
 import Loader from '../components/Loader'
 import { enqueueSnackbar } from 'notistack'
+import { Link } from 'react-router-dom'
 
 export default function Stoke() {
     const [data, setData] = useState([]);
@@ -169,7 +170,7 @@ export default function Stoke() {
                 <div className='flex flex-col lg:flex-row gap-3 justify-between items-center'>
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Stock </h1>
-                        <p className='text-brown-50'>Dashboard / <span className='text-brown font-medium'>Stock</span>
+                        <p className='text-brown-50'><Link to="/dashboard">Dashboard</Link>  / <span className='text-brown font-medium'>Stock</span>
                         </p>
 
                     </div>

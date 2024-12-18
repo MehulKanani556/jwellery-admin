@@ -31,7 +31,7 @@ import {
   updateStatusCoupon,
 } from "../reduxe/slice/coupons.slice";
 import { addProductOffer, editProductOffer, getAllProductOffers, updateStatusProductOffer } from "../reduxe/slice/productoffer.slice";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { getAllCategory } from "../reduxe/slice/catagorys.slice";
 import { getAllSubCategory } from "../reduxe/slice/subcategorys.slice";
 import { getAllProducts } from "../reduxe/slice/product.slice";
@@ -136,7 +136,7 @@ export default function AddProductOffer() {
             {offerData ? "Edit Product Offer" : "Add Product Offers"}
           </h1>
           <p className="text-brown-50">
-            Dashboard /{" "} Product Offers /{" "}
+            <Link to="/dashboard">Dashboard</Link>  /{" "}<Link to="/product-offer">Product Offers</Link>  /  {" "}
             <span className="text-brown font-medium">
               {offerData ? "Edit Product Offer" : "Add Product Offers"}
             </span>

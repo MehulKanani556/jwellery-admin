@@ -5,7 +5,7 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleProducts } from "../reduxe/slice/product.slice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsPlayCircle } from "react-icons/bs";
 import Loader from "../components/Loader";
 
@@ -116,7 +116,7 @@ const ProductView = React.memo(() => {
                     <div>
                         <h1 className="text-2xl font-bold text-brown">View Product</h1>
                         <p className="text-brown-50">
-                            Dashboard / Product / {' '}
+                            <Link to="/dashboard">Dashboard</Link>  / <Link to="/products">Product </Link>  / {' '}
                             <span className="text-brown font-medium">View product</span>
                         </p>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -24,7 +24,7 @@ export default function PrivacyView() {
                     <div>
                         <h1 className="text-2xl font-bold text-brown">View Privacy Policy</h1>
                         <p className="text-brown-50">
-                            Dashboard /{" "} Privacy Policy / {" "}
+                            <Link to="/dashboard">Dashboard</Link>  /{" "} <Link to="/privacy">Privacy Policy </Link>  / {" "}
                             <span className="text-brown font-medium">View Privacy Policy</span>
                         </p>
                     </div>

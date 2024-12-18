@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addReason, deleteAllReason, getAllReason, updateStatusReason } from "../reduxe/slice/reason.slice";
+import { Link } from "react-router-dom";
 
 export default function ReasonForCancel() {
   const [data, setData] = useState("");
@@ -82,7 +83,7 @@ export default function ReasonForCancel() {
         <div className="text-center lg:text-left">
           <h1 className="text-2xl font-bold text-brown">Reason For Cancellation </h1>
           <p className="text-brown-50">
-            Dashboard / <span className="text-brown font-medium">Reason For Cancellation</span>
+            <Link to="/dashboard">Dashboard</Link>  / <span className="text-brown font-medium">Reason For Cancellation</span>
           </p>
         </div>
         <div>

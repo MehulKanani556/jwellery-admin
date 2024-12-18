@@ -39,6 +39,7 @@ import Pagination from "@mui/material/Pagination";
 import Menu from "@mui/material/Menu";
 import { FaFilter } from "react-icons/fa";
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
 // import MenuItem from '@mui/material/MenuItem';
 
 export default function SubCategory() {
@@ -256,7 +257,7 @@ export default function SubCategory() {
           <div className="text-center lg:text-left">
             <h1 className="text-2xl font-bold text-brown">SubCategory </h1>
             <p className="text-brown-50">
-              Dashboard /{" "}
+              <Link to="/dashboard">Dashboard</Link>  /{" "}
               <span className="text-brown font-medium">SubCategory</span>
             </p>
           </div>

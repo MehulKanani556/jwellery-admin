@@ -24,6 +24,7 @@ import {
 } from "../reduxe/slice/coupons.slice";
 // import MenuItem from '@mui/material/MenuItem';
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
 export default function Coupons() {
     const [couponData, setCouponData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
@@ -182,7 +183,7 @@ export default function Coupons() {
                 <div>
                     <h1 className="text-2xl font-bold text-brown">Invoice </h1>
                     <p className="text-brown-50">
-                        Dashboard /{" "}
+                        <Link to="/dashboard">Dashboard</Link>  /{" "}
                         <span className="text-brown font-medium">Invoice</span>
                     </p>
                 </div>

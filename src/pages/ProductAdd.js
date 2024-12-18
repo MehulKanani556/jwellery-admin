@@ -10,7 +10,7 @@ import {
 import Menu from "@mui/material/Menu";
 import MenuItem from '@mui/material/MenuItem';
 import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getSingleProducts } from "../reduxe/slice/product.slice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import MenuItem from '@mui/material/MenuItem';
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -292,6 +292,12 @@ const AddProduct = React.memo(() => {
             setFieldValue('stone', products.stone || "");
             setFieldValue('stone_price', products.stone_price || "");
             setFieldValue('making_charge', products.making_charge || "");
+            setFieldValue('water_resistant', products.water_resistant || "");
+            setFieldValue('cash_material', products.cash_material || "");
+            setFieldValue('movement', products.movement || "");
+            setFieldValue('clasp_type', products.clasp_type || "");
+            setFieldValue('reference_number', products.reference_number || "");
+            setFieldValue('warranty', products.warranty || "");
 
             // Set media files if they exist
             if (products.images) {
@@ -340,7 +346,7 @@ const AddProduct = React.memo(() => {
         diamond_shape: Yup.string(),
         collection: Yup.string(),
         gender: Yup.string().required('Gender is required'),
-        occasion:Yup.string().required('Occasion is required'),
+        occasion: Yup.string().required('Occasion is required'),
         qty: Yup.number().required('Quantity is required').moreThan(0, 'Quantity must be greater than 0'),
         price: Yup.number()
             .required('Price is required')
@@ -350,7 +356,7 @@ const AddProduct = React.memo(() => {
             .max(100, 'Discount cannot exceed 100'),
         description: Yup.string()
             .required('Description is required'),
-           
+
         mediaFiles: Yup.array()
             .test('required', 'At least one image or video is required', function (value) {
                 return value && value.length > 0;
@@ -394,12 +400,18 @@ const AddProduct = React.memo(() => {
             price: '',
             discount: '',
             description: '',
-            occasion:'',
+            occasion: '',
             mediaFiles: [],
-            gram:'',
-            stone:'',
-            stone_price:'',
-            making_charge:'',
+            gram: '',
+            stone: '',
+            stone_price: '',
+            making_charge: '',
+            water_resistant: '',
+            cash_material: '',
+            movement: '',
+            clasp_type: '',
+            reference_number: '',
+            warranty: '',
         },
         validationSchema: productValidationSchema,
         validateOnChange: false,
@@ -408,12 +420,15 @@ const AddProduct = React.memo(() => {
             console.log(values);
             const data = { ...values, status: "active" }
             if (id) {
-                // dispatch(getAllProducts());
                 dispatch(editProduct({ data, id: id }))
-                navigate('/products')
+                    .unwrap()
+                    .then(() => navigate('/products'))
+                    .catch((error) => console.error("Failed to edit product:", error));
             } else {
                 dispatch(addProduct(data))
-                navigate('/products')
+                    .unwrap()
+                    .then(() => navigate('/products'))
+                    .catch((error) => console.error("Failed to add product:", error));
             }
         },
     });
@@ -456,7 +471,7 @@ const AddProduct = React.memo(() => {
                     <div>
                         <h1 className="text-2xl font-bold text-brown">{pageTitle}</h1>
                         <p className="text-brown-50 text-[14px] font-[500] mt-1">
-                            Dashboard / Product / {' '}
+                            <Link to="/dashboard">Dashboard</Link>  /  <Link to="/products">Product </Link> / {' '}
                             <span className="text-brown font-medium">{pageTitle}</span>
                         </p>
                     </div>
@@ -521,22 +536,22 @@ const AddProduct = React.memo(() => {
                         <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-2  xl:grid-cols-3 gap-4">
                             <div className="col-span-2 xl:col-span-1 2xl:col-span-1 flex gap-0 items-center row">
                                 <div className="col-12 col-md-6">
-                                <label className="block text-brown text-base font-semibold mb-2">Metal Color </label>
-                                <select
-                                    name="metal_color"
-                                    className={` px-3 py-2 h-[40px] w-[100%] md:w-[90%]  border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.metal_color === '' ? 'text-gray-400' : 'text-black'}`}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.metal_color}
-                                >
-                                    <option value="" className="text-black">Select</option>
-                                    <option value="rose" className="text-black">Rose-Gold</option>
-                                    <option value="gold" className="text-black">Gold</option>
-                                    <option value="silver" className="text-black">Silver</option>
-                                    <option value="platinum" className="text-black">Platinum</option>
-                                    <option value="white_gold" className="text-black">White Gold</option>
-                                    <option value="yellow_gold" className="text-black">Yellow Gold</option>
-                                </select>
+                                    <label className="block text-brown text-base font-semibold mb-2">Metal Color </label>
+                                    <select
+                                        name="metal_color"
+                                        className={` px-3 py-2 h-[40px] w-[100%] md:w-[90%]  border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.metal_color === '' ? 'text-gray-400' : 'text-black'}`}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.metal_color}
+                                    >
+                                        <option value="" className="text-black">Select</option>
+                                        <option value="rose" className="text-black">Rose-Gold</option>
+                                        <option value="gold" className="text-black">Gold</option>
+                                        <option value="silver" className="text-black">Silver</option>
+                                        <option value="platinum" className="text-black">Platinum</option>
+                                        <option value="white_gold" className="text-black">White Gold</option>
+                                        <option value="yellow_gold" className="text-black">Yellow Gold</option>
+                                    </select>
                                     {/* <label className="block text-brown text-base font-semibold mb-2">Metal Color </label>
                                     <div className="flex gap-4">
                                         <label className="relative flex items-center cursor-pointer">
@@ -592,7 +607,7 @@ const AddProduct = React.memo(() => {
                                 <div className="col-12 col-md-6">
                                     {/* <label className="block text-brown text-base font-semibold mb-2">Metal Type </label> */}
                                     {/* <div className="flex gap-4"> */}
-                                        {/* <label className="relative flex items-center cursor-pointer">
+                                    {/* <label className="relative flex items-center cursor-pointer">
                                             <input
                                                 type="radio"
                                                 name="metal"
@@ -669,26 +684,26 @@ const AddProduct = React.memo(() => {
                                         </label> */}
                                     {/* </div> */}
                                     <label className="block text-brown text-base font-semibold mb-2">Metal Type</label>
-                                <select
-                                    name="metal"
-                                    className={`px-3  h-[40px]  w-[100%] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.metal === '' ? 'text-gray-400' : 'text-black'}`}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.metal}
-                                >
-                                    <option value="" className="text-black">Select</option>
-                                    <option value="9k-gold" className="text-black">9K Gold</option>
-                                    <option value="10k-gold" className="text-black">10K Gold</option>
-                                    <option value="14k-gold" className="text-black">14K Gold</option>
-                                    <option value="18k-gold" className="text-black">18K Gold</option>
-                                    <option value="22k-gold" className="text-black">22K Gold</option>
-                                    <option value="24k-gold" className="text-black">24K Gold</option>
-                                    <option value="silver-900" className="text-black">Silver-900</option>
-                                    <option value="silver-925" className="text-black">Silver-925</option>
-                                    <option value="silver-999" className="text-black">Silver-999</option>
-                                    <option value="platinum-900" className="text-black">Platinum-900</option>
-                                    <option value="platinum-950" className="text-black">Platinum-950</option>
-                                </select>
+                                    <select
+                                        name="metal"
+                                        className={`px-3  h-[40px]  w-[100%] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.metal === '' ? 'text-gray-400' : 'text-black'}`}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.metal}
+                                    >
+                                        <option value="" className="text-black">Select</option>
+                                        <option value="9k-gold" className="text-black">9K Gold</option>
+                                        <option value="10k-gold" className="text-black">10K Gold</option>
+                                        <option value="14k-gold" className="text-black">14K Gold</option>
+                                        <option value="18k-gold" className="text-black">18K Gold</option>
+                                        <option value="22k-gold" className="text-black">22K Gold</option>
+                                        <option value="24k-gold" className="text-black">24K Gold</option>
+                                        <option value="silver-900" className="text-black">Silver-900</option>
+                                        <option value="silver-925" className="text-black">Silver-925</option>
+                                        <option value="silver-999" className="text-black">Silver-999</option>
+                                        <option value="platinum-900" className="text-black">Platinum-900</option>
+                                        <option value="platinum-950" className="text-black">Platinum-950</option>
+                                    </select>
                                     {(errors.metal && touched.metal) && <p className="text-red-500 text-sm mt-1 text-[11px] ">{errors.metal}</p>}
                                 </div>
                             </div>
@@ -979,7 +994,7 @@ const AddProduct = React.memo(() => {
 
                         {/* Product Specifications */}
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            
+
                             <div>
                                 <label className="block text-brown text-base font-semibold mb-2">Diamond Setting</label>
                                 <div
@@ -1222,7 +1237,7 @@ const AddProduct = React.memo(() => {
                                     <option value="" className="text-black">Select stone</option>
                                     <option value="real" className="text-black">Real</option>
                                     <option value="fake" className="text-black">Fake</option>
-                                   
+
                                 </select>
                                 {(errors.stone && touched.stone) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.stone}</p>}
                             </div>
@@ -1252,7 +1267,101 @@ const AddProduct = React.memo(() => {
                                 />
                                 {(errors.making_charge && touched.making_charge) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.making_charge}</p>}
                             </div>
-                            
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Water Resistant</label>
+                                <input
+                                    name="water_resistant"
+                                    type="text"
+                                    placeholder="Enter water resistant details"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.water_resistant}
+                                />
+                                {(errors.water_resistant && touched.water_resistant) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.water_resistant}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Cash Material</label>
+                                <select
+                                    name="cash_material"
+                                    // className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.cash_material === '' ? 'text-gray-400' : 'text-black'}`}
+
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.cash_material}
+                                >
+                                    <option value="" className="text-black">Select cash material</option>
+                                    <option value="gold" className="text-black">Gold</option>
+                                    <option value="silver" className="text-black">Silver</option>
+                                    <option value="platinum" className="text-black">Platinum</option>
+                                    <option value="stainless_steel" className="text-black">Stainless Steel</option>
+                                    <option value="titanium" className="text-black">Titanium</option>
+                                </select>
+                                {(errors.cash_material && touched.cash_material) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.cash_material}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Movement</label>
+                                <select
+                                    name="movement"
+                                    className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.movement === '' ? 'text-gray-400' : 'text-black'}`}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.movement}
+                                >
+                                    <option value="" className="text-black">Select movement</option>
+                                    <option value="automatic" className="text-black">Automatic</option>
+                                    <option value="quartz" className="text-black">Quartz</option>
+                                    <option value="manual" className="text-black">Manual</option>
+                                    <option value="mechanical" className="text-black">Mechanical</option>
+                                    <option value="hand_wound" className="text-black">Hand Wound</option>
+                                </select>
+                                {(errors.movement && touched.movement) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.movement}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Clasp Type</label>
+                                <input
+                                    name="clasp_type"
+                                    type="text"
+                                    placeholder="Enter clasp type"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.clasp_type}
+                                />
+                                {(errors.clasp_type && touched.clasp_type) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.clasp_type}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Reference Number</label>
+                                <input
+                                    name="reference_number"
+                                    type="text"
+                                    placeholder="Enter reference number"
+                                    className="w-full px-3 py-2 border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.reference_number}
+                                />
+                                {(errors.reference_number && touched.reference_number) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.reference_number}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-brown text-base font-semibold mb-2">Warranty</label>
+                                <select
+                                    name="warranty"
+                                    className={`w-full px-3 py-2 h-[40px] border border-brown rounded-md focus:outline-none focus:ring-1 focus:ring-brown ${values.warranty === '' ? 'text-gray-400' : 'text-black'}`}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.warranty}
+                                >
+                                    <option value="" className="text-black">Select warranty</option>
+                                    <option value="1_month" className="text-black">1 Month</option>
+                                    <option value="6_month" className="text-black">6 Month</option>
+                                    <option value="1_year" className="text-black">1 Year</option>
+                                    <option value="2_year" className="text-black">2 Year</option>
+                                    <option value="lifetime" className="text-black">Lifetime</option>
+                                </select>
+                                {(errors.warranty && touched.warranty) && <p className="text-red-500 text-sm mt-1 text-[11px]">{errors.warranty}</p>}
+                            </div>
                         </div>
 
                         {/* Form Actions */}

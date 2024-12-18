@@ -6,6 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getAllUsers } from "../reduxe/slice/users.slice";
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
 
 export default function User() {
   const [userData, setUserData] = useState([]);
@@ -80,7 +81,7 @@ export default function User() {
         <div className="text-center lg:text-left">
           <h1 className="text-2xl font-bold text-brown">User </h1>
           <p className="text-brown-50">
-            Dashboard / <span className="text-brown font-medium">User</span>
+            <Link to="/dashboard">Dashboard</Link>  / <span className="text-brown font-medium">User</span>
           </p>
         </div>
         <div>

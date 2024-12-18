@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getOrderById } from "../reduxe/slice/orders.slice";
 
 import { FiArrowLeft } from "react-icons/fi";
@@ -122,7 +122,7 @@ const InvoiceView = () => {
         <div>
           <h1 className="text-2xl font-bold text-brown">View Invoice</h1>
           <p className="text-brown-50">
-            Dashboard / Invoice /{" "}
+            <Link to="/dashboard">Dashboard</Link>  / Invoice /{" "}
             <span className="text-brown font-medium">View Invoice</span>
           </p>
         </div>

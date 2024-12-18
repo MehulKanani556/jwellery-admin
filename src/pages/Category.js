@@ -14,6 +14,7 @@ import {
 import Loader from "../components/Loader";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 export default function Category() {
   const [categoryData, setCategoryData] = useState("");
@@ -155,7 +156,7 @@ export default function Category() {
         <div className="text-center lg:text-left">
           <h1 className="text-2xl font-bold text-brown">Category </h1>
           <p className="text-brown-50">
-            Dashboard / <span className="text-brown font-medium">Category</span>
+            <Link to="/dashboard">Dashboard</Link>  / <span className="text-brown font-medium">Category</span>
           </p>
         </div>
         <div>

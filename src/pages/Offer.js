@@ -17,6 +17,7 @@ import { addOffer, deleteAllOffers, deleteOffer, editOffer, getAllOffers, update
 import { ErrorMessage, Field, Formik } from "formik";
 import * as Yup from 'yup';
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
 export default function Offer() {
     const [data, setData] = useState("");
     const [delOpen, setDelOpen] = useState(false);
@@ -193,7 +194,7 @@ export default function Offer() {
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl font-bold text-brown">Offers</h1>
                         <p className="text-brown-50">
-                            Dashboard /{" "}
+                            <Link to="/dashboard">Dashboard</Link>  /{" "}
                             <span className="text-brown font-medium">Offers</span>
                         </p>
                     </div>
