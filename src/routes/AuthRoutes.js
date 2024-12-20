@@ -32,6 +32,7 @@ import Faqs from '../pages/FAQ\'s'
 import FaqType from '../pages/FAQ_Type'
 import FAQsView from '../pages/FAQsView'
 import NotFound from '../pages/NotFound'
+import Payment from '../pages/Payment'
 
 export default function AuthRoutes() {
     return (
@@ -69,6 +70,7 @@ export default function AuthRoutes() {
                         <Route path="/faq-type" element={<FaqType/>} />      
                         <Route path="/faqs/view" element={<FAQsView />} />      
                         <Route path="*" element={<NotFound />} />
+                        <Route path="/p" element={<Payment />} />
                     </Routes>
                 </Layout>
             </ProtectedRoute>
