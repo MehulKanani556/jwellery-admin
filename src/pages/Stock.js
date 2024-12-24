@@ -23,8 +23,8 @@ export default function Stoke() {
     const [filterOpen, setFilterOpen] = useState(false);
     const dispatch = useDispatch();
     const { stocks, loading } = useSelector(state => state.stocks);
-    const category = useSelector(state => state.categorys.category).filter(v => !stocks.some(stock => stock.category_id == v.id));
-    const SubCategory = useSelector(state => state.subcategorys.SubCategory).filter(v => !stocks.some(stock => stock.sub_category_id == v.id));
+    const category = useSelector(state => state.categorys.category);
+    const SubCategory = useSelector(state => state.subcategorys.SubCategory);
     const products = useSelector(state => state.products.products).filter(v => !stocks.some(stock => stock.product_id == v.id));
     const [filteredItems, setFilteredItems] = useState(stocks);
     const [filtersApplied, setFiltersApplied] = useState(false);
@@ -171,10 +171,8 @@ export default function Stoke() {
                         <h1 className="text-2xl font-bold text-brown">Stock </h1>
                         <p className='text-brown-50'><Link to="/dashboard">Dashboard</Link>  / <span className='text-brown font-medium'>Stock</span>
                         </p>
-
                     </div>
                     <div className=''>
-
                         <div className="flex flex-wrap justify-center lg:justify-end gap-4  mb-4">
                             {/* <button className=" text-brown w-32 border-brown border px-3 py-2 rounded flex justify-center items-center gap-2" onClick={handleFilterOpen}>
                             <span><RiFilter2Fill /></span><span>Filter</span>
